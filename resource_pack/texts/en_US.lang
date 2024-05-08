@@ -1,0 +1,5 @@
+pack.name=Amethyst Connect RP
+pack.description=The plugin used to connect the Minecraft world to the NexusCore BDS server
+item.nexus:mysterious_shard.name=Mysterious Shard
+item.nexus:mysterious_shard.name=Mysterious Shard
+item.nexus:nights_edge.name=Night's Edge

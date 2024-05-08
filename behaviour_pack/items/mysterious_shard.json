@@ -1,0 +1,36 @@
+{
+	"format_version": "1.20.50",
+	"minecraft:item": {
+		"description": {
+			"identifier": "nexus:mysterious_shard",
+			"menu_category": {
+				"category": "nature"
+			}
+		},
+		"components": {
+			"minecraft:max_stack_size": 1,
+			"minecraft:icon": {
+				"texture": "nexus_mysterious_shard"
+			},
+			"minecraft:display_name": {
+				"value": "Mysterious Fragment"
+			},
+			"minecraft:glint": true,
+			"minecraft:cooldown": {
+				"category": "consume",
+				"duration": 30
+			},
+			"minecraft:food": {
+				"can_always_eat": false,
+				"nutrition": 10,
+				"saturation_modifier": 0.01,
+				"using_converts_to": "nexus:mysterious_shard"
+			},
+			"minecraft:use_modifiers": {
+				"use_duration": 2,
+				"movement_modifier": 0.35
+			},
+			"minecraft:use_animation": "eat"
+		}
+	}
+}

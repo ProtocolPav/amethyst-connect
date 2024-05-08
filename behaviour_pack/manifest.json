@@ -1,0 +1,52 @@
+{
+	"format_version": 2,
+	"metadata": {
+		"authors": [
+			"ProtocolPav",
+			"Ezio"
+		]
+	},
+	"header": {
+		"name": "Amethyst Connect Plugin",
+		"description": "The plugin used to connect the Minecraft world to the Amethyst BDS Server.",
+		"min_engine_version": [ 1, 20, 60 ],
+		"uuid": "5f5ab0ea-79f8-4d1c-b283-0b7d05a538a9",
+		"version": [ 1, 2, 5 ]
+	},
+	"modules": [
+		{
+			"type": "data",
+			"uuid": "29e6c34b-1fc2-426d-b472-86e56e1e3c0d",
+			"version": [ 1, 0, 0 ]
+		},
+		{
+			"type": "script",
+			"language": "javascript",
+			"uuid": "c2758c76-c27c-4f04-add5-93951a2c32b8",
+			"entry": "scripts/main.js",
+			"version": [ 1, 0, 0 ]
+		}
+	],
+	"dependencies": [
+		{
+			"module_name": "@minecraft/server",
+			"version": "1.11.0-beta"
+		},
+		{
+			"module_name": "@minecraft/server-gametest",
+			"version": "1.0.0-beta"
+		},
+		{
+			"module_name": "@minecraft/server-ui",
+			"version": "1.2.0-beta"
+		},
+		{
+			"module_name": "@minecraft/server-admin",
+			"version": "1.0.0-beta"
+		},
+		{
+			"module_name": "@minecraft/server-net",
+			"version": "1.0.0-beta"
+		}
+	]
+}
