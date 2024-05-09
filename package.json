@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@minecraft/server": "beta",
-    "@minecraft/server-net": "beta"
+    "@minecraft/server-net": "beta",
+    "@minecraft/vanilla-data": "latest"
   }
 }

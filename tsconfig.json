@@ -6,7 +6,9 @@
         "allowSyntheticDefaultImports": true,
         "baseUrl": "./behaviour_pack/scripts-dev",
         "rootDir": "./behaviour_pack/scripts-dev",
-        "outDir": "./behaviour_pack/scripts"
+        "outDir": "./behaviour_pack/scripts",
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
     },
     "exclude": [ "node_modules" ],
     "include": [ "behaviour_pack" ]
