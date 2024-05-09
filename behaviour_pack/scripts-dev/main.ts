@@ -6,6 +6,10 @@ import {load as logs_plugin} from './logs';
 
 import config from '../amethyst.json';
 
+// Loads the guild ID from the config file,
+// but when NexusCore is done, it should check
+// if the config file is empty. If it is,
+// get the ID from NexusCore.
 const guild_id = config.guild_id
 
 
