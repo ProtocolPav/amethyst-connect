@@ -3,5 +3,8 @@
     "@minecraft/server": "beta",
     "@minecraft/server-net": "beta",
     "@minecraft/vanilla-data": "latest"
+  },
+  "devDependencies": {
+    "esbuild": "^0.21.1"
   }
 }

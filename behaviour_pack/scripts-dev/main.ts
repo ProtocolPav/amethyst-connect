@@ -1,8 +1,8 @@
 import { world, system } from '@minecraft/server';
 import { elytraCheck } from './elytra_plugin';
-import { load as chat_link_plugin } from "./chat_link";
-import {load as border_plugin} from './border';
-import {load as logs_plugin} from './logs';
+import { load as chat_link_plugin } from "./chat_link/index";
+import {load as border_plugin} from './border/index';
+import {load as logs_plugin} from './logs/index';
 
 import config from '../amethyst.json';
 
