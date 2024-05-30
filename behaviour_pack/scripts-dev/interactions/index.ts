@@ -84,30 +84,34 @@ export function load(guild_id: string) {
         // Case when the player kills something
         if (damageSource.damagingEntity instanceof Player) {
             const player = damageSource.damagingEntity
+            const dimension = player.dimension
     
             // Case when the player kills a player
             if (deadEntity instanceof Player) {
                 const dead_player = deadEntity
     
-                utils.log_player_death_event(dead_player, player, guild_id)
+                utils.log_player_death_event(dimension, dead_player, player, thorny_id_map)
             }
             // Case when the player kills an entity
             else {
-                utils.log_kill_event(player, deadEntity, guild_id)
+                utils.log_kill_event(dimension, player, deadEntity, thorny_id_map)
             }
         }
         // Case when an entity kills a player
         else if (deadEntity instanceof Player && damageSource.damagingEntity) {
             const killer = damageSource.damagingEntity
             const player = deadEntity
+
+            const dimension = player.dimension
     
-            utils.log_death_event(player, killer, guild_id)
+            utils.log_death_event(dimension, player, killer, thorny_id_map)
         }
         // Case when player suicides
         else if (deadEntity instanceof Player && !damageSource.damagingEntity) {
             const player = deadEntity
+            const dimension = player.dimension
     
-            utils.log_self_death_event(player, damageSource.cause, guild_id)
+            utils.log_self_death_event(dimension, player, damageSource.cause, thorny_id_map)
         }
     })
 }
