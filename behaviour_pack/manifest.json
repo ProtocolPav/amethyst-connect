@@ -7,18 +7,13 @@
 		]
 	},
 	"header": {
-		"name": "Amethyst Connect Plugin",
-		"description": "The plugin used to connect the Minecraft world to the Amethyst BDS Server.",
+		"name": "Amethyst Connect",
+		"description": "Required pack for Amethyst's full functionality",
 		"min_engine_version": [ 1, 20, 60 ],
 		"uuid": "5f5ab0ea-79f8-4d1c-b283-0b7d05a538a9",
 		"version": [ 1, 3, 0 ]
 	},
 	"modules": [
-		{
-			"type": "data",
-			"uuid": "29e6c34b-1fc2-426d-b472-86e56e1e3c0d",
-			"version": [ 1, 0, 0 ]
-		},
 		{
 			"type": "script",
 			"language": "javascript",

@@ -2,7 +2,7 @@ import { world, system } from '@minecraft/server';
 import { elytraCheck } from './elytra_plugin';
 import { load as chat_link_plugin } from "./chat_link/index";
 import {load as border_plugin} from './border/index';
-import {load as logs_plugin} from './logs/index';
+import {load as interactions_plugin} from './interactions/index';
 
 import config from '../amethyst.json';
 
@@ -28,4 +28,4 @@ system.runInterval(() => {
 // within a for loop and loading
 chat_link_plugin()
 border_plugin()
-logs_plugin(guild_id)
+interactions_plugin(guild_id)
