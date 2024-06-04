@@ -1,33 +1,41 @@
 import * as utils from './utils'
 import { Player, world, system } from '@minecraft/server';
 import { HttpRequest, HttpHeader, HttpRequestMethod, http } from '@minecraft/server-net';
-import {MinecraftEntityTypes, MinecraftBlockTypes} from "@minecraft/vanilla-data";
+import { MinecraftBlockTypes } from "@minecraft/vanilla-data";
+
+function send_connect_request(thorny_id_map:object, player: Player) {
+    const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/events/connection`);
+    request.method = HttpRequestMethod.Post;
+    request.headers = [
+        new HttpHeader("Content-Type", "application/json"),
+        new HttpHeader("auth", "my-auth-token"),
+    ];
+    request.body = JSON.stringify({"type": "connect", "thorny_id": thorny_id_map[player.name]});
+    console.log(`[Plugin] [Logs] Sending Connect to NexusCore for ${player.name}`);
+
+    http.request(request);
+
+    player.sendMessage(`§aWelcome to Everthorn, §l${player.name}§r\n| We've missed you so much!\n| Hop on noisechat to chat with the server!\n| Bored? Go and complete some quests!\n---------\n`)
+}
 
 export function load(guild_id: string) {
     var thorny_id_map = {}
 
     world.afterEvents.playerSpawn.subscribe(({ initialSpawn: first_time_connecting, player: player }) => {
         if (first_time_connecting) {
-
             if (!(player.name in thorny_id_map)) {
-                http.get(`http://nexuscore:8000/api/v0.1/users/guild/${guild_id}/${player.name}`).then(response => {
-                    thorny_id_map[player.name] = JSON.parse(response.body)["user"]["thorny_id"]
-                })
+                http.get(`http://nexuscore:8000/api/v0.1/users/guild/${guild_id}/${player.name}`)
+                    .then(response => {
+                        console.log("setting ThornyID")
+                        thorny_id_map[player.name] = JSON.parse(response.body)["user"]["thorny_id"]
+
+                        send_connect_request(thorny_id_map, player)
+                    });
             }
-
-            const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/events/connection`);
-            request.method = HttpRequestMethod.Post;
-            request.body = JSON.stringify({"type": "connect", "thorny_id": thorny_id_map[player.name]});
-            request.headers = [
-                new HttpHeader("Content-Type", "application/json"),
-                new HttpHeader("auth", "my-auth-token"),
-            ];
-
-            console.log(`[Plugin] [Logs] Sending Connect to NexusCore for ${player.name}`);
-
-            http.request(request);
-    
-            player.sendMessage(`§aWelcome to Everthorn, §l${player.name}§r\n| We've missed you so much!\n| Hop on noisechat to chat with the server!\n| Bored? Go and complete some quests!\n---------\n`)
+            else {
+                send_connect_request(thorny_id_map, player)
+            }
+            
         }
     })
     
@@ -64,7 +72,7 @@ export function load(guild_id: string) {
         const dimension = data.player.dimension
         
         // The block IDs that will be logged.
-        const all_blocks = [
+        const all_blocks: string[] = [
             MinecraftBlockTypes.Chest, MinecraftBlockTypes.Barrel, MinecraftBlockTypes.RedShulkerBox,
             MinecraftBlockTypes.BlueShulkerBox, MinecraftBlockTypes.CyanShulkerBox, MinecraftBlockTypes.GrayShulkerBox,
             MinecraftBlockTypes.LimeShulkerBox, MinecraftBlockTypes.PinkShulkerBox, MinecraftBlockTypes.BlackShulkerBox,
@@ -74,7 +82,7 @@ export function load(guild_id: string) {
             MinecraftBlockTypes.LightGrayShulkerBox
         ]
     
-        if (block_id in all_blocks) {
+        if (all_blocks.includes(block_id)) {
             system.run(() => { utils.log_block_event('use', dimension, data.player, data.block, block_id, thorny_id_map) })
         }
     })
