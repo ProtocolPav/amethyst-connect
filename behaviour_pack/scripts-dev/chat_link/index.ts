@@ -46,28 +46,50 @@ function relay_event(content: string, colour: 'red' | 'green' | 'yellow') {
 }
 
 
-export function load() {
+export function load(guild_id: string) {
     
     console.log('[Plugin] [ChatLink] Loading Chat Link Plugin...')
+
+    var user_role_map = {}
+
+    world.afterEvents.playerJoin.subscribe(({ playerName }) => {
+        http.get(`http://nexuscore:8000/api/v0.1/users/guild/${guild_id}/${playerName}`)
+        .then(response => {
+            var role = JSON.parse(response.body)["user"]["role"]
+            
+            if (JSON.parse(response.body)["user"]["patron"]) {
+                role = 'patron'
+            }
+
+            var colour = '§b'
+
+            switch (role) {
+                case 'patron':
+                    colour = '§d'
+                case 'owner':
+                    colour = '§a'
+                case 'community manager':
+                    colour = '§e'
+            }
+
+            user_role_map[playerName] = colour + role
+        })
+    })
     
     // Relay in-game chat and decorate chat
     world.beforeEvents.chatSend.subscribe((data) => {
-        const gamertag = data.sender.nameTag
-        
-        // Role should be gotten from NexusCore. Right now
-        // this is not implemented, but it should be in future
-        const role = "§bDweller"
-        
+        const gamertag = data.sender.name
+
         world.sendMessage({
             rawtext: [
                 {
-                    text: `§l§8[§r${role}§l§8]§r §7${gamertag}:§r ${data.message}`,
+                    text: `§l§8[§r${user_role_map[gamertag]}§l§8]§r §7${gamertag}:§r ${data.message}`,
                 },
             ],
         });
-        
+
         data.cancel = true;
-    
+
         system.run(() => { relay_message(data.sender.nameTag, data.message) });
     });
     

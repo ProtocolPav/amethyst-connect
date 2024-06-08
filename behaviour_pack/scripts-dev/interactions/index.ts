@@ -19,6 +19,9 @@ function send_connect_request(thorny_id_map:object, player: Player) {
 }
 
 export function load(guild_id: string) {
+
+    console.log('[Plugin] [Interactions] Loading Interactions Plugin...')
+
     var thorny_id_map = {}
 
     world.afterEvents.playerSpawn.subscribe(({ initialSpawn: first_time_connecting, player: player }) => {
@@ -26,7 +29,6 @@ export function load(guild_id: string) {
             if (!(player.name in thorny_id_map)) {
                 http.get(`http://nexuscore:8000/api/v0.1/users/guild/${guild_id}/${player.name}`)
                     .then(response => {
-                        console.log("setting ThornyID")
                         thorny_id_map[player.name] = JSON.parse(response.body)["user"]["thorny_id"]
 
                         send_connect_request(thorny_id_map, player)
@@ -122,4 +124,6 @@ export function load(guild_id: string) {
             utils.log_self_death_event(dimension, player, damageSource.cause, thorny_id_map)
         }
     })
+
+    console.log('[Plugin] [Interactions] Successfully loaded!')
 }

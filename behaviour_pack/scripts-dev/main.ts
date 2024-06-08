@@ -26,6 +26,6 @@ system.runInterval(() => {
 // This should be done differently, by getting a list
 // of all plugins from NexusCore and then importing each
 // within a for loop and loading
-chat_link_plugin()
+chat_link_plugin(guild_id)
 border_plugin()
 interactions_plugin(guild_id)
