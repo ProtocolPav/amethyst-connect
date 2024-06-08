@@ -4,9 +4,7 @@
 	"texture_data": {
 		"nexus_mysterious_shard": {
 			"textures": "textures/items/mysterious_shard"
-		},
-		"nexus_nights_edge": {
-			"textures": "textures/items/sword"
 		}
+		
 	}
 }
