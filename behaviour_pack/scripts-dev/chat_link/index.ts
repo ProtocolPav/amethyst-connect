@@ -57,7 +57,7 @@ export function load(guild_id: string) {
         .then(response => {
             var role = JSON.parse(response.body)["user"]["role"]
             
-            if (JSON.parse(response.body)["user"]["patron"]) {
+            if (JSON.parse(response.body)["user"]["patron"] == true) {
                 role = 'patron'
             }
 
@@ -66,10 +66,13 @@ export function load(guild_id: string) {
             switch (role) {
                 case 'patron':
                     colour = '§d'
+                    break;
                 case 'owner':
                     colour = '§a'
+                    break;
                 case 'community manager':
                     colour = '§e'
+                    break;
             }
 
             user_role_map[playerName] = colour + role
