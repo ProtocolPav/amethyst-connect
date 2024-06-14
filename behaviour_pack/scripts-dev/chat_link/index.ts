@@ -2,12 +2,12 @@ import { HttpRequest, HttpHeader, HttpRequestMethod, http } from '@minecraft/ser
 import { world, system, Player } from '@minecraft/server';
 
 
-function relay_message(nametag: string, content: string) {
-    const request = new HttpRequest(`http://thorny-wbs:8000/chat/message`,);
+function relay_message(url: string, nametag: string, content: string) {
+    const request = new HttpRequest(url);
     request.method = HttpRequestMethod.Post;
     request.body = JSON.stringify({
         'content': content,
-        'name': nametag
+        'username': nametag
     });
     request.headers = [
         new HttpHeader("Content-Type", "application/json"),
@@ -30,12 +30,14 @@ function choose_colour(colour: string) {
 }
 
 
-function relay_event(content: string, colour: 'red' | 'green' | 'yellow') {
-    const request = new HttpRequest(`http://thorny-wbs:8000/chat/event`,);
+function relay_event(url: string, content: string, colour: 'red' | 'green' | 'yellow') {
+    const request = new HttpRequest(url);
     request.method = HttpRequestMethod.Post;
     request.body = JSON.stringify({
-        'content': content,
-        'colour': choose_colour(colour)
+        'username': "Server",
+        'content': null,
+        'embeds': [{'title': content, 'color': choose_colour(colour)}],
+        'attachments': []
     });
     request.headers = [
         new HttpHeader("Content-Type", "application/json"),
@@ -46,7 +48,7 @@ function relay_event(content: string, colour: 'red' | 'green' | 'yellow') {
 }
 
 
-export function load(guild_id: string) {
+export function load(guild_id: string, webhook_url: string) {
     
     console.log('[Plugin] [ChatLink] Loading Chat Link Plugin...')
 
@@ -57,7 +59,7 @@ export function load(guild_id: string) {
         .then(response => {
             var role = JSON.parse(response.body)["user"]["role"]
             
-            if (JSON.parse(response.body)["user"]["patron"]) {
+            if (JSON.parse(response.body)["user"]["patron"] == true) {
                 role = 'patron'
             }
 
@@ -66,10 +68,13 @@ export function load(guild_id: string) {
             switch (role) {
                 case 'patron':
                     colour = '§d'
+                    break;
                 case 'owner':
                     colour = '§a'
+                    break;
                 case 'community manager':
                     colour = '§e'
+                    break;
             }
 
             user_role_map[playerName] = colour + role
@@ -90,7 +95,7 @@ export function load(guild_id: string) {
 
         data.cancel = true;
 
-        system.run(() => { relay_message(data.sender.nameTag, data.message) });
+        system.run(() => { relay_message(webhook_url, data.sender.nameTag, data.message) });
     });
     
     // Relay Player deaths
@@ -99,34 +104,34 @@ export function load(guild_id: string) {
         if (damageSource.damagingEntity instanceof Player && deadEntity instanceof Player) {
             const player = damageSource.damagingEntity
             const dead_player = deadEntity
-            system.run(() => { relay_event(`${dead_player.name} died by ${player.name}'s wrath`, 'yellow') })
+            system.run(() => { relay_event(webhook_url, `${dead_player.name} died by ${player.name}'s wrath`, 'yellow') })
         }
         
         // Case when an entity kills a player
         else if (deadEntity instanceof Player && damageSource.damagingEntity) {
             const player = deadEntity
 
-            system.run(() => { relay_event(`${player.name} died`, 'yellow') })
+            system.run(() => { relay_event(webhook_url, `${player.name} died`, 'yellow') })
         }
         
         // Case when player suicides
         else if (deadEntity instanceof Player && !damageSource.damagingEntity) {
             const player = deadEntity
 
-            system.run(() => { relay_event(`${player.name}'s master plan ended in failure...`, 'yellow') })
+            system.run(() => { relay_event(webhook_url, `${player.name}'s master plan ended in failure...`, 'yellow') })
         }
     })
     
     // Relay Player Joins
     world.afterEvents.playerSpawn.subscribe(({ initialSpawn: first_spawn, player: player }) => {
         if (first_spawn) {
-            system.run(() => { relay_event(`${player.name} has joined the server`, 'green') })
+            system.run(() => { relay_event(webhook_url, `${player.name} has joined the server`, 'green') })
         }
     })
     
     // Relay Player Leaves
     world.afterEvents.playerLeave.subscribe(({ playerName: player_name }) => {
-        system.run(() => { relay_event(`${player_name} has left the server`, 'red') })
+        system.run(() => { relay_event(webhook_url, `${player_name} has left the server`, 'red') })
     })
     
     console.log('[Plugin] [ChatLink] Successfully loaded!')

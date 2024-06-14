@@ -1,5 +1,6 @@
 import * as utils from './utils'
-import { Player, world, system } from '@minecraft/server';
+import { QuestCache, InteractionQueue, process_interactions } from './quest';
+import { Player, world, system, EntityComponentTypes, EquipmentSlot } from '@minecraft/server';
 import { HttpRequest, HttpHeader, HttpRequestMethod, http } from '@minecraft/server-net';
 import { MinecraftBlockTypes } from "@minecraft/vanilla-data";
 
@@ -23,6 +24,12 @@ export function load(guild_id: string) {
     console.log('[Plugin] [Interactions] Loading Interactions Plugin...')
 
     var thorny_id_map = {}
+    var cached_quests: QuestCache = {}
+    var interaction_queue: InteractionQueue = new InteractionQueue()
+
+    system.runInterval(() => {
+        process_interactions(interaction_queue, cached_quests)
+    }, 1)
 
     world.afterEvents.playerSpawn.subscribe(({ initialSpawn: first_time_connecting, player: player }) => {
         if (first_time_connecting) {
@@ -42,24 +49,37 @@ export function load(guild_id: string) {
     })
     
     world.afterEvents.playerLeave.subscribe(({ playerName: player_name }) => {
-            const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/events/connection`);
-            request.method = HttpRequestMethod.Post;
-            request.body = JSON.stringify({"type": "disconnect", "thorny_id": thorny_id_map[player_name]});
-            request.headers = [
-                new HttpHeader("Content-Type", "application/json"),
-                new HttpHeader("auth", "my-auth-token"),
-            ];
+        const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/events/connection`);
+        request.method = HttpRequestMethod.Post;
+        request.body = JSON.stringify({"type": "disconnect", "thorny_id": thorny_id_map[player_name]});
+        request.headers = [
+            new HttpHeader("Content-Type", "application/json"),
+            new HttpHeader("auth", "my-auth-token"),
+        ];
 
-            console.log(`[Plugin] [Logs] Sending Disonnect to NexusCore for ${player_name}`);
+        console.log(`[Plugin] [Logs] Sending Disonnect to NexusCore for ${player_name}`);
 
-            http.request(request);
+        http.request(request);
     })
     
     world.beforeEvents.playerBreakBlock.subscribe(({ player, block }) => {
         const block_id = block.typeId
+        const block_location = [block.x, block.y]
         const dimension = player.dimension
     
-        system.run(() => { utils.log_block_event('mine', dimension, player, block, block_id, thorny_id_map) })
+        system.run(() => {
+            // Log Interaction to NexusCore
+            utils.log_block_event('mine', dimension, player, block, block_id, thorny_id_map)
+
+            // Add Interaction to Queue for processing
+            interaction_queue.enqueue({
+                thorny_id: thorny_id_map[player.name],
+                time: new Date(),
+                target_id: block_id,
+                target_location: block_location,
+                mainhand: player.getComponent(EntityComponentTypes.Equippable)?.getEquipment(EquipmentSlot.Mainhand)?.typeId ?? null
+            })
+        })
     })
     
     world.afterEvents.playerPlaceBlock.subscribe(({ player, block }) => {
@@ -73,7 +93,8 @@ export function load(guild_id: string) {
         const block_id = data.block.typeId
         const dimension = data.player.dimension
         
-        // The block IDs that will be logged.
+        // List of all block IDs that the system will log.
+        // Anything that isn't these will not be logged.
         const all_blocks: string[] = [
             MinecraftBlockTypes.Chest, MinecraftBlockTypes.Barrel, MinecraftBlockTypes.RedShulkerBox,
             MinecraftBlockTypes.BlueShulkerBox, MinecraftBlockTypes.CyanShulkerBox, MinecraftBlockTypes.GrayShulkerBox,

@@ -2,7 +2,8 @@
   "dependencies": {
     "@minecraft/server": "beta",
     "@minecraft/server-net": "beta",
-    "@minecraft/vanilla-data": "latest"
+    "@minecraft/vanilla-data": "latest",
+    "date-fns": "^3.6.0"
   },
   "devDependencies": {
     "esbuild": "^0.21.1"
