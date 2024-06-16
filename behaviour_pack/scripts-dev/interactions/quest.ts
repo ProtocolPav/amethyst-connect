@@ -67,8 +67,8 @@ class Objective {
             this.rewards = rewards
     }
 
-    increment_completion(gamertag: string, target_id: string, target_location: number[], mainhand: string | null): void {
-        if (target_id === this.objective && this.status === 'in_progress' && this.check_requirements(target_location, mainhand)) {
+    increment_completion(gamertag: string, target_id: string, target_location: number[], mainhand: string | null, date: Date): void {
+        if (target_id === this.objective && this.status === 'in_progress' && this.check_requirements(target_location, mainhand, date)) {
 
             this.completion++
             world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`execute at ${gamertag} run playsound note.pling @p ~ ~3 ~ 100 1.5`);
@@ -79,6 +79,9 @@ class Objective {
                 this.status = 'completed'
                 this.end = format(new Date(), 'yyyy-MM-dd HH:mm:ss')
             }
+            else if (this.completion === 1) {
+                this.start = format(new Date(), 'yyyy-MM-dd HH:mm:ss')
+            }
         }
     }
 
@@ -86,7 +89,7 @@ class Objective {
         const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/users/thorny-id/${thorny_id}/quest/${quest_id}/${this.objective_id}`);
         request.method = HttpRequestMethod.Put;
         request.body = JSON.stringify({
-            "start": null,
+            "start": this.start,
             "end": this.end,
             "completion": this.completion,
             "status": this.status
@@ -117,7 +120,7 @@ class Objective {
 
     }
 
-    check_requirements(target_location: number[], mainhand: string | null): boolean {
+    check_requirements(target_location: number[], mainhand: string | null, date: Date): boolean {
         // Check mainhand
         if (this.required_mainhand && mainhand !== this.required_mainhand) {
             return false;
@@ -129,7 +132,7 @@ class Objective {
         }
 
         // Check timer
-        if (this.objective_timer && !this.timer_check(this.objective_timer)) {
+        if (this.objective_timer && !this.timer_check(this.objective_timer, date)) {
             this.status = 'failed';
             return false;
         }
@@ -147,8 +150,8 @@ class Objective {
         return false
     }
 
-    timer_check(timer: number): boolean {
-        const now = new Date()
+    timer_check(timer: number, date: Date): boolean {
+        const now = date
         const start = parse(this.start, "yyyy-MM-dd HH:mm:ss.SSSSSS", new Date())
 
         if (differenceInSeconds(now, start) > timer) {
@@ -179,14 +182,14 @@ export class Quest {
         this.objectives = objectives
     }
 
-    async increment_active_objective(thorny_id: number, gamertag: string, target_id: string, target_location: number[], mainhand: string | null): Promise<void> {
+    async increment_active_objective(thorny_id: number, gamertag: string, target_id: string, target_location: number[], mainhand: string | null, date: Date): Promise<void> {
         const active_object = this.objectives.find(objective => objective.status === 'in_progress');
         var completed_objectives = 0
         
         // Increment & Sync only the active objective
         if (active_object) {
 
-            active_object.increment_completion(gamertag, target_id, target_location, mainhand);
+            active_object.increment_completion(gamertag, target_id, target_location, mainhand, date);
 
             if (active_object.status === 'completed') {
                 await active_object.sync_to_nexuscore(thorny_id, this.quest_id);
@@ -365,7 +368,7 @@ export async function process_interactions(interaction_queue: InteractionQueue, 
 
             if (interaction) {
                 const quest = await fetch_active_quest(interaction.thorny_id, cached_quests)
-                await quest?.increment_active_objective(interaction.thorny_id, interaction.gamertag, interaction.target_id, interaction.target_location, interaction.mainhand)
+                await quest?.increment_active_objective(interaction.thorny_id, interaction.gamertag, interaction.target_id, interaction.target_location, interaction.mainhand, interaction.time)
             }
         }
 
