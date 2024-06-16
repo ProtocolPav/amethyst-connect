@@ -67,10 +67,13 @@ class Objective {
             this.rewards = rewards
     }
 
-    increment_completion(target_id: string, target_location: number[], mainhand: string | null): void {
+    increment_completion(gamertag: string, target_id: string, target_location: number[], mainhand: string | null): void {
         if (target_id === this.objective && this.status === 'in_progress' && this.check_requirements(target_location, mainhand)) {
 
             this.completion++
+            world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`execute at ${gamertag} run playsound note.pling @p ~ ~3 ~ 100 1.5`);
+            world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`title ${gamertag} actionbar Objective Progress: ${this.completion}/${this.objective_count}`);
+            world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`execute at ${gamertag} run playsound note.pling @p ~ ~3 ~ 100 2`);
 
             if (this.completion === this.objective_count) {
                 this.status = 'completed'
@@ -79,7 +82,7 @@ class Objective {
         }
     }
 
-    sync_to_nexuscore(thorny_id: number, quest_id: number): void {
+    async sync_to_nexuscore(thorny_id: number, quest_id: number): Promise<void> {
         const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/users/thorny-id/${thorny_id}/quest/${quest_id}/${this.objective_id}`);
         request.method = HttpRequestMethod.Put;
         request.body = JSON.stringify({
@@ -92,30 +95,46 @@ class Objective {
             new HttpHeader("Content-Type", "application/json"),
             new HttpHeader("auth", "my-auth-token"),
         ];
-
-        world.sendMessage(`Syncing ${this.completion}, ${this.status}`)
     
-        http.request(request);
+        await http.request(request);
+    }
+
+    async give_rewards(thorny_id: number, gamertag: string) {
+        for (const reward of this.rewards) {
+            if (reward.balance) {
+                world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`
+                    say ${gamertag} I cannot give you balance rewards yet. 
+                    Please send a screenshot of this to a CM. 
+                    ${reward.balance} Nugs need to be added.
+                `);
+            }
+            else if (reward.item) {
+                world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`
+                    give ${gamertag} ${reward.item} ${reward.count}
+                `);
+            }
+        }
+
     }
 
     check_requirements(target_location: number[], mainhand: string | null): boolean {
         // Check mainhand
         if (this.required_mainhand && mainhand !== this.required_mainhand) {
-            return false
+            return false;
         }
 
         // Check location
         if (this.required_location && !this.distance_check(this.required_location[0], target_location[0], this.required_location[1], target_location[1])) {
-            return false
+            return false;
         }
 
         // Check timer
         if (this.objective_timer && !this.timer_check(this.objective_timer)) {
-            // Include some lines to mark the whole quest as FAILED!
-            return false
+            this.status = 'failed';
+            return false;
         }
 
-        return true
+        return true;
     }
 
     distance_check(x1: number, z1: number, x2: number, z2: number): boolean {
@@ -130,13 +149,13 @@ class Objective {
 
     timer_check(timer: number): boolean {
         const now = new Date()
-        const start = parse(this.start, "yyyy-MM-dd HH:mm:ss", new Date())
+        const start = parse(this.start, "yyyy-MM-dd HH:mm:ss.SSSSSS", new Date())
 
-        if (differenceInSeconds(now, start) < timer) {
-            return true
+        if (differenceInSeconds(now, start) > timer) {
+            return false
         }
 
-        return false
+        return true
     }
 }
 
@@ -160,49 +179,69 @@ export class Quest {
         this.objectives = objectives
     }
 
-    increment_active_objective(thorny_id: number, target_id: string, target_location: number[], mainhand: string | null): void {
-        const active_object = this.objectives.find(objective => objective.status === 'in_progress')
+    async increment_active_objective(thorny_id: number, gamertag: string, target_id: string, target_location: number[], mainhand: string | null): Promise<void> {
+        const active_object = this.objectives.find(objective => objective.status === 'in_progress');
+        var completed_objectives = 0
         
         // Increment & Sync only the active objective
         if (active_object) {
 
-            // Increment only if there is no timer, or if the timer is valid
-            if (!active_object.objective_timer || (active_object.objective_timer && active_object.timer_check(active_object.objective_timer))) {
-                active_object.increment_completion(target_id, target_location, mainhand);
-                active_object.sync_to_nexuscore(thorny_id, this.quest_id);
-            }
-            // The timer is invalid. Fail entire quest
-            else if (active_object.objective_timer) {
-                this.fail_quest(thorny_id);
-                // Inform user of this change
-            }
+            active_object.increment_completion(gamertag, target_id, target_location, mainhand);
 
             if (active_object.status === 'completed') {
-                this.complete_quest(thorny_id)
-                world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`title @a title ${this.title} COMPLETE!`)
-                // Inform user
+                await active_object.sync_to_nexuscore(thorny_id, this.quest_id);
+                await active_object.give_rewards(thorny_id, gamertag);
+                world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`title ${gamertag} actionbar Objective Completed! Run /quests view to see the next one.`);
+                world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`execute at ${gamertag} run playsound random.levelup @p ~ ~3 ~ 100 1.5`);
+            }
+            else if (active_object.status === 'failed') {
+                await this.fail_quest(thorny_id);
+                world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`title @a title Objective Failed`);
+                const msg = {'rawtext': [{'text': 'You have failed this objective, and the entire quest has been failed. Better luck next time!'}]}
+                world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`tellraw ${gamertag} ${JSON.stringify(msg)}`);
+                world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`execute at ${gamertag} run playsound random.levelup @p ~ ~3 ~ 100 0.5`);
+            }
+            else {
+                await active_object.sync_to_nexuscore(thorny_id, this.quest_id);
+            }
+
+            for (const objective of this.objectives) {
+                if (objective.status === 'completed') {
+                    completed_objectives++;
+                }
+            }
+    
+            if (completed_objectives === this.objectives.length) {
+                await this.complete_quest(thorny_id);
+                world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`title ${gamertag} title Quest Complete!`);
+                world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`execute at @a run playsound random.levelup @p ~ ~3 ~ 100 1.5`);
+                const msg = {'rawtext': [
+                    {'text': '§e+=+=+=+=+=+=+ Server Message +=+=+=+=+=+=+§r\n'},
+                    {'text': `${gamertag} has just completed §l${this.title}§r!\n`},
+                    {'text': `Run §d/quests view§r on the discord to accept and start your own quest!`},
+                ]}
+                world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`tellraw @a ${JSON.stringify(msg)}`);
             }
         }
     }
 
-    fail_quest(thorny_id: number) {
+    async fail_quest(thorny_id: number): Promise<void> {
+        this.status = 'failed'
+
         const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/users/thorny-id/${thorny_id}/quest/active`);
         request.method = HttpRequestMethod.Delete;
+        request.body = JSON.stringify({})
         request.headers = [
             new HttpHeader("Content-Type", "application/json"),
             new HttpHeader("auth", "my-auth-token"),
         ];
     
-        http.request(request);
-
-        this.status = 'failed'
-
-        for (const obj of this.objectives) {
-            obj.status = 'failed'
-        }
+        console.log(request.uri, request.method)
+        console.log(JSON.stringify(await http.request(request)));
+        console.log('after request')
     }
 
-    complete_quest(thorny_id: number) {
+    async complete_quest(thorny_id: number): Promise<void> {
         this.status = 'completed'
 
         const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/users/thorny-id/${thorny_id}/quest/${this.quest_id}`);
@@ -218,7 +257,9 @@ export class Quest {
             new HttpHeader("auth", "my-auth-token"),
         ];
     
-        http.request(request);
+        console.log(request.uri, request.method)
+        await http.request(request);
+        console.log('after request')
     }
 }
 
@@ -228,6 +269,7 @@ export interface QuestCache {
 
 interface Interaction {
     thorny_id: number
+    gamertag: string
     time: Date
     target_id: string
     target_location: number[]
@@ -263,17 +305,14 @@ export class InteractionQueue {
 async function fetch_active_quest(thorny_id: number, quest_cache: QuestCache): Promise<Quest | null> {
     // If there is already an in_progress quest in the cache, return it
     if (thorny_id in quest_cache && quest_cache[thorny_id].status === 'in_progress') {
-        world.sendMessage("Getting from CACHE")
     }
     // Otherwise, if the cached quest is failed or completed, 
     // check the API if a new active quest exists
     else {
-        world.sendMessage("Getting UserQuest from API")
         const quest_response = JSON.parse((await http.get(`http://nexuscore:8000/api/v0.1/users/thorny-id/${thorny_id}/quest/active`)).body)
 
         // Only continue fetching if an active quest exists
         if (quest_response['quest']) {
-            world.sendMessage("Getting Quest from API")
             const quest_data = JSON.parse((await http.get(`http://nexuscore:8000/api/v0.1/quests/${quest_response['quest']['quest_id']}`)).body)
 
             var objectives: Objective[] = []
@@ -319,15 +358,17 @@ async function fetch_active_quest(thorny_id: number, quest_cache: QuestCache): P
 
 export async function process_interactions(interaction_queue: InteractionQueue, cached_quests: QuestCache) {
     if (!interaction_queue.is_processing) {
+        interaction_queue.is_processing = true
+
         while (!interaction_queue.is_empty()) {
-            interaction_queue.is_processing = true
             var interaction = interaction_queue.dequeue()
 
             if (interaction) {
-                const quest = await fetch_active_quest(interaction?.thorny_id, cached_quests)
-                quest?.increment_active_objective(interaction?.thorny_id, interaction?.target_id, interaction?.target_location, interaction?.mainhand)
+                const quest = await fetch_active_quest(interaction.thorny_id, cached_quests)
+                await quest?.increment_active_objective(interaction.thorny_id, interaction.gamertag, interaction.target_id, interaction.target_location, interaction.mainhand)
             }
         }
+
         interaction_queue.is_processing = false
     }
 }

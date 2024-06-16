@@ -74,6 +74,7 @@ export function load(guild_id: string) {
             // Add Interaction to Queue for processing
             interaction_queue.enqueue({
                 thorny_id: thorny_id_map[player.name],
+                gamertag: player.name,
                 time: new Date(),
                 target_id: block_id,
                 target_location: block_location,
