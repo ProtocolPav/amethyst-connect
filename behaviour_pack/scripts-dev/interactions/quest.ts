@@ -132,7 +132,7 @@ class Objective {
         }
 
         // Check timer
-        if (this.objective_timer && !this.timer_check(this.objective_timer, date)) {
+        if (this.objective_timer && !this.timer_check(this.objective_timer, date) && this.completion > 0) {
             this.status = 'failed';
             return false;
         }
@@ -152,8 +152,9 @@ class Objective {
 
     timer_check(timer: number, date: Date): boolean {
         const now = date
-        const start = parse(this.start, "yyyy-MM-dd HH:mm:ss.SSSSSS", new Date())
+        const start = parse(this.start, "yyyy-MM-dd HH:mm:ss", new Date())
 
+        console.log(differenceInSeconds(now, start), now, start)
         if (differenceInSeconds(now, start) > timer) {
             return false
         }
