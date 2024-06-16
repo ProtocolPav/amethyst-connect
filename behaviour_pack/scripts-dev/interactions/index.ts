@@ -128,6 +128,15 @@ export function load(guild_id: string) {
             else {
                 utils.log_kill_event(dimension, player, deadEntity, thorny_id_map)
             }
+
+            interaction_queue.enqueue({
+                thorny_id: thorny_id_map[player.name],
+                gamertag: player.name,
+                time: new Date(),
+                target_id: deadEntity.typeId,
+                target_location: [deadEntity.location.x, deadEntity.location.z],
+                mainhand: player.getComponent(EntityComponentTypes.Equippable)?.getEquipment(EquipmentSlot.Mainhand)?.typeId ?? null
+            })
         }
         // Case when an entity kills a player
         else if (deadEntity instanceof Player && damageSource.damagingEntity) {
