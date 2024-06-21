@@ -60,19 +60,19 @@ export function load(guild_id: string, webhook_url: string) {
             var role = JSON.parse(response.body)["user"]["role"]
             
             if (JSON.parse(response.body)["user"]["patron"] == true) {
-                role = 'patron'
+                role = 'Patron'
             }
 
             var colour = '§b'
 
             switch (role) {
-                case 'patron':
+                case 'Patron':
                     colour = '§d'
                     break;
-                case 'owner':
+                case 'Owner':
                     colour = '§a'
                     break;
-                case 'community manager':
+                case 'Community Manager':
                     colour = '§e'
                     break;
             }
