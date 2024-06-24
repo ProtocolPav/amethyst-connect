@@ -309,15 +309,20 @@ export class InteractionQueue {
 async function fetch_active_quest(thorny_id: number, quest_cache: QuestCache): Promise<Quest | null> {
     // If there is already an in_progress quest in the cache, return it
     if (thorny_id in quest_cache && quest_cache[thorny_id].status === 'in_progress') {
+        console.log('[QUESTS] Fetching from cache...')
     }
     // Otherwise, if the cached quest is failed or completed, 
     // check the API if a new active quest exists
     else {
+        console.log(`[QUESTS] Fetching Active Quest for ${thorny_id}`)
         const quest_response = JSON.parse((await http.get(`http://nexuscore:8000/api/v0.1/users/thorny-id/${thorny_id}/quest/active`)).body)
+        console.log(`[QUESTS] Fetched!`)
 
         // Only continue fetching if an active quest exists
         if (quest_response['quest']) {
+            console.log(`[QUESTS] Fetching Quest Data for ${thorny_id}`)
             const quest_data = JSON.parse((await http.get(`http://nexuscore:8000/api/v0.1/quests/${quest_response['quest']['quest_id']}`)).body)
+            console.log(`[QUESTS] Fetched!`)
 
             var objectives: Objective[] = []
 
