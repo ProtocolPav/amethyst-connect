@@ -55,24 +55,24 @@ export function load(guild_id: string, webhook_url: string) {
     var user_role_map = {}
 
     world.afterEvents.playerJoin.subscribe(({ playerName }) => {
-        http.get(`http://nexuscore:8000/api/v0.1/users/guild/${guild_id}/${playerName}`)
+        http.get(`http://nexuscore:8000/api/v0.1/users/guild/${guild_id}/${playerName.replace(" ", "%20")}`)
         .then(response => {
             var role = JSON.parse(response.body)["user"]["role"]
             
             if (JSON.parse(response.body)["user"]["patron"] == true) {
-                role = 'patron'
+                role = 'Patron'
             }
 
             var colour = '§b'
 
             switch (role) {
-                case 'patron':
-                    colour = '§d'
+                case 'Patron':
+                    colour = '§c'
                     break;
-                case 'owner':
+                case 'Owner':
                     colour = '§a'
                     break;
-                case 'community manager':
+                case 'Community Manager':
                     colour = '§e'
                     break;
             }

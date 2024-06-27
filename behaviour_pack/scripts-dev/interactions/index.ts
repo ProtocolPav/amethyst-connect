@@ -34,7 +34,7 @@ export function load(guild_id: string) {
     world.afterEvents.playerSpawn.subscribe(({ initialSpawn: first_time_connecting, player: player }) => {
         if (first_time_connecting) {
             if (!(player.name in thorny_id_map)) {
-                http.get(`http://nexuscore:8000/api/v0.1/users/guild/${guild_id}/${player.name}`)
+                http.get(`http://nexuscore:8000/api/v0.1/users/guild/${guild_id}/${player.name.replace(" ", "%20")}`)
                     .then(response => {
                         thorny_id_map[player.name] = JSON.parse(response.body)["user"]["thorny_id"]
 
