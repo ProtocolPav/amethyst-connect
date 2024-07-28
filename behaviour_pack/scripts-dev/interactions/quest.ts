@@ -86,7 +86,7 @@ class Objective {
     }
 
     async sync_to_nexuscore(thorny_id: number, quest_id: number): Promise<void> {
-        const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/users/thorny-id/${thorny_id}/quest/${quest_id}/${this.objective_id}`);
+        const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/users/${thorny_id}/quest/${quest_id}/${this.objective_id}`);
         request.method = HttpRequestMethod.Put;
         request.body = JSON.stringify({
             "start": this.start,
@@ -232,7 +232,7 @@ export class Quest {
     async fail_quest(thorny_id: number): Promise<void> {
         this.status = 'failed'
 
-        const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/users/thorny-id/${thorny_id}/quest/active`);
+        const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/users/${thorny_id}/quest/active`);
         request.method = HttpRequestMethod.Delete;
         request.body = JSON.stringify({})
         request.headers = [
@@ -248,7 +248,7 @@ export class Quest {
     async complete_quest(thorny_id: number): Promise<void> {
         this.status = 'completed'
 
-        const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/users/thorny-id/${thorny_id}/quest/${this.quest_id}`);
+        const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/users/${thorny_id}/quest/${this.quest_id}`);
         request.method = HttpRequestMethod.Put;
         request.body = JSON.stringify({
             "accepted_on": null,
@@ -313,11 +313,11 @@ async function fetch_active_quest(thorny_id: number, quest_cache: QuestCache): P
     // Otherwise, if the cached quest is failed or completed, 
     // check the API if a new active quest exists
     else {
-        const quest_response = JSON.parse((await http.get(`http://nexuscore:8000/api/v0.1/users/thorny-id/${thorny_id}/quest/active`)).body)
+        const quest_response = JSON.parse((await http.get(`http://nexuscore:8000/api/v0.1/users/${thorny_id}/quest/active`)).body)
 
         // Only continue fetching if an active quest exists
-        if (quest_response['quest']) {
-            const quest_data = JSON.parse((await http.get(`http://nexuscore:8000/api/v0.1/quests/${quest_response['quest']['quest_id']}`)).body)
+        if (quest_response) {
+            const quest_data = JSON.parse((await http.get(`http://nexuscore:8000/api/v0.1/quests/${quest_response['quest_id']}`)).body)
 
             var objectives: Objective[] = []
 
@@ -351,7 +351,7 @@ async function fetch_active_quest(thorny_id: number, quest_cache: QuestCache): P
             quest_cache[thorny_id] = new Quest(
                 quest_data['quest']['quest_id'],
                 quest_data['quest']['title'],
-                quest_response['quest']['status'],
+                quest_response['status'],
                 objectives
             )
         }
