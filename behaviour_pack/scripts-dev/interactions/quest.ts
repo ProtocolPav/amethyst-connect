@@ -313,10 +313,12 @@ async function fetch_active_quest(thorny_id: number, quest_cache: QuestCache): P
     // Otherwise, if the cached quest is failed or completed, 
     // check the API if a new active quest exists
     else {
-        const quest_response = JSON.parse((await http.get(`http://nexuscore:8000/api/v0.1/users/${thorny_id}/quest/active`)).body)
+        const quest_api_call = await http.get(`http://nexuscore:8000/api/v0.1/users/${thorny_id}/quest/active`)
 
-        // Only continue fetching if an active quest exists
-        if (quest_response) {
+        // If a quest exists (200), process it.
+        if (quest_api_call.status == 200) {
+            const quest_response = JSON.parse(quest_api_call.body)
+
             const quest_data = JSON.parse((await http.get(`http://nexuscore:8000/api/v0.1/quests/${quest_response['quest_id']}`)).body)
 
             var objectives: Objective[] = []
