@@ -217,12 +217,13 @@ export class Quest {
     
             if (completed_objectives === this.objectives.length) {
                 await this.complete_quest(thorny_id);
+                await this.relay_completion(gamertag, this.title);
                 world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`title ${gamertag} title Quest Complete!`);
                 world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`execute at @a run playsound random.levelup @p ~ ~3 ~ 100 1.5`);
                 const msg = {'rawtext': [
                     {'text': '§e+=+=+=+=+=+=+ Server Message +=+=+=+=+=+=+§r\n'},
                     {'text': `${gamertag} has just completed §l${this.title}§r!\n`},
-                    {'text': `Run §d/quests view§r on the discord to accept and start your own quest!`},
+                    {'text': `Run §d/quests view§r on the discord to accept this quest and reap the rewards!`},
                 ]}
                 world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`tellraw @a ${JSON.stringify(msg)}`);
             }
@@ -240,9 +241,7 @@ export class Quest {
             new HttpHeader("auth", "my-auth-token"),
         ];
     
-        console.log(request.uri, request.method)
         console.log(JSON.stringify(await http.request(request)));
-        console.log('after request')
     }
 
     async complete_quest(thorny_id: number): Promise<void> {
@@ -261,9 +260,25 @@ export class Quest {
             new HttpHeader("auth", "my-auth-token"),
         ];
     
-        console.log(request.uri, request.method)
         await http.request(request);
-        console.log('after request')
+    }
+
+    async relay_completion(nametag: string, quest_name: string): Promise<void> {
+        const request = new HttpRequest('http://nexuscore:8000/api/v0.1/events/relay');
+        request.method = HttpRequestMethod.Post;
+        request.body = JSON.stringify({
+            'type': 'other',
+            'content': '',
+            'embed_title': `${nametag} has completed ***${quest_name}***!`,
+            'embed_content': 'Run `/quests view` to accept this quest and reap the rewards!',
+            'name': 'Server'
+          });
+        request.headers = [
+            new HttpHeader("Content-Type", "application/json"),
+            new HttpHeader("auth", "my-auth-token"),
+        ];
+    
+        http.request(request);
     }
 }
 
