@@ -1,22 +1,29 @@
 import * as utils from './utils'
+import * as nexus from '../api/user'
 import { QuestCache, InteractionQueue, process_interactions } from './quest';
 import { Player, world, system, EntityComponentTypes, EquipmentSlot } from '@minecraft/server';
 import { HttpRequest, HttpHeader, HttpRequestMethod, http } from '@minecraft/server-net';
-import { MinecraftBlockTypes } from "@minecraft/vanilla-data";
+import { MinecraftBlockTypes, MinecraftDimensionTypes } from "@minecraft/vanilla-data";
 
-function send_connect_request(thorny_id_map:object, player: Player) {
+function send_connect_request(thorny_user_map:object, player: Player) {
     const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/events/connection`);
     request.method = HttpRequestMethod.Post;
     request.headers = [
         new HttpHeader("Content-Type", "application/json"),
         new HttpHeader("auth", "my-auth-token"),
     ];
-    request.body = JSON.stringify({"type": "connect", "thorny_id": thorny_id_map[player.name]});
+    request.body = JSON.stringify({"type": "connect", "thorny_id": thorny_user_map[player.name].thorny_id});
     console.log(`[Plugin] [Logs] Sending Connect to NexusCore for ${player.name}`);
 
     http.request(request);
+}
 
-    player.sendMessage(`§aWelcome to Everthorn, §l${player.name}§r\n| We've missed you so much!\n| Hop on noisechat to chat with the server!\n| Bored? Go and complete some quests!\n---------\n`)
+function send_motd(player: Player) {
+    const motd_short = 'Hope you have fun!'
+    const motd = '§oSome take time filling the creeper in the hole, while others just fix the surface. It looks the same until you start digging.'
+    world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`title ${player.name} actionbar §a§lWelcome to Everthorn!§r ${motd_short}`)
+
+    player.sendMessage(`§aWelcome to Everthorn, §l${player.name}§r\n| ${motd_short}§r\n| ${motd}§r\n---------\n`)
 }
 
 export function load(guild_id: string) {
@@ -24,6 +31,8 @@ export function load(guild_id: string) {
     console.log('[Plugin] [Interactions] Loading Interactions Plugin...')
 
     var thorny_id_map = {}
+    var player_balance_map = {}
+    var thorny_user_map = {}
     var cached_quests: QuestCache = {}
     var interaction_queue: InteractionQueue = new InteractionQueue()
 
@@ -34,15 +43,24 @@ export function load(guild_id: string) {
     world.afterEvents.playerSpawn.subscribe(({ initialSpawn: first_time_connecting, player: player }) => {
         if (first_time_connecting) {
             if (!(player.name in thorny_id_map)) {
-                http.get(`http://nexuscore:8000/api/v0.1/users/guild/${guild_id}/${player.name.replace(" ", "%20")}`)
-                    .then(response => {
-                        thorny_id_map[player.name] = JSON.parse(response.body)["user"]["thorny_id"]
+                nexus.get_user(guild_id, player.name).then(
+                    thorny_user => {
+                        thorny_id_map[player.name] = thorny_user.thorny_id
+                        player_balance_map[player.name] = thorny_user.balance
 
-                        send_connect_request(thorny_id_map, player)
-                    });
+                        thorny_user_map[player.name] = thorny_user
+        
+                        send_connect_request(thorny_user_map, player)
+                        send_motd(player)
+        
+                        if (thorny_user.patron) {
+                            player.nameTag = `§l§d${player.nameTag}`
+                        }
+                    }
+                );
             }
             else {
-                send_connect_request(thorny_id_map, player)
+                send_connect_request(thorny_user_map, player)
             }
             
         }
@@ -51,7 +69,7 @@ export function load(guild_id: string) {
     world.afterEvents.playerLeave.subscribe(({ playerName: player_name }) => {
         const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/events/connection`);
         request.method = HttpRequestMethod.Post;
-        request.body = JSON.stringify({"type": "disconnect", "thorny_id": thorny_id_map[player_name]});
+        request.body = JSON.stringify({"type": "disconnect", "thorny_id": thorny_user_map[player_name].thorny_id});
         request.headers = [
             new HttpHeader("Content-Type", "application/json"),
             new HttpHeader("auth", "my-auth-token"),
@@ -73,8 +91,9 @@ export function load(guild_id: string) {
 
             // Add Interaction to Queue for processing
             interaction_queue.enqueue({
-                thorny_id: thorny_id_map[player.name],
+                thorny_user: thorny_user_map[player.name],
                 gamertag: player.name,
+                balance: player_balance_map[player.name],
                 time: new Date(),
                 target_id: block_id,
                 target_location: block_location,
@@ -130,8 +149,9 @@ export function load(guild_id: string) {
             }
 
             interaction_queue.enqueue({
-                thorny_id: thorny_id_map[player.name],
+                thorny_user: thorny_user_map[player.name],
                 gamertag: player.name,
+                balance: player_balance_map[player.name],
                 time: new Date(),
                 target_id: deadEntity.typeId,
                 target_location: [deadEntity.location.x, deadEntity.location.z],
