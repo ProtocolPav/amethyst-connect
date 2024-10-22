@@ -2,6 +2,7 @@ import { HttpRequest, HttpHeader, HttpRequestMethod, http } from '@minecraft/ser
 import { Block, Dimension, Entity, world } from '@minecraft/server';
 import { parse, format, differenceInSeconds } from 'date-fns';
 import { MinecraftDimensionTypes } from '@minecraft/vanilla-data';
+import * as nexus from '../api/user'
 
 class Reward {
     reward_id: number
@@ -102,14 +103,15 @@ class Objective {
         await http.request(request);
     }
 
-    async give_rewards(thorny_id: number, gamertag: string) {
+    async give_rewards(thorny_user: nexus.ThornyUser, gamertag: string, balance: number) {
         for (const reward of this.rewards) {
             if (reward.balance) {
-                world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`
-                    say ${gamertag} I cannot give you balance rewards yet. 
-                    Please send a screenshot of this to a CM. 
-                    ${reward.balance} Nugs need to be added.
-                `);
+                thorny_user.balance += reward.balance
+                
+                await nexus.update_user(thorny_user)
+
+                const msg = {'rawtext': [{'text': `You have received ${reward.balance} nugs for completing this objective!`}]}
+                world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`tellraw ${gamertag} ${JSON.stringify(msg)}`);
             }
             else if (reward.item) {
                 world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`
@@ -183,7 +185,7 @@ export class Quest {
         this.objectives = objectives
     }
 
-    async increment_active_objective(thorny_id: number, gamertag: string, target_id: string, target_location: number[], mainhand: string | null, date: Date): Promise<void> {
+    async increment_active_objective(thorny_user: nexus.ThornyUser, gamertag: string, balance: number, target_id: string, target_location: number[], mainhand: string | null, date: Date): Promise<void> {
         const active_object = this.objectives.find(objective => objective.status === 'in_progress');
         var completed_objectives = 0
         
@@ -193,20 +195,20 @@ export class Quest {
             active_object.increment_completion(gamertag, target_id, target_location, mainhand, date);
 
             if (active_object.status === 'completed') {
-                await active_object.sync_to_nexuscore(thorny_id, this.quest_id);
-                await active_object.give_rewards(thorny_id, gamertag);
+                await active_object.sync_to_nexuscore(thorny_user.thorny_id, this.quest_id);
+                await active_object.give_rewards(thorny_user, gamertag, balance);
                 world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`title ${gamertag} actionbar Objective Completed! Run /quests view to see the next one.`);
                 world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`execute at ${gamertag} run playsound random.levelup @p ~ ~3 ~ 100 1.5`);
             }
             else if (active_object.status === 'failed') {
-                await this.fail_quest(thorny_id);
+                await this.fail_quest(thorny_user.thorny_id);
                 world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`title @a title Objective Failed`);
                 const msg = {'rawtext': [{'text': 'You have failed this objective, and the entire quest has been failed. Better luck next time!'}]}
                 world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`tellraw ${gamertag} ${JSON.stringify(msg)}`);
                 world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`execute at ${gamertag} run playsound random.levelup @p ~ ~3 ~ 100 0.5`);
             }
             else {
-                await active_object.sync_to_nexuscore(thorny_id, this.quest_id);
+                await active_object.sync_to_nexuscore(thorny_user.thorny_id, this.quest_id);
             }
 
             for (const objective of this.objectives) {
@@ -216,7 +218,7 @@ export class Quest {
             }
     
             if (completed_objectives === this.objectives.length) {
-                await this.complete_quest(thorny_id);
+                await this.complete_quest(thorny_user.thorny_id);
                 await this.relay_completion(gamertag, this.title);
                 world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`title ${gamertag} title Quest Complete!`);
                 world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`execute at @a run playsound random.levelup @p ~ ~3 ~ 100 1.5`);
@@ -287,8 +289,9 @@ export interface QuestCache {
 }
 
 interface Interaction {
-    thorny_id: number
+    thorny_user: nexus.ThornyUser
     gamertag: string
+    balance: number
     time: Date
     target_id: string
     target_location: number[]
@@ -321,14 +324,14 @@ export class InteractionQueue {
     }
 }
 
-async function fetch_active_quest(thorny_id: number, quest_cache: QuestCache): Promise<Quest | null> {
+async function fetch_active_quest(thorny_user: nexus.ThornyUser, quest_cache: QuestCache): Promise<Quest | null> {
     // If there is already an in_progress quest in the cache, return it
-    if (thorny_id in quest_cache && quest_cache[thorny_id].status === 'in_progress') {
+    if (thorny_user.thorny_id in quest_cache && quest_cache[thorny_user.thorny_id].status === 'in_progress') {
     }
     // Otherwise, if the cached quest is failed or completed, 
     // check the API if a new active quest exists
     else {
-        const quest_api_call = await http.get(`http://nexuscore:8000/api/v0.1/users/${thorny_id}/quest/active`)
+        const quest_api_call = await http.get(`http://nexuscore:8000/api/v0.1/users/${thorny_user.thorny_id}/quest/active`)
 
         // If a quest exists (200), process it.
         if (quest_api_call.status == 200) {
@@ -365,7 +368,7 @@ async function fetch_active_quest(thorny_id: number, quest_cache: QuestCache): P
                 ))
             }
 
-            quest_cache[thorny_id] = new Quest(
+            quest_cache[thorny_user.thorny_id] = new Quest(
                 quest_data['quest']['quest_id'],
                 quest_data['quest']['title'],
                 quest_response['status'],
@@ -374,7 +377,7 @@ async function fetch_active_quest(thorny_id: number, quest_cache: QuestCache): P
         }
     }
 
-    return quest_cache[thorny_id];
+    return quest_cache[thorny_user.thorny_id];
 }
 
 export async function process_interactions(interaction_queue: InteractionQueue, cached_quests: QuestCache) {
@@ -385,8 +388,9 @@ export async function process_interactions(interaction_queue: InteractionQueue, 
             var interaction = interaction_queue.dequeue()
 
             if (interaction) {
-                const quest = await fetch_active_quest(interaction.thorny_id, cached_quests)
-                await quest?.increment_active_objective(interaction.thorny_id, interaction.gamertag, interaction.target_id, interaction.target_location, interaction.mainhand, interaction.time)
+                const quest = await fetch_active_quest(interaction.thorny_user, cached_quests)
+                await quest?.increment_active_objective(interaction.thorny_user, interaction.gamertag, interaction.balance,
+                    interaction.target_id, interaction.target_location, interaction.mainhand, interaction.time)
             }
         }
 
