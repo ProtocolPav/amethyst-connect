@@ -1,10 +1,11 @@
-import { world, system } from '@minecraft/server';
+import { world, system, DimensionTypes } from '@minecraft/server';
 import { elytraCheck } from './elytra_plugin';
 import { load as chat_link_plugin } from "./chat_link/index";
 import {load as border_plugin} from './border/index';
 import {load as interactions_plugin} from './interactions/index';
 
 import config from '../amethyst.json';
+import { MinecraftDimensionTypes } from '@minecraft/vanilla-data';
 
 // Loads the guild ID from the config file,
 // but when NexusCore is done, it should check
