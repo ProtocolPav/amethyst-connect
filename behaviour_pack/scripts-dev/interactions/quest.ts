@@ -76,8 +76,8 @@ class Objective {
             this.rewards = rewards
     }
 
-    increment_completion(gamertag: string, target_id: string, target_location: number[], mainhand: string | null, date: Date): void {
-        if (target_id === this.objective && this.status === 'in_progress' && this.check_requirements(target_location, mainhand, date)) {
+    async increment_completion(gamertag: string, target_id: string, target_location: number[], mainhand: string | null, date: Date): Promise<void> {
+        if (target_id === this.objective && this.status === 'in_progress' && await this.check_requirements(target_location, mainhand, date)) {
 
             this.completion++
             world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`execute at ${gamertag} run playsound note.pling @p ~ ~3 ~ 100 1.5`);
@@ -130,7 +130,7 @@ class Objective {
 
     }
 
-    check_requirements(target_location: number[], mainhand: string | null, date: Date): boolean {
+    async check_requirements(target_location: number[], mainhand: string | null, date: Date): Promise<boolean> {
         // Check mainhand
         if (this.required_mainhand && mainhand !== this.required_mainhand) {
             return false;
@@ -148,8 +148,8 @@ class Objective {
         }
 
         // Check Natural Block
-        if (this.objective_type == 'mine' && this.natural_block && !this.natural_block_check(target_location)) {
-            return false;
+        if (this.objective_type == 'mine' && this.natural_block) {
+            return !await this.natural_block_check(target_location)
         }
 
         return true;
@@ -212,7 +212,7 @@ export class Quest {
         // Increment & Sync only the active objective
         if (active_object) {
             
-            active_object.increment_completion(gamertag, target_id, target_location, mainhand, date);
+            await active_object.increment_completion(gamertag, target_id, target_location, mainhand, date);
 
             if (active_object.status === 'completed') {
                 await active_object.sync_to_nexuscore(thorny_user.thorny_id, this.quest_id);

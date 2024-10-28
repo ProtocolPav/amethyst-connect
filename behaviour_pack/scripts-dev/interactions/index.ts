@@ -80,7 +80,7 @@ export function load(guild_id: string) {
     
     world.beforeEvents.playerBreakBlock.subscribe(({ player, block }) => {
         const block_id = block.typeId
-        const block_location = [block.x, block.y]
+        const block_location = [block.x, block.y, block.z]
         const dimension = player.dimension
     
         system.run(() => {
