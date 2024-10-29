@@ -31,7 +31,6 @@ export function load(guild_id: string) {
     console.log('[Plugin] [Interactions] Loading Interactions Plugin...')
 
     var thorny_id_map = {}
-    var player_balance_map = {}
     var thorny_user_map = {}
     var cached_quests: QuestCache = {}
     var interaction_queue: InteractionQueue = new InteractionQueue()
@@ -46,7 +45,6 @@ export function load(guild_id: string) {
                 nexus.get_user(guild_id, player.name).then(
                     thorny_user => {
                         thorny_id_map[player.name] = thorny_user.thorny_id
-                        player_balance_map[player.name] = thorny_user.balance
 
                         thorny_user_map[player.name] = thorny_user
         
@@ -82,7 +80,7 @@ export function load(guild_id: string) {
     
     world.beforeEvents.playerBreakBlock.subscribe(({ player, block }) => {
         const block_id = block.typeId
-        const block_location = [block.x, block.y]
+        const block_location = [block.x, block.y, block.z]
         const dimension = player.dimension
     
         system.run(() => {
@@ -93,7 +91,6 @@ export function load(guild_id: string) {
             interaction_queue.enqueue({
                 thorny_user: thorny_user_map[player.name],
                 gamertag: player.name,
-                balance: player_balance_map[player.name],
                 time: new Date(),
                 target_id: block_id,
                 target_location: block_location,
@@ -151,7 +148,6 @@ export function load(guild_id: string) {
             interaction_queue.enqueue({
                 thorny_user: thorny_user_map[player.name],
                 gamertag: player.name,
-                balance: player_balance_map[player.name],
                 time: new Date(),
                 target_id: deadEntity.typeId,
                 target_location: [deadEntity.location.x, deadEntity.location.z],

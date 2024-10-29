@@ -91,7 +91,7 @@ export function load(guild_id: string, webhook_url: string) {
 
         data.cancel = true;
 
-        system.run(() => { relay_message(data.sender.nameTag, data.message) });
+        system.run(() => { relay_message(data.sender.name, data.message) });
     });
     
     // Relay Player deaths

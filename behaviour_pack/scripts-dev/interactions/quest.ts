@@ -6,16 +6,19 @@ import * as nexus from '../api/user'
 
 class Reward {
     reward_id: number
+    display_name: string | null
     balance: number | null
     item: string | null
     count: number | null
 
     constructor (
         id: number, 
+        display_name: string | null,
         balance: number | null,
         item: string | null,
         count: number | null) {
             this.reward_id = id
+            this.display_name = display_name
             this.balance = balance
             this.item = item
             this.count = count
@@ -23,16 +26,17 @@ class Reward {
 }
 
 class Objective {
-
     objective_id: number
     start: string
     end: string
     completion: number
     status: 'in_progress' | 'completed' | 'failed'
+    description: string
     objective: string
     objective_count: number
     objective_type: 'kill' | 'mine'
     objective_timer: number | null
+    natural_block: boolean
     required_mainhand: string | null
     required_location: [number, number] | null
     location_radius: number
@@ -44,10 +48,12 @@ class Objective {
         end: string,
         completion: number,
         status: 'in_progress' | 'completed' | 'failed',
+        description: string,
         objective: string,
         objective_count: number,
         objective_type: 'kill' | 'mine',
         objective_timer: number | null,
+        natural_block: boolean,
         required_mainhand: string | null,
         required_location: [number, number] | null,
         location_radius: number,
@@ -58,18 +64,20 @@ class Objective {
             this.end = end
             this.completion = completion
             this.status = status
+            this.description = description
             this.objective = objective
             this.objective_count = objective_count
             this.objective_type = objective_type
             this.objective_timer = objective_timer
+            this.natural_block = natural_block
             this.required_mainhand = required_mainhand
             this.required_location = required_location
             this.location_radius = location_radius
             this.rewards = rewards
     }
 
-    increment_completion(gamertag: string, target_id: string, target_location: number[], mainhand: string | null, date: Date): void {
-        if (target_id === this.objective && this.status === 'in_progress' && this.check_requirements(target_location, mainhand, date)) {
+    async increment_completion(gamertag: string, target_id: string, target_location: number[], mainhand: string | null, date: Date): Promise<void> {
+        if (target_id === this.objective && this.status === 'in_progress' && await this.check_requirements(target_location, mainhand, date)) {
 
             this.completion++
             world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`execute at ${gamertag} run playsound note.pling @p ~ ~3 ~ 100 1.5`);
@@ -103,7 +111,7 @@ class Objective {
         await http.request(request);
     }
 
-    async give_rewards(thorny_user: nexus.ThornyUser, gamertag: string, balance: number) {
+    async give_rewards(thorny_user: nexus.ThornyUser, gamertag: string) {
         for (const reward of this.rewards) {
             if (reward.balance) {
                 thorny_user.balance += reward.balance
@@ -122,7 +130,7 @@ class Objective {
 
     }
 
-    check_requirements(target_location: number[], mainhand: string | null, date: Date): boolean {
+    async check_requirements(target_location: number[], mainhand: string | null, date: Date): Promise<boolean> {
         // Check mainhand
         if (this.required_mainhand && mainhand !== this.required_mainhand) {
             return false;
@@ -137,6 +145,11 @@ class Objective {
         if (this.objective_timer && !this.timer_check(this.objective_timer, date) && this.completion > 0) {
             this.status = 'failed';
             return false;
+        }
+
+        // Check Natural Block
+        if (this.objective_type == 'mine' && this.natural_block) {
+            return !await this.natural_block_check(target_location)
         }
 
         return true;
@@ -163,6 +176,13 @@ class Objective {
 
         return true
     }
+
+    async natural_block_check(target_location: number[]): Promise<boolean> {
+        return http.get(`http://nexuscore:8000/api/v0.1/events/interaction?x=${target_location[0]}&y=${target_location[1]}&z=${target_location[2]}`)
+        .then(response => {
+            return JSON.parse(response.body)['exists']
+        });
+    }
 }
 
 
@@ -185,20 +205,34 @@ export class Quest {
         this.objectives = objectives
     }
 
-    async increment_active_objective(thorny_user: nexus.ThornyUser, gamertag: string, balance: number, target_id: string, target_location: number[], mainhand: string | null, date: Date): Promise<void> {
+    async increment_active_objective(thorny_user: nexus.ThornyUser, gamertag: string, target_id: string, target_location: number[], mainhand: string | null, date: Date): Promise<void> {
         const active_object = this.objectives.find(objective => objective.status === 'in_progress');
         var completed_objectives = 0
         
         // Increment & Sync only the active objective
         if (active_object) {
-
-            active_object.increment_completion(gamertag, target_id, target_location, mainhand, date);
+            
+            await active_object.increment_completion(gamertag, target_id, target_location, mainhand, date);
 
             if (active_object.status === 'completed') {
                 await active_object.sync_to_nexuscore(thorny_user.thorny_id, this.quest_id);
-                await active_object.give_rewards(thorny_user, gamertag, balance);
-                world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`title ${gamertag} actionbar Objective Completed! Run /quests view to see the next one.`);
-                world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`execute at ${gamertag} run playsound random.levelup @p ~ ~3 ~ 100 1.5`);
+                await active_object.give_rewards(thorny_user, gamertag);
+                const active_object_index = this.objectives.indexOf(active_object)
+
+                if (active_object_index+1 < this.objectives.length) {
+                    const next_objective = this.objectives[active_object_index+1]
+                    world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`title ${gamertag} actionbar Objective ${active_object_index+1}/${this.objectives.length} Complete!`);
+                    world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`execute at ${gamertag} run playsound random.levelup @p ~ ~3 ~ 100 1.5`);
+                    
+                    let task = `${next_objective.objective_type} ${next_objective.objective_count} ${next_objective.objective.replace('minecraft:', '').replace('_', ' ')}`
+                    task = task.charAt(0).toUpperCase() + task.slice(1)
+                    const msg = {'rawtext': [{'text': `§a+=+=+=+=+ Objective ${active_object_index+2} +=+=+=+=+§r\n` +
+                                `§7${next_objective.description}§r\n` +
+                                `Your task: §e§l${task}§r\n\n` +
+                                `§oRun §5/quests view§r§o on Discord to see the full task info!§r\n` +
+                                `§a+=+=+=+=+=+=+=+=+=+=+=+=+=+=+§r`}]}
+                    world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`tellraw ${gamertag} ${JSON.stringify(msg)}`);
+                }
             }
             else if (active_object.status === 'failed') {
                 await this.fail_quest(thorny_user.thorny_id);
@@ -291,7 +325,6 @@ export interface QuestCache {
 interface Interaction {
     thorny_user: nexus.ThornyUser
     gamertag: string
-    balance: number
     time: Date
     target_id: string
     target_location: number[]
@@ -347,7 +380,7 @@ async function fetch_active_quest(thorny_user: nexus.ThornyUser, quest_cache: Qu
 
                 for (const rew of quest_data['rewards']) {
                     if (rew['objective_id'] === obj['objective_id']) {
-                        rewards.push(new Reward(rew['reward_id'], rew['balance'], rew['item'], rew['count']))
+                        rewards.push(new Reward(rew['reward_id'], rew['display_name'], rew['balance'], rew['item'], rew['count']))
                     }
                 }
 
@@ -357,10 +390,12 @@ async function fetch_active_quest(thorny_user: nexus.ThornyUser, quest_cache: Qu
                     objective_progress['end'],
                     objective_progress['completion'],
                     objective_progress['status'],
+                    obj['description'],
                     obj['objective'],
                     obj['objective_count'],
                     obj['objective_type'],
                     obj['objective_timer'],
+                    obj['natural_block'],
                     obj['required_mainhand'],
                     obj['required_location'],
                     obj['location_radius'],
@@ -389,7 +424,7 @@ export async function process_interactions(interaction_queue: InteractionQueue, 
 
             if (interaction) {
                 const quest = await fetch_active_quest(interaction.thorny_user, cached_quests)
-                await quest?.increment_active_objective(interaction.thorny_user, interaction.gamertag, interaction.balance,
+                await quest?.increment_active_objective(interaction.thorny_user, interaction.gamertag,
                     interaction.target_id, interaction.target_location, interaction.mainhand, interaction.time)
             }
         }
