@@ -150,7 +150,7 @@ export function load(guild_id: string) {
                 gamertag: player.name,
                 time: new Date(),
                 target_id: deadEntity.typeId,
-                target_location: [deadEntity.location.x, deadEntity.location.z],
+                target_location: [deadEntity.location.x, deadEntity.location.y, deadEntity.location.z],
                 mainhand: player.getComponent(EntityComponentTypes.Equippable)?.getEquipment(EquipmentSlot.Mainhand)?.typeId ?? null
             })
         }
@@ -170,6 +170,17 @@ export function load(guild_id: string) {
     
             utils.log_self_death_event(dimension, player, damageSource.cause, thorny_id_map)
         }
+    })
+
+    system.afterEvents.scriptEventReceive.subscribe(script_event => {
+        interaction_queue.enqueue({
+            thorny_user: thorny_user_map[script_event.message],
+            gamertag: script_event.message,
+            time: new Date(),
+            target_id: script_event.id,
+            target_location: [0, 0, 0],
+            mainhand: null
+        })
     })
 
     console.log('[Plugin] [Interactions] Successfully loaded!')

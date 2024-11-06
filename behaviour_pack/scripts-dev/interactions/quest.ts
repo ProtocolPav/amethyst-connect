@@ -137,7 +137,7 @@ class Objective {
         }
 
         // Check location
-        if (this.required_location && !this.distance_check(this.required_location[0], target_location[0], this.required_location[1], target_location[1])) {
+        if (this.required_location && !this.distance_check(this.required_location[0], this.required_location[1], target_location[0], target_location[2])) {
             return false;
         }
 
