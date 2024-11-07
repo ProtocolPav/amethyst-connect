@@ -33,8 +33,9 @@ class Objective {
     status: 'in_progress' | 'completed' | 'failed'
     description: string
     objective: string
+    display: string | null
     objective_count: number
-    objective_type: 'kill' | 'mine'
+    objective_type: 'kill' | 'mine' | 'encounter'
     objective_timer: number | null
     natural_block: boolean
     required_mainhand: string | null
@@ -50,8 +51,9 @@ class Objective {
         status: 'in_progress' | 'completed' | 'failed',
         description: string,
         objective: string,
+        display: string | null,
         objective_count: number,
-        objective_type: 'kill' | 'mine',
+        objective_type: 'kill' | 'mine' | 'encounter',
         objective_timer: number | null,
         natural_block: boolean,
         required_mainhand: string | null,
@@ -66,6 +68,7 @@ class Objective {
             this.status = status
             this.description = description
             this.objective = objective
+            this.display = display
             this.objective_count = objective_count
             this.objective_type = objective_type
             this.objective_timer = objective_timer
@@ -137,7 +140,7 @@ class Objective {
         }
 
         // Check location
-        if (this.required_location && !this.distance_check(this.required_location[0], target_location[0], this.required_location[1], target_location[1])) {
+        if (this.required_location && !this.distance_check(this.required_location[0], this.required_location[1], target_location[0], target_location[2])) {
             return false;
         }
 
@@ -224,8 +227,15 @@ export class Quest {
                     world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`title ${gamertag} actionbar Objective ${active_object_index+1}/${this.objectives.length} Complete!`);
                     world.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`execute at ${gamertag} run playsound random.levelup @p ~ ~3 ~ 100 1.5`);
                     
-                    let task = `${next_objective.objective_type} ${next_objective.objective_count} ${next_objective.objective.replace('minecraft:', '').replace('_', ' ')}`
-                    task = task.charAt(0).toUpperCase() + task.slice(1)
+                    let task: string | null = ''
+                    if (next_objective.objective_type == 'encounter') {
+                        task = next_objective.display
+                    }
+                    else {
+                        task = `${next_objective.objective_type} ${next_objective.objective_count} ${next_objective.objective.replace('minecraft:', '').replace('_', ' ')}`
+                        task = task.charAt(0).toUpperCase() + task.slice(1)
+                    }
+
                     const msg = {'rawtext': [{'text': `§a+=+=+=+=+ Objective ${active_object_index+2} +=+=+=+=+§r\n` +
                                 `§7${next_objective.description}§r\n` +
                                 `Your task: §e§l${task}§r\n\n` +
@@ -392,6 +402,7 @@ async function fetch_active_quest(thorny_user: nexus.ThornyUser, quest_cache: Qu
                     objective_progress['status'],
                     obj['description'],
                     obj['objective'],
+                    obj['display'],
                     obj['objective_count'],
                     obj['objective_type'],
                     obj['objective_timer'],
