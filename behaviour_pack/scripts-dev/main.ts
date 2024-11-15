@@ -1,11 +1,11 @@
-import { world, system, DimensionTypes } from '@minecraft/server';
+import { world, system } from '@minecraft/server';
 import { elytraCheck } from './elytra_plugin';
 import { load as chat_link_plugin } from "./chat_link/index";
 import {load as border_plugin} from './border/index';
 import {load as interactions_plugin} from './interactions/index';
+import {load as load_fungus_spread_plugin } from './custom_components/fungus_spread'
 
 import config from '../amethyst.json';
-import { MinecraftDimensionTypes } from '@minecraft/vanilla-data';
 
 // Loads the guild ID from the config file,
 // but when NexusCore is done, it should check
@@ -31,3 +31,4 @@ system.runInterval(() => {
 chat_link_plugin(guild_id, webhook_url)
 border_plugin()
 interactions_plugin(guild_id)
+load_fungus_spread_plugin()

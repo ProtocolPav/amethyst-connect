@@ -1,7 +1,7 @@
 {
-	"format_version": [
-		1,
-		1,
-		0
-	]
+	"format_version": "1.21.40",
+	"amethyst:fungus_block": {
+		"textures": "fungus_block",
+		"sound": "glass"
+	}
 }
