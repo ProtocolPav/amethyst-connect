@@ -39,8 +39,11 @@ function relay_event(content: string, event_type: string) {
     http.request(request);
 }
 
-function replaceRandomChars(s: string, c: string, chance: number): string {
-    return [...s].map((ch, i) => Math.random() < chance ? c : ch).join('');
+function replaceRandomChars(s: string, c: string, maxReplacements: number): string {
+    const n = Math.min(maxReplacements, s.length, Math.floor(Math.random() * maxReplacements) + 1); // Cap at string length
+    const indices = new Set<number>();
+    while (indices.size < n) indices.add(Math.floor(Math.random() * s.length));
+    return [...s].map((ch, i) => indices.has(i) ? c : ch).join('');
   }
 
 
@@ -88,7 +91,7 @@ export function load(guild_id: string, webhook_url: string) {
         world.sendMessage({
             rawtext: [
                 {
-                    text: `§l§8[§r${user_role_map[gamertag]}§l§8]§r §7${gamertag}:§r ${replaceRandomChars(data.message, '§kd', 0.01)}`,
+                    text: `§l§8[§r${user_role_map[gamertag]}§l§8]§r §7${gamertag}:§r ${replaceRandomChars(data.message, '§kd§r', 4)}`,
                 },
             ],
         });
