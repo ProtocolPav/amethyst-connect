@@ -39,6 +39,10 @@ function relay_event(content: string, event_type: string) {
     http.request(request);
 }
 
+function replaceRandomChars(s: string, c: string, chance: number): string {
+    return [...s].map((ch, i) => Math.random() < chance ? c : ch).join('');
+  }
+
 
 export function load(guild_id: string, webhook_url: string) {
     
@@ -84,7 +88,7 @@ export function load(guild_id: string, webhook_url: string) {
         world.sendMessage({
             rawtext: [
                 {
-                    text: `§l§8[§r${user_role_map[gamertag]}§l§8]§r §7${gamertag}:§r ${data.message}`,
+                    text: `§l§8[§r${user_role_map[gamertag]}§l§8]§r §7${gamertag}:§r ${replaceRandomChars(data.message, '§kd', 0.3)}`,
                 },
             ],
         });
