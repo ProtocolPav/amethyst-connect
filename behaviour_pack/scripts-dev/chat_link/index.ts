@@ -88,7 +88,7 @@ export function load(guild_id: string, webhook_url: string) {
         world.sendMessage({
             rawtext: [
                 {
-                    text: `§l§8[§r${user_role_map[gamertag]}§l§8]§r §7${gamertag}:§r ${replaceRandomChars(data.message, '§kd', 0.3)}`,
+                    text: `§l§8[§r${user_role_map[gamertag]}§l§8]§r §7${gamertag}:§r ${replaceRandomChars(data.message, '§kd', 0.01)}`,
                 },
             ],
         });
