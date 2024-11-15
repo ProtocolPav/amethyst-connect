@@ -3,9 +3,9 @@
 	"texture_name": "atlas.items",
 	"texture_data": {
 		"nexus_mysterious_shard": {
-			"textures": "textures/items/mysterious_shard"
+			"textures": "textures/items/mysterious_shard.png"
 		},"bottle_o_togetherness_texture": {
-			"textures": "textures/items/bottle_o_togetherness"}
+			"textures": "textures/items/bottle_o_togetherness.png"}
 		
 	}
 }

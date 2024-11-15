@@ -3,5 +3,9 @@
 	"padding": 8,
 	"resource_pack_name": "Amethyst Connect",
 	"texture_name": "atlas.terrain",
-	"texture_data": {}
+	"texture_data": {
+		"fungus_block": {
+			"textures": "textures/blocks/fungus_block.png"
+		}
+	}
 }
