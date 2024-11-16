@@ -1,5 +1,7 @@
 const esbuild = require("esbuild");
 
+const guildId = process.env.GUILD_ID;
+
 const external = [
     "@minecraft/server",
     "@minecraft/server-ui",
@@ -19,6 +21,9 @@ esbuild
         minify: true,
         format: "esm",
         external,
+        define: {
+            'process.env.GUILD_ID': JSON.stringify(guildId), // Inject GUILD_ID at build time
+        },
     })
     .then(() => {
         console.log("Bundling finished!");
