@@ -1,0 +1,40 @@
+import { HttpRequest, HttpHeader, HttpRequestMethod, http } from '@minecraft/server-net';
+
+
+export class Relay {
+    public static message(nametag: string, content: string) {
+        const request = new HttpRequest('http://nexuscore:8000/api/v0.1/events/relay');
+        request.method = HttpRequestMethod.Post;
+        request.body = JSON.stringify({
+            'type': 'message',
+            'content': content,
+            'embed_title': '',
+            'embed_content': '',
+            'name': nametag
+          });
+        request.headers = [
+            new HttpHeader("Content-Type", "application/json"),
+            new HttpHeader("auth", "my-auth-token"),
+        ];
+    
+        http.request(request);
+    }
+
+    public static event(content: string, event_type: 'join' | 'leave' | 'other') {
+        const request = new HttpRequest('http://nexuscore:8000/api/v0.1/events/relay');
+        request.method = HttpRequestMethod.Post;
+        request.body = JSON.stringify({
+            'type': event_type,
+            'content': '',
+            'embed_title': content,
+            'embed_content': '',
+            'name': 'Server'
+          });
+        request.headers = [
+            new HttpHeader("Content-Type", "application/json"),
+            new HttpHeader("auth", "my-auth-token"),
+        ];
+    
+        http.request(request);
+    }
+}
