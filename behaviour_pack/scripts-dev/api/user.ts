@@ -19,7 +19,7 @@ interface IThornyUser {
     whitelist: string
 }
 
-export class ThornyUser implements IThornyUser {
+export default class ThornyUser implements IThornyUser {
     private static thorny_user_map = {}
 
     thorny_id: number

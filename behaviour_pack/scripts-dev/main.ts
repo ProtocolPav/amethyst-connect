@@ -1,9 +1,6 @@
-import { world, system } from '@minecraft/server';
-import { elytraCheck } from './elytra_plugin';
-import { load as chat_link_plugin } from "./chat_link/index";
-import {load as border_plugin} from './border/index';
-import {load as interactions_plugin} from './interactions/index';
-import {load as load_fungus_spread_plugin } from './custom_components/fungus_spread'
+import load_custom_components from './components';
+import load_gameplay_restrictions from './gameplay_restrictions'
+import load_world_event_handlers from './world_events';
 
 import config from '../amethyst.json';
 
@@ -12,23 +9,12 @@ import config from '../amethyst.json';
 // if the config file is empty. If it is,
 // get the ID from NexusCore.
 const guild_id = config.guild_id
-const webhook_url = config.webhook_url
 
+// Loading Gameplay Restrictions
+load_gameplay_restrictions()
 
-// Runs certain functions every second. 1 second = 20 ticks
-system.runInterval(() => {
-    let playerlist = world.getPlayers();
+// Loading Custom Component Scripts
+load_custom_components()
 
-    playerlist.forEach((player) => {
-        elytraCheck(player)
-    });
-}, 20)
-
-// Loading all plugins.
-// This should be done differently, by getting a list
-// of all plugins from NexusCore and then importing each
-// within a for loop and loading
-chat_link_plugin(guild_id, webhook_url)
-border_plugin()
-interactions_plugin(guild_id)
-load_fungus_spread_plugin()
+// Load Event Handlers
+load_world_event_handlers(guild_id)

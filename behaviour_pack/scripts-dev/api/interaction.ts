@@ -12,7 +12,7 @@ interface IInteraction {
     dimension: string
 }
 
-export class Interaction implements IInteraction {
+export default class Interaction implements IInteraction {
     thorny_id: number
     type: 'mine' | 'kill' | 'die' | 'place' | 'use'
     position_x: number

@@ -1,3 +1,11 @@
-export { ThornyUser } from "./user";
-export { Relay } from "./relay";
-export { Interaction } from "./interaction";
+import ThornyUser from "./user";
+import Relay from "./relay";
+import Interaction from "./interaction";
+
+const api = {
+    ThornyUser: ThornyUser,
+    Relay: Relay,
+    Interaction: Interaction
+};
+
+export default api;

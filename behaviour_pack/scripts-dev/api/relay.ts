@@ -1,7 +1,7 @@
 import { HttpRequest, HttpHeader, HttpRequestMethod, http } from '@minecraft/server-net';
 
 
-export class Relay {
+export default class Relay {
     public static message(nametag: string, content: string) {
         const request = new HttpRequest('http://nexuscore:8000/api/v0.1/events/relay');
         request.method = HttpRequestMethod.Post;

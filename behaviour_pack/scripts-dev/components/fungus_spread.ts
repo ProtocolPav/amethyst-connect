@@ -2,7 +2,7 @@ import { BlockComponentRandomTickEvent, world } from "@minecraft/server";
 import { MinecraftBlockTypes } from "@minecraft/vanilla-data";
 
 
-export function load_fungus_spreading_component() {
+export default function load_fungus_spreading_component() {
     function fungus_spread(event : BlockComponentRandomTickEvent) {
         if (Math.random() < 0.5) {
             const adjacent_blocks = [event.block.above(), event.block.below(), event.block.south(), event.block.west(), event.block.north(), event.block.east()]

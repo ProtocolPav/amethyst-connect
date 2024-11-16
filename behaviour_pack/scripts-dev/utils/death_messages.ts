@@ -1,6 +1,6 @@
 
 
-export class DeathMessage {
+export default class DeathMessage {
 
     public static random_pvp(killer: string, dead: string): string {
         const deathMessages = [

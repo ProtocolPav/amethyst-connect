@@ -40,7 +40,7 @@ function elytraCheck(player: Player) {
     }
 }
 
-export function load_elytra_mending_checker() {
+export default function load_elytra_mending_checker() {
     system.runInterval(() => {
         let playerlist = world.getPlayers();
     

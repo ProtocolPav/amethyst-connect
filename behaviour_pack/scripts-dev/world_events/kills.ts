@@ -1,9 +1,9 @@
 import { world } from "@minecraft/server"
-import { Interaction, ThornyUser, Relay } from "../api"
-import { DeathMessage } from "../utils"
+import api from "../api"
+import utils from "../utils"
 import { EntityComponentTypes, EquipmentSlot, Player } from "@minecraft/server"
 
-export function load_kill_event_handler() {
+export default function load_kill_event_handler() {
 
     world.afterEvents.entityDie.subscribe((event) => {
 
@@ -13,9 +13,9 @@ export function load_kill_event_handler() {
             const dimension = player.dimension
             const mainhand = player.getComponent(EntityComponentTypes.Equippable)?.getEquipment(EquipmentSlot.Mainhand)
 
-            const interaction = new Interaction(
+            const interaction = new api.Interaction(
                 {
-                    thorny_id: ThornyUser.fetch_user(player.name)?.thorny_id ?? 0,
+                    thorny_id: api.ThornyUser.fetch_user(player.name)?.thorny_id ?? 0,
                     type: 'kill',
                     position_x: event.deadEntity.location[0],
                     position_y: event.deadEntity.location[1],
@@ -36,9 +36,9 @@ export function load_kill_event_handler() {
                 // Replace Interaction Ref with dead players name
                 interaction.reference = dead_player.name
 
-                const death_interaction = new Interaction(
+                const death_interaction = new api.Interaction(
                     {
-                        thorny_id: ThornyUser.fetch_user(dead_player.name)?.thorny_id ?? 0,
+                        thorny_id: api.ThornyUser.fetch_user(dead_player.name)?.thorny_id ?? 0,
                         type: 'die',
                         position_x: dead_player.location[0],
                         position_y: dead_player.location[1],
@@ -54,7 +54,7 @@ export function load_kill_event_handler() {
                 death_interaction.post_interaction()
 
                 // Relay death
-                Relay.event(DeathMessage.random_pvp(player.name, dead_player.name), 'other')
+                api.Relay.event(utils.DeathMessage.random_pvp(player.name, dead_player.name), 'other')
             }
             
             // Log kill interaction
@@ -71,9 +71,9 @@ export function load_kill_event_handler() {
             const dimension = player.dimension
             const mainhand = player.getComponent(EntityComponentTypes.Equippable)?.getEquipment(EquipmentSlot.Mainhand)
 
-            const death_interaction = new Interaction(
+            const death_interaction = new api.Interaction(
                 {
-                    thorny_id: ThornyUser.fetch_user(player.name)?.thorny_id ?? 0,
+                    thorny_id: api.ThornyUser.fetch_user(player.name)?.thorny_id ?? 0,
                     type: 'die',
                     position_x: player.location[0],
                     position_y: player.location[1],
@@ -89,7 +89,7 @@ export function load_kill_event_handler() {
             death_interaction.post_interaction()
 
             // Relay death
-            Relay.event(DeathMessage.random_pve(player.name, killer.typeId), 'other')
+            api.Relay.event(utils.DeathMessage.random_pve(player.name, killer.typeId), 'other')
         }
 
         // Player Suicide
@@ -99,9 +99,9 @@ export function load_kill_event_handler() {
             const dimension = player.dimension
             const mainhand = player.getComponent(EntityComponentTypes.Equippable)?.getEquipment(EquipmentSlot.Mainhand)
 
-            const death_interaction = new Interaction(
+            const death_interaction = new api.Interaction(
                 {
-                    thorny_id: ThornyUser.fetch_user(player.name)?.thorny_id ?? 0,
+                    thorny_id: api.ThornyUser.fetch_user(player.name)?.thorny_id ?? 0,
                     type: 'die',
                     position_x: player.location[0],
                     position_y: player.location[1],
@@ -117,7 +117,7 @@ export function load_kill_event_handler() {
             death_interaction.post_interaction()
 
             // Relay death
-            Relay.event(DeathMessage.random_suicide(player.name, event.damageSource.cause), 'other')
+            api.Relay.event(utils.DeathMessage.random_suicide(player.name, event.damageSource.cause), 'other')
         }
     })
 

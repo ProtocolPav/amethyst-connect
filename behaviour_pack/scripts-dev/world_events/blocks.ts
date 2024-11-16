@@ -1,9 +1,9 @@
 import { world, system } from "@minecraft/server"
-import { Interaction, ThornyUser } from "../api"
+import api from "../api"
 import { EntityComponentTypes, EquipmentSlot } from "@minecraft/server"
 import { MinecraftBlockTypes } from "@minecraft/vanilla-data"
 
-export function load_block_event_handler() {
+export default function load_block_event_handler() {
 
     // Handle Block Break Event
     world.beforeEvents.playerBreakBlock.subscribe((event) => {
@@ -13,9 +13,9 @@ export function load_block_event_handler() {
         const mainhand = event.player.getComponent(EntityComponentTypes.Equippable)?.getEquipment(EquipmentSlot.Mainhand)
 
         system.run(() => {
-            const interaction = new Interaction(
+            const interaction = new api.Interaction(
                 {
-                    thorny_id: ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
+                    thorny_id: api.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
                     type: 'mine',
                     position_x: block_location[0],
                     position_y: block_location[1],
@@ -41,9 +41,9 @@ export function load_block_event_handler() {
         const mainhand = event.player.getComponent(EntityComponentTypes.Equippable)?.getEquipment(EquipmentSlot.Mainhand)
     
         system.run(() => {
-            const interaction = new Interaction(
+            const interaction = new api.Interaction(
                 {
-                    thorny_id: ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
+                    thorny_id: api.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
                     type: 'place',
                     position_x: block_location[0],
                     position_y: block_location[1],
@@ -80,9 +80,9 @@ export function load_block_event_handler() {
     
         if (all_blocks.includes(block_id)) {
             system.run(() => {
-                const interaction = new Interaction(
+                const interaction = new api.Interaction(
                     {
-                        thorny_id: ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
+                        thorny_id: api.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
                         type: 'use',
                         position_x: block_location[0],
                         position_y: block_location[1],

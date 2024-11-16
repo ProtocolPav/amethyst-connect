@@ -1,7 +1,7 @@
 import { Player, world, system, EntityDamageCause } from '@minecraft/server';
 import { MinecraftDimensionTypes } from "@minecraft/vanilla-data";
 
-export function borderCheck(player: Player, dimensionID: MinecraftDimensionTypes, border_size: number, warning_range: string[], outside: string[]) {
+function borderCheck(player: Player, dimensionID: MinecraftDimensionTypes, border_size: number, warning_range: string[], outside: string[]) {
     const position = player.location
     const distance_2d = Math.sqrt(position.x ** 2 + position.z ** 2)
 
@@ -29,7 +29,7 @@ export function borderCheck(player: Player, dimensionID: MinecraftDimensionTypes
     }
 }
 
-export function load_world_border() {    
+export default function load_world_border() {    
     let players_100_blocks_away  = {overworld: [], nether: [], end: []}
     let players_outside_border  = {overworld: [], nether: [], end: []}
     
