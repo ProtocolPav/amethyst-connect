@@ -1,6 +1,6 @@
 import load_custom_components from './components';
 import load_gameplay_restrictions from './gameplay_restrictions'
-import load_world_event_handlers from './world_events';
+import load_world_event_handlers from './events';
 
 import config from '../amethyst.json';
 
