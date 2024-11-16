@@ -1,0 +1,124 @@
+import { world } from "@minecraft/server"
+import { Interaction, ThornyUser, Relay } from "../api"
+import { DeathMessage } from "../utils"
+import { EntityComponentTypes, EquipmentSlot, Player } from "@minecraft/server"
+
+export function load_kill_event_handler() {
+
+    world.afterEvents.entityDie.subscribe((event) => {
+
+        // Player kills Something
+        if (event.damageSource.damagingEntity instanceof Player) {
+            const player = event.damageSource.damagingEntity
+            const dimension = player.dimension
+            const mainhand = player.getComponent(EntityComponentTypes.Equippable)?.getEquipment(EquipmentSlot.Mainhand)
+
+            const interaction = new Interaction(
+                {
+                    thorny_id: ThornyUser.fetch_user(player.name)?.thorny_id ?? 0,
+                    type: 'kill',
+                    position_x: event.deadEntity.location[0],
+                    position_y: event.deadEntity.location[1],
+                    position_z: event.deadEntity.location[2],
+                    reference: event.deadEntity.typeId,
+                    mainhand: mainhand?.typeId ?? null,
+                    dimension: dimension.id
+
+                }
+            )
+    
+            // Player kills Player
+            // Log dead player's death
+            if (event.deadEntity instanceof Player) {
+                const dead_player = event.deadEntity
+                const dead_mainhand = dead_player.getComponent(EntityComponentTypes.Equippable)?.getEquipment(EquipmentSlot.Mainhand)
+                
+                // Replace Interaction Ref with dead players name
+                interaction.reference = dead_player.name
+
+                const death_interaction = new Interaction(
+                    {
+                        thorny_id: ThornyUser.fetch_user(dead_player.name)?.thorny_id ?? 0,
+                        type: 'die',
+                        position_x: dead_player.location[0],
+                        position_y: dead_player.location[1],
+                        position_z: dead_player.location[2],
+                        reference: player.name,
+                        mainhand: dead_mainhand?.typeId ?? null,
+                        dimension: dimension.id
+    
+                    }
+                )
+                
+                // Log death interaction
+                death_interaction.post_interaction()
+
+                // Relay death
+                Relay.event(DeathMessage.random_pvp(player.name, dead_player.name), 'other')
+            }
+            
+            // Log kill interaction
+            interaction.post_interaction()
+
+            // Add interaction to quests processing queue
+        }
+
+        // Entity Kills Player
+        else if (event.deadEntity instanceof Player && event.damageSource.damagingEntity) {
+            const killer = event.damageSource.damagingEntity
+            const player = event.deadEntity
+
+            const dimension = player.dimension
+            const mainhand = player.getComponent(EntityComponentTypes.Equippable)?.getEquipment(EquipmentSlot.Mainhand)
+
+            const death_interaction = new Interaction(
+                {
+                    thorny_id: ThornyUser.fetch_user(player.name)?.thorny_id ?? 0,
+                    type: 'die',
+                    position_x: player.location[0],
+                    position_y: player.location[1],
+                    position_z: player.location[2],
+                    reference: killer.typeId,
+                    mainhand: mainhand?.typeId ?? null,
+                    dimension: dimension.id
+
+                }
+            )
+            
+            // Log death interaction
+            death_interaction.post_interaction()
+
+            // Relay death
+            Relay.event(DeathMessage.random_pve(player.name, killer.typeId), 'other')
+        }
+
+        // Player Suicide
+        else if (event.deadEntity instanceof Player && !event.damageSource.damagingEntity) {
+            const player = event.deadEntity
+
+            const dimension = player.dimension
+            const mainhand = player.getComponent(EntityComponentTypes.Equippable)?.getEquipment(EquipmentSlot.Mainhand)
+
+            const death_interaction = new Interaction(
+                {
+                    thorny_id: ThornyUser.fetch_user(player.name)?.thorny_id ?? 0,
+                    type: 'die',
+                    position_x: player.location[0],
+                    position_y: player.location[1],
+                    position_z: player.location[2],
+                    reference: event.damageSource.cause,
+                    mainhand: mainhand?.typeId ?? null,
+                    dimension: dimension.id
+
+                }
+            )
+            
+            // Log death interaction
+            death_interaction.post_interaction()
+
+            // Relay death
+            Relay.event(DeathMessage.random_suicide(player.name, event.damageSource.cause), 'other')
+        }
+    })
+
+}
