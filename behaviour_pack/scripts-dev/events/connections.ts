@@ -2,7 +2,7 @@ import api from '../api'
 import utils from '../utils';
 import { world } from '@minecraft/server';
 
-export default function load_connections_handler(guild_id) {
+export default function load_connections_handler(guild_id: string) {
 
     // Handle Player Join Event
     world.afterEvents.playerSpawn.subscribe((spawn_event) => {
@@ -23,6 +23,7 @@ export default function load_connections_handler(guild_id) {
     // Handle Player Leave Event
     world.afterEvents.playerLeave.subscribe((leave_event) => {
         const thorny_user = api.ThornyUser.fetch_user(leave_event.playerName)
+        console.log(JSON.stringify(thorny_user))
         thorny_user?.send_connect_event('disconnect')
         api.Relay.event(`${leave_event.playerName} has left the server`, 'leave')
     })

@@ -20,7 +20,7 @@ interface IThornyUser {
 }
 
 export default class ThornyUser implements IThornyUser {
-    private static thorny_user_map = {}
+    private static thorny_user_map: {[key: string]: ThornyUser} = {}
 
     thorny_id: number
     user_id: number
@@ -59,15 +59,15 @@ export default class ThornyUser implements IThornyUser {
     }
 
     public static async get_user_from_api(guild_id: string, gamertag: string): Promise<ThornyUser> {
-        const thorny_user = http.get(`http://nexuscore:8000/api/v0.1/users/guild/${guild_id}/${gamertag.replace(" ", "%20")}`)
-                            .then(response => {
-                                return new ThornyUser(JSON.parse(response.body) as IThornyUser)
-                            });
-        
-        // Adds user to map for quick fetching
-        ThornyUser.thorny_user_map[gamertag] = thorny_user
+        return http.get(`http://nexuscore:8000/api/v0.1/users/guild/${guild_id}/${gamertag.replace(" ", "%20")}`)
+                .then(response => {
+                    const thorny_user = new ThornyUser(JSON.parse(response.body) as IThornyUser)
 
-        return thorny_user
+                    // Adds user to map for quick fetching
+                    ThornyUser.thorny_user_map[gamertag] = thorny_user
+
+                    return thorny_user
+                });
     }
 
     public static fetch_user(gamertag: string): ThornyUser | undefined {
