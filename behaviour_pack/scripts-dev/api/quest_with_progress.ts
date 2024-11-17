@@ -71,7 +71,10 @@ class ObjectiveWithProgress extends Objective {
         await http.request(request);
     }
 
-    public async increment_completion(interaction: Interaction, quest: QuestWithProgress) {
+    /**
+     * @returns a Boolean representing if completion was incremented
+     */
+    public async increment_completion(interaction: Interaction, quest: QuestWithProgress): Promise<Boolean> {
         if (await this.check_requirements(interaction, this.start ?? new Date())) {
             this.completion++
 
@@ -99,11 +102,17 @@ class ObjectiveWithProgress extends Objective {
             else if (this.completion === 1) {
                 this.start = new Date()
             }
+
+            return true;
         }
+
+        return false;
     }
 }
 
 export default class QuestWithProgress extends Quest {
+    public static quest_cache: {[thorny_id: number]: QuestWithProgress} = {}
+
     thorny_user: ThornyUser
     accepted_on: Date
     started_on: Date | null
@@ -120,7 +129,16 @@ export default class QuestWithProgress extends Quest {
         this.objectives = objectives
     }
 
+    public static async clear_cache(thorny_user: ThornyUser) {
+        delete this.quest_cache[thorny_user.thorny_id]
+    }
+
     public static async get_active_quest(thorny_user: ThornyUser): Promise<QuestWithProgress | null> {
+
+        if (this.quest_cache[thorny_user.thorny_id]) {
+            return this.quest_cache[thorny_user.thorny_id]
+        }
+
         try {
             const active_quest = await http.get(`http://nexuscore:8000/api/v0.1/users/${thorny_user.thorny_id}/quest/active`);
 
@@ -151,7 +169,9 @@ export default class QuestWithProgress extends Quest {
                     objectives.push(new ObjectiveWithProgress(objective, rewards, thorny_user))
                 }
 
-                return new QuestWithProgress(quest_data, objectives, thorny_user);
+                const quest_object = new QuestWithProgress(quest_data, objectives, thorny_user)
+                this.quest_cache[thorny_user.thorny_id] = quest_object
+                return quest_object
             } else {
                 return null
             }
@@ -163,8 +183,7 @@ export default class QuestWithProgress extends Quest {
     }
 
     private get_active_objective(): ObjectiveWithProgress | null {
-        return this.objectives.find(objective => objective.status === 'in_progress')
-                ?? null
+        return this.objectives.find(objective => objective.status === 'in_progress') ?? null
     }
 
     public async update_user_quest() {
@@ -187,7 +206,11 @@ export default class QuestWithProgress extends Quest {
         }
     }
 
-    public async increment_active_objective(interaction: Interaction) {
+    /**
+     * @returns
+     * A boolean representing if the objective has been incremented or not
+     */
+    public async increment_active_objective(interaction: Interaction): Promise<Boolean> {
         const active_objective = this.get_active_objective()
 
         if (active_objective) {
@@ -195,7 +218,7 @@ export default class QuestWithProgress extends Quest {
                 this.started_on = new Date()
             }
 
-            await active_objective.increment_completion(interaction, this)
+            const incremented = await active_objective.increment_completion(interaction, this)
 
             const next_objective = this.get_active_objective()
 
@@ -220,6 +243,10 @@ export default class QuestWithProgress extends Quest {
                     `Run §5/quests view§r on Discord to start it!`
                 )
             }
+
+            return incremented;
         }
+        
+        return false;
     }
 }

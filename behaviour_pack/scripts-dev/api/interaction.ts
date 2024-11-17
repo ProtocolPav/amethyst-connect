@@ -41,7 +41,7 @@ export default class Interaction implements IInteraction {
     /**
      * Post interaction to NexusCore
      */
-    public post_interaction() {
+    public async post_interaction() {
         const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/events/interaction`);
         request.method = HttpRequestMethod.Post;
         request.body = JSON.stringify(this);
@@ -50,7 +50,7 @@ export default class Interaction implements IInteraction {
             new HttpHeader("auth", "my-auth-token"),
         ];
   
-        http.request(request);
+        await http.request(request);
     }
 
     public static set_processing(value: true | false) {

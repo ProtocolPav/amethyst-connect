@@ -3203,7 +3203,7 @@ var Interaction = class _Interaction {
   /**
    * Post interaction to NexusCore
    */
-  post_interaction() {
+  async post_interaction() {
     const request = new HttpRequest3(`http://nexuscore:8000/api/v0.1/events/interaction`);
     request.method = HttpRequestMethod3.Post;
     request.body = JSON.stringify(this);
@@ -3211,7 +3211,7 @@ var Interaction = class _Interaction {
       new HttpHeader3("Content-Type", "application/json"),
       new HttpHeader3("auth", "my-auth-token")
     ];
-    http3.request(request);
+    await http3.request(request);
   }
   static set_processing(value) {
     _Interaction.processing = value;
@@ -6700,41 +6700,50 @@ var sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 var sleep_default = sleep;
 
 // behaviour_pack/scripts-dev/utils/commands.ts
-import { world as world5 } from "@minecraft/server";
+import { world as world5, system as system3 } from "@minecraft/server";
 import { EntityComponentTypes as EntityComponentTypes2, ItemStack } from "@minecraft/server";
 function send_message(dimension, target, message2) {
   const msg = { "rawtext": [{ "text": message2 }] };
   world5.getDimension(dimension).runCommand(`tellraw ${target} ${JSON.stringify(msg)}`);
 }
 async function play_quest_progress_sound(gamertag) {
-  world5.getPlayers({ name: gamertag })[0].playSound(
+  let player = world5.getPlayers({ name: gamertag })[0];
+  player.playSound(
     "note.pling",
-    { pitch: 1.5, volume: 100 }
+    { pitch: 1.5, volume: 100, location: player.location }
   );
-  await sleep_default(20);
-  world5.getPlayers({ name: gamertag })[0].playSound(
-    "note.pling",
-    { pitch: 2, volume: 100 }
-  );
+  system3.runTimeout(() => {
+    player.playSound(
+      "note.pling",
+      { pitch: 2, volume: 100, location: player.location }
+    );
+  }, 2);
 }
 function play_quest_complete_sound(gamertag) {
-  world5.getPlayers({ name: gamertag })[0].playSound(
+  let player = world5.getPlayers({ name: gamertag })[0];
+  player.playSound(
     "mace.heavy_smash_ground",
-    { volume: 100 }
+    { volume: 100, location: player.location }
   );
-  world5.getPlayers({ name: gamertag })[0].playSound(
+  player.playSound(
     "random.totem",
-    { volume: 100 }
+    { volume: 100, location: player.location }
   );
-  world5.getPlayers({ name: gamertag })[0].playSound(
+  player.playSound(
     "random.levelup",
-    { volume: 100, pitch: 1.5 }
+    { volume: 100, pitch: 1.5, location: player.location }
   );
+  for (let i = 0; i < 5; i++) {
+    system3.runTimeout(() => {
+      player.runCommand(`particle minecraft:totem_particle ~ ~2 ~`);
+    }, 10);
+  }
 }
 function play_objective_complete_sound(gamertag) {
-  world5.getPlayers({ name: gamertag })[0].playSound(
+  let player = world5.getPlayers({ name: gamertag })[0];
+  player.playSound(
     "random.levelup",
-    { volume: 100, pitch: 0.8 }
+    { volume: 100, pitch: 0.8, location: player.location }
   );
 }
 function send_title(dimension, target, type, message2) {
@@ -6881,7 +6890,6 @@ ${this.get_clean_requirements()}
     return `${title}${description}${full_task}${rewards}${requirements}${final_line}`;
   }
   async check_requirements(interaction, start_time) {
-    console.log(interaction.reference, this.objective);
     if (interaction.reference !== this.objective) {
       return false;
     }
@@ -6984,6 +6992,9 @@ var ObjectiveWithProgress = class extends Objective {
     ];
     await http5.request(request);
   }
+  /**
+   * @returns a Boolean representing if completion was incremented
+   */
   async increment_completion(interaction, quest) {
     if (await this.check_requirements(interaction, this.start ?? /* @__PURE__ */ new Date())) {
       this.completion++;
@@ -7005,10 +7016,15 @@ var ObjectiveWithProgress = class extends Objective {
       } else if (this.completion === 1) {
         this.start = /* @__PURE__ */ new Date();
       }
+      return true;
     }
+    return false;
   }
 };
 var QuestWithProgress = class _QuestWithProgress extends Quest {
+  static {
+    this.quest_cache = {};
+  }
   constructor(data, objectives, thorny_user) {
     super(data, objectives);
     this.thorny_user = thorny_user;
@@ -7017,7 +7033,13 @@ var QuestWithProgress = class _QuestWithProgress extends Quest {
     this.status = data.status;
     this.objectives = objectives;
   }
+  static async clear_cache(thorny_user) {
+    delete this.quest_cache[thorny_user.thorny_id];
+  }
   static async get_active_quest(thorny_user) {
+    if (this.quest_cache[thorny_user.thorny_id]) {
+      return this.quest_cache[thorny_user.thorny_id];
+    }
     try {
       const active_quest = await http5.get(`http://nexuscore:8000/api/v0.1/users/${thorny_user.thorny_id}/quest/active`);
       if (active_quest.status === 200) {
@@ -7037,7 +7059,9 @@ var QuestWithProgress = class _QuestWithProgress extends Quest {
           }
           objectives.push(new ObjectiveWithProgress(objective, rewards, thorny_user));
         }
-        return new _QuestWithProgress(quest_data, objectives, thorny_user);
+        const quest_object = new _QuestWithProgress(quest_data, objectives, thorny_user);
+        this.quest_cache[thorny_user.thorny_id] = quest_object;
+        return quest_object;
       } else {
         return null;
       }
@@ -7066,13 +7090,17 @@ var QuestWithProgress = class _QuestWithProgress extends Quest {
       await objective.update_user_objective(this);
     }
   }
+  /**
+   * @returns
+   * A boolean representing if the objective has been incremented or not
+   */
   async increment_active_objective(interaction) {
     const active_objective = this.get_active_objective();
     if (active_objective) {
       if (active_objective.completion == 0 && this.objectives.indexOf(active_objective) == 0) {
         this.started_on = /* @__PURE__ */ new Date();
       }
-      await active_objective.increment_completion(interaction, this);
+      const incremented = await active_objective.increment_completion(interaction, this);
       const next_objective = this.get_active_objective();
       if (!next_objective) {
         this.status = "completed";
@@ -7092,7 +7120,9 @@ ${this.thorny_user.gamertag} has just completed \xA7l\xA7n${this.title}\xA7r!
 Run \xA75/quests view\xA7r on Discord to start it!`
         );
       }
+      return incremented;
     }
+    return false;
   }
 };
 
@@ -7107,17 +7137,15 @@ var api = {
 var api_default = api;
 
 // behaviour_pack/scripts-dev/loops/quests.ts
-import { system as system3 } from "@minecraft/server";
+import { system as system4 } from "@minecraft/server";
 async function check_quests() {
   if (!api_default.Interaction.is_processing()) {
     api_default.Interaction.set_processing(true);
     let interaction = api_default.Interaction.dequeue();
     while (interaction) {
-      console.log("[Loops] Processing....");
       let thorny_user = api_default.ThornyUser.fetch_user_by_id(interaction.thorny_id);
       let quest = await api_default.QuestWithProgress.get_active_quest(thorny_user);
-      if (quest) {
-        await quest.increment_active_objective(interaction);
+      if (quest && await quest.increment_active_objective(interaction)) {
         await quest.update_user_quest();
         await thorny_user.update();
         if (quest.status == "completed") {
@@ -7126,6 +7154,7 @@ async function check_quests() {
             "Run `/quests view` to start it and reap the rewards!",
             "other"
           );
+          api_default.QuestWithProgress.clear_cache(thorny_user);
         }
       }
       interaction = api_default.Interaction.dequeue();
@@ -7134,7 +7163,7 @@ async function check_quests() {
   }
 }
 function load_quest_loop() {
-  system3.runInterval(async () => {
+  system4.runInterval(async () => {
     await check_quests();
   }, 1);
   console.log("[Loops] Loaded Quests Loop");
@@ -7148,7 +7177,7 @@ function load_loops() {
 }
 
 // behaviour_pack/scripts-dev/events/blocks.ts
-import { world as world6, system as system4 } from "@minecraft/server";
+import { world as world6, system as system5 } from "@minecraft/server";
 import { EntityComponentTypes as EntityComponentTypes3, EquipmentSlot as EquipmentSlot2 } from "@minecraft/server";
 function load_block_event_handler() {
   world6.beforeEvents.playerBreakBlock.subscribe((event) => {
@@ -7156,7 +7185,7 @@ function load_block_event_handler() {
     const block_location = [event.block.x, event.block.y, event.block.z];
     const dimension = event.player.dimension;
     const mainhand = event.player.getComponent(EntityComponentTypes3.Equippable)?.getEquipment(EquipmentSlot2.Mainhand);
-    system4.run(() => {
+    system5.run(() => {
       const interaction = new api_default.Interaction(
         {
           thorny_id: api_default.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
@@ -7178,7 +7207,7 @@ function load_block_event_handler() {
     const block_location = [event.block.x, event.block.y, event.block.z];
     const dimension = event.player.dimension;
     const mainhand = event.player.getComponent(EntityComponentTypes3.Equippable)?.getEquipment(EquipmentSlot2.Mainhand);
-    system4.run(() => {
+    system5.run(() => {
       const interaction = new api_default.Interaction(
         {
           thorny_id: api_default.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
@@ -7221,7 +7250,7 @@ function load_block_event_handler() {
       MinecraftBlockTypes.LightGrayShulkerBox
     ];
     if (all_blocks.includes(block_id)) {
-      system4.run(() => {
+      system5.run(() => {
         const interaction = new api_default.Interaction(
           {
             thorny_id: api_default.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
@@ -7241,7 +7270,7 @@ function load_block_event_handler() {
 }
 
 // behaviour_pack/scripts-dev/events/chat.ts
-import { world as world7, system as system5 } from "@minecraft/server";
+import { world as world7, system as system6 } from "@minecraft/server";
 function load_chat_handler() {
   world7.beforeEvents.chatSend.subscribe((chat_event) => {
     const gamertag = chat_event.sender.name;
@@ -7254,7 +7283,7 @@ function load_chat_handler() {
       ]
     });
     chat_event.cancel = true;
-    system5.run(() => {
+    system6.run(() => {
       api_default.Relay.message(gamertag, chat_event.message);
     });
   });
@@ -7277,6 +7306,9 @@ function load_connections_handler(guild_id2) {
   });
   world8.afterEvents.playerLeave.subscribe((leave_event) => {
     const thorny_user = api_default.ThornyUser.fetch_user(leave_event.playerName);
+    if (thorny_user) {
+      api_default.QuestWithProgress.clear_cache(thorny_user);
+    }
     thorny_user?.send_connect_event("disconnect");
     api_default.Relay.event(`${leave_event.playerName} has left the server`, "", "leave");
   });
@@ -7367,9 +7399,9 @@ function load_kill_event_handler() {
 }
 
 // behaviour_pack/scripts-dev/events/script_events.ts
-import { system as system6 } from "@minecraft/server";
+import { system as system7 } from "@minecraft/server";
 function load_script_event_handler() {
-  system6.afterEvents.scriptEventReceive.subscribe((script_event) => {
+  system7.afterEvents.scriptEventReceive.subscribe((script_event) => {
   });
 }
 

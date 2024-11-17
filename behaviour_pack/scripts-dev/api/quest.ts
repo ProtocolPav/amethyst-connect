@@ -155,8 +155,6 @@ export class Objective {
 
     protected async check_requirements(interaction: Interaction, start_time: Date): Promise<Boolean> {
 
-        console.log(interaction.reference, this.objective, )
-
         // Check if the block/mob/encounter is correct
         if (interaction.reference !== this.objective) {
             return false;

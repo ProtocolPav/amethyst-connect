@@ -1,4 +1,4 @@
-import { world } from '@minecraft/server';
+import { world, system } from '@minecraft/server';
 import sleep from './sleep';
 import { EntityComponentTypes, ItemStack } from '@minecraft/server';
 
@@ -9,38 +9,48 @@ function send_message(dimension: string, target: string, message: string) {
 }
 
 async function play_quest_progress_sound(gamertag: string) {
-    world.getPlayers({name: gamertag})[0].playSound(
+    let player = world.getPlayers({name: gamertag})[0]
+
+    player.playSound(
         'note.pling',
-        {pitch: 1.5, volume: 100}
+        {pitch: 1.5, volume: 100, location: player.location}
     )
 
-    await sleep(20)
-
-    world.getPlayers({name: gamertag})[0].playSound(
-        'note.pling',
-        {pitch: 2, volume: 100}
-    )
+    system.runTimeout(() => {
+        player.playSound(
+            'note.pling',
+            {pitch: 2, volume: 100, location: player.location}
+        )
+    }, 2)
 }
 
 function play_quest_complete_sound(gamertag: string) {
-    world.getPlayers({name: gamertag})[0].playSound(
+    let player = world.getPlayers({name: gamertag})[0]
+
+    player.playSound(
         'mace.heavy_smash_ground',
-        {volume: 100}
+        {volume: 100, location: player.location}
     )
-    world.getPlayers({name: gamertag})[0].playSound(
+    player.playSound(
         'random.totem',
-        {volume: 100}
+        {volume: 100, location: player.location}
     )
-    world.getPlayers({name: gamertag})[0].playSound(
+    player.playSound(
         'random.levelup',
-        {volume: 100, pitch: 1.5}
+        {volume: 100, pitch: 1.5, location: player.location}
     )
+
+    for (let i = 0; i < 5; i++) {
+        system.runTimeout(() => {player.runCommand(`particle minecraft:totem_particle ~ ~2 ~`)}, 10)
+    }
 }
 
 function play_objective_complete_sound(gamertag: string) {
-    world.getPlayers({name: gamertag})[0].playSound(
+    let player = world.getPlayers({name: gamertag})[0]
+
+    player.playSound(
         'random.levelup',
-        {volume: 100, pitch: 0.8}
+        {volume: 100, pitch: 0.8, location: player.location}
     )
 }
 

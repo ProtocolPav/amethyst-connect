@@ -23,6 +23,7 @@ export default function load_connections_handler(guild_id: string) {
     // Handle Player Leave Event
     world.afterEvents.playerLeave.subscribe((leave_event) => {
         const thorny_user = api.ThornyUser.fetch_user(leave_event.playerName)
+        if (thorny_user) { api.QuestWithProgress.clear_cache(thorny_user) }
         thorny_user?.send_connect_event('disconnect')
         api.Relay.event(`${leave_event.playerName} has left the server`, '', 'leave')
     })
