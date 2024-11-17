@@ -6879,8 +6879,12 @@ var Objective = class {
 `;
     const description = `\xA77${this.description}\xA7r
 `;
-    const full_task = `Your Task: \xA7s${task_type} \xA7l${this.objective_count} ${utils_default.clean_id(this.objective)}\xA7r
+    let full_task = `Your Task: \xA7s${task_type} \xA7l${this.objective_count} ${utils_default.clean_id(this.objective)}\xA7r
 `;
+    if (this.display) {
+      full_task = `Your Task: \xA7s${this.display}\xA7r
+`;
+    }
     const rewards = `Rewards: ${this.get_clean_rewards()}
 `;
     const requirements = `\xA7u+=+=+=+=+ Requirements +=+=+=+=+\xA7r

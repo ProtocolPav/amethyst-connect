@@ -145,7 +145,12 @@ export class Objective {
 
         const title = `§a+=+=+=+=+ ${quest_title} +=+=+=+=+§r\n§s+=+=+=+=+ Objective ${objective_index} +=+=+=+=+§r\n`
         const description = `§7${this.description}§r\n`
-        const full_task = `Your Task: §s${task_type} §l${this.objective_count} ${utils.clean_id(this.objective)}§r\n`
+
+        let full_task = `Your Task: §s${task_type} §l${this.objective_count} ${utils.clean_id(this.objective)}§r\n`
+
+        if (this.display) {
+            full_task = `Your Task: §s${this.display}§r\n`
+        }
         const rewards = `Rewards: ${this.get_clean_rewards()}\n`
         const requirements = `§u+=+=+=+=+ Requirements +=+=+=+=+§r\n${this.get_clean_requirements()}\n`
         const final_line = `§a+=+=+=+=+=+=+=+=+=+=+=+=+=+=+§r`
