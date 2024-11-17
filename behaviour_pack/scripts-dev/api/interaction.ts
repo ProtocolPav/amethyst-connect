@@ -21,6 +21,7 @@ export default class Interaction implements IInteraction {
     reference: string
     mainhand: string | null
     dimension: string
+    time: Date
 
     constructor(data: IInteraction) {
         this.thorny_id = data.thorny_id
@@ -31,6 +32,7 @@ export default class Interaction implements IInteraction {
         this.reference = data.reference
         this.mainhand = data.mainhand
         this.dimension = data.dimension
+        this.time = new Date()
     }
 
     /**

@@ -17,9 +17,9 @@ export default function load_kill_event_handler() {
                 {
                     thorny_id: api.ThornyUser.fetch_user(player.name)?.thorny_id ?? 0,
                     type: 'kill',
-                    position_x: event.deadEntity.location[0],
-                    position_y: event.deadEntity.location[1],
-                    position_z: event.deadEntity.location[2],
+                    position_x: event.deadEntity.location.x,
+                    position_y: event.deadEntity.location.y,
+                    position_z: event.deadEntity.location.z,
                     reference: event.deadEntity.typeId,
                     mainhand: mainhand?.typeId ?? null,
                     dimension: dimension.id
@@ -40,9 +40,9 @@ export default function load_kill_event_handler() {
                     {
                         thorny_id: api.ThornyUser.fetch_user(dead_player.name)?.thorny_id ?? 0,
                         type: 'die',
-                        position_x: dead_player.location[0],
-                        position_y: dead_player.location[1],
-                        position_z: dead_player.location[2],
+                        position_x: dead_player.location.x,
+                        position_y: dead_player.location.y,
+                        position_z: dead_player.location.z,
                         reference: player.name,
                         mainhand: dead_mainhand?.typeId ?? null,
                         dimension: dimension.id
@@ -75,9 +75,9 @@ export default function load_kill_event_handler() {
                 {
                     thorny_id: api.ThornyUser.fetch_user(player.name)?.thorny_id ?? 0,
                     type: 'die',
-                    position_x: player.location[0],
-                    position_y: player.location[1],
-                    position_z: player.location[2],
+                    position_x: player.location.x,
+                    position_y: player.location.y,
+                    position_z: player.location.z,
                     reference: killer.typeId,
                     mainhand: mainhand?.typeId ?? null,
                     dimension: dimension.id
@@ -103,9 +103,9 @@ export default function load_kill_event_handler() {
                 {
                     thorny_id: api.ThornyUser.fetch_user(player.name)?.thorny_id ?? 0,
                     type: 'die',
-                    position_x: player.location[0],
-                    position_y: player.location[1],
-                    position_z: player.location[2],
+                    position_x: player.location.x,
+                    position_y: player.location.y,
+                    position_z: player.location.z,
                     reference: event.damageSource.cause,
                     mainhand: mainhand?.typeId ?? null,
                     dimension: dimension.id

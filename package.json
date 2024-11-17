@@ -3,10 +3,13 @@
     "@minecraft/server": "beta",
     "@minecraft/server-net": "beta",
     "@minecraft/vanilla-data": "latest",
-    "cross-env": "^7.0.3"
+    "cross-env": "^7.0.3",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.13",
     "@types/node": "^22.9.0",
+    "date-fns": "^4.1.0",
     "esbuild": "^0.21.1"
   },
   "scripts": {

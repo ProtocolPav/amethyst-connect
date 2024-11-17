@@ -20,7 +20,8 @@ interface IThornyUser {
 }
 
 export default class ThornyUser implements IThornyUser {
-    private static thorny_user_map: {[key: string]: ThornyUser} = {}
+    private static thorny_user_map: {[gamertag: string]: ThornyUser} = {}
+    private static thorny_id_map: {[thorny_id: number]: ThornyUser} = {}
 
     thorny_id: number
     user_id: number
@@ -65,6 +66,8 @@ export default class ThornyUser implements IThornyUser {
 
                     // Adds user to map for quick fetching
                     ThornyUser.thorny_user_map[gamertag] = thorny_user
+                    ThornyUser.thorny_id_map[thorny_user.thorny_id] = thorny_user
+                    thorny_user.gamertag = gamertag
 
                     return thorny_user
                 });
@@ -72,6 +75,10 @@ export default class ThornyUser implements IThornyUser {
 
     public static fetch_user(gamertag: string): ThornyUser | undefined {
         return ThornyUser.thorny_user_map[gamertag]
+    }
+
+    public static fetch_user_by_id(thorny_id: number): ThornyUser {
+        return ThornyUser.thorny_id_map[thorny_id]
     }
     
     /**
