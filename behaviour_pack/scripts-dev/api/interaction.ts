@@ -13,6 +13,9 @@ interface IInteraction {
 }
 
 export default class Interaction implements IInteraction {
+    private static queue: Interaction[] = []
+    private static processing: Boolean = false
+
     thorny_id: number
     type: 'mine' | 'kill' | 'die' | 'place' | 'use'
     position_x: number
@@ -26,9 +29,9 @@ export default class Interaction implements IInteraction {
     constructor(data: IInteraction) {
         this.thorny_id = data.thorny_id
         this.type = data.type
-        this.position_x = data.position_x
-        this.position_y = data.position_y
-        this.position_z = data.position_z
+        this.position_x = Math.round(data.position_x)
+        this.position_y = Math.round(data.position_y)
+        this.position_z = Math.round(data.position_z)
         this.reference = data.reference
         this.mainhand = data.mainhand
         this.dimension = data.dimension
@@ -48,5 +51,21 @@ export default class Interaction implements IInteraction {
         ];
   
         http.request(request);
+    }
+
+    public static set_processing(value: true | false) {
+        Interaction.processing = value
+    }
+
+    public static is_processing(): Boolean {
+        return Interaction.processing
+    }
+
+    public static enqueue(interaction: Interaction) {
+        Interaction.queue.push(interaction)
+    }
+
+    public static dequeue() {
+        return Interaction.queue.shift()
     }
 }

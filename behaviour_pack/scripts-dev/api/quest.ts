@@ -50,7 +50,6 @@ export class Reward {
     public async give_reward(interaction: Interaction, thorny_user: ThornyUser) {
         if (this.balance) {
             thorny_user.balance += this.balance
-            await thorny_user.update()
 
             utils.commands.send_title(
                 interaction.dimension,
@@ -156,6 +155,8 @@ export class Objective {
 
     protected async check_requirements(interaction: Interaction, start_time: Date): Promise<Boolean> {
 
+        console.log(interaction.reference, this.objective, )
+
         // Check if the block/mob/encounter is correct
         if (interaction.reference !== this.objective) {
             return false;
@@ -179,8 +180,8 @@ export class Objective {
         }
 
         // Check natural block
-        if (this.objective_type == 'mine' && !(await this.check_if_natural(interaction.position_x, interaction.position_y, interaction.position_z))) {
-            return false;
+        if (this.objective_type == 'mine' && this.natural_block) {
+            return !(await this.check_if_natural(interaction.position_x, interaction.position_y, interaction.position_z))
         }
 
         return true;
@@ -209,8 +210,8 @@ export default class Quest {
 
     constructor(data: IQuest, objectives: Objective[]) {
         this.quest_id = data.quest_id
-        this.start_time = parse(data.start_time, 'yyyy-MM-dd HH:mm:ss', new Date())
-        this.end_time = parse(data.end_time, 'yyyy-MM-dd HH:mm:ss', new Date())
+        this.start_time = parse(data.start_time, 'yyyy-MM-dd HH:mm:ss.SSSSSS', new Date())
+        this.end_time = parse(data.end_time, 'yyyy-MM-dd HH:mm:ss.SSSSSS', new Date())
         this.title = data.title
         this.description = data.description
         

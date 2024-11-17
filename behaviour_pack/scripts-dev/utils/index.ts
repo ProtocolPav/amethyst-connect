@@ -5,6 +5,7 @@ import sleep from './sleep'
 import commands from './commands'
 import convert_seconds_to_hms from './time_string'
 import clean_id from './clean_minecraft_ids'
+import combine from './combine_two_lists'
 
 const utils = {
     DeathMessage,
@@ -13,7 +14,8 @@ const utils = {
     sleep,
     commands,
     convert_seconds_to_hms,
-    clean_id
+    clean_id,
+    combine
 }
 
 export default utils

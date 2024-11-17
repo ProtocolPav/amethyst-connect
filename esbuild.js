@@ -18,7 +18,7 @@ esbuild
         entryPoints: ["behaviour_pack/scripts-dev/main.ts"],
         outfile: "behaviour_pack/scripts/main.js",
         bundle: true,
-        minify: true,
+        minify: false,
         format: "esm",
         external,
         define: {

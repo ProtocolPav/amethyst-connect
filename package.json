@@ -3,8 +3,7 @@
     "@minecraft/server": "beta",
     "@minecraft/server-net": "beta",
     "@minecraft/vanilla-data": "latest",
-    "cross-env": "^7.0.3",
-    "lodash": "^4.17.21"
+    "cross-env": "^7.0.3"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.13",

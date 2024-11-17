@@ -10,7 +10,7 @@ export default function load_connections_handler(guild_id: string) {
             api.ThornyUser.get_user_from_api(guild_id, spawn_event.player.name)
             .then(thorny_user => {
                 thorny_user.send_connect_event('connect')
-                api.Relay.event(`${spawn_event.player.name} has joined the server`, 'join')
+                api.Relay.event(`${spawn_event.player.name} has joined the server`, '', 'join')
                 utils.send_motd(spawn_event.player)
 
                 if (thorny_user.patron) {
@@ -23,9 +23,8 @@ export default function load_connections_handler(guild_id: string) {
     // Handle Player Leave Event
     world.afterEvents.playerLeave.subscribe((leave_event) => {
         const thorny_user = api.ThornyUser.fetch_user(leave_event.playerName)
-        console.log(JSON.stringify(thorny_user))
         thorny_user?.send_connect_event('disconnect')
-        api.Relay.event(`${leave_event.playerName} has left the server`, 'leave')
+        api.Relay.event(`${leave_event.playerName} has left the server`, '', 'leave')
     })
 
 }

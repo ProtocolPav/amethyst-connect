@@ -2,6 +2,7 @@ import { world } from "@minecraft/server"
 import api from "../api"
 import utils from "../utils"
 import { EntityComponentTypes, EquipmentSlot, Player } from "@minecraft/server"
+import { MinecraftEntityTypes } from "@minecraft/vanilla-data"
 
 export default function load_kill_event_handler() {
 
@@ -54,13 +55,17 @@ export default function load_kill_event_handler() {
                 death_interaction.post_interaction()
 
                 // Relay death
-                api.Relay.event(utils.DeathMessage.random_pvp(player.name, dead_player.name), 'other')
+                api.Relay.event(utils.DeathMessage.random_pvp(player.name, dead_player.name), '', 'other')
             }
             
             // Log kill interaction
             interaction.post_interaction()
 
-            // Add interaction to quests processing queue
+            // Set reference back to player so that Quests can
+            // correctly handle them :))
+            interaction.reference = MinecraftEntityTypes.Player
+
+            api.Interaction.enqueue(interaction)
         }
 
         // Entity Kills Player
@@ -89,7 +94,7 @@ export default function load_kill_event_handler() {
             death_interaction.post_interaction()
 
             // Relay death
-            api.Relay.event(utils.DeathMessage.random_pve(player.name, killer.typeId), 'other')
+            api.Relay.event(utils.DeathMessage.random_pve(player.name, killer.typeId), '', 'other')
         }
 
         // Player Suicide
@@ -117,7 +122,7 @@ export default function load_kill_event_handler() {
             death_interaction.post_interaction()
 
             // Relay death
-            api.Relay.event(utils.DeathMessage.random_suicide(player.name, event.damageSource.cause), 'other')
+            api.Relay.event(utils.DeathMessage.random_suicide(player.name, event.damageSource.cause), '', 'other')
         }
     })
 

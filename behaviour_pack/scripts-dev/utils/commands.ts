@@ -14,7 +14,7 @@ async function play_quest_progress_sound(gamertag: string) {
         {pitch: 1.5, volume: 100}
     )
 
-    await sleep(100)
+    await sleep(20)
 
     world.getPlayers({name: gamertag})[0].playSound(
         'note.pling',

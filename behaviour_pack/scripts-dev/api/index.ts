@@ -5,11 +5,11 @@ import Quest from "./quest";
 import QuestWithProgress from "./quest_with_progress";
 
 const api = {
-    ThornyUser: ThornyUser,
-    Relay: Relay,
-    Interaction: Interaction,
-    Quest: Quest,
-    QuestWithProgress: QuestWithProgress
+    ThornyUser,
+    Relay,
+    Interaction,
+    Quest,
+    QuestWithProgress
 };
 
 export default api;

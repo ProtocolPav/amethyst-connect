@@ -29,7 +29,7 @@ export default function load_block_event_handler() {
             
             interaction.post_interaction()
 
-            // Add Interaction to Queue for quest processing...
+            api.Interaction.enqueue(interaction)
         })
     })
     

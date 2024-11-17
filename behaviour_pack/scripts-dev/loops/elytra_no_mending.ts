@@ -48,4 +48,6 @@ export default function load_elytra_mending_checker() {
             elytraCheck(player)
         });
     }, 20)
+
+    console.log('[Loops] Loaded Elytra Checker Loop') 
 }
