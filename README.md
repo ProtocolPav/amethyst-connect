@@ -8,7 +8,7 @@ Each plugin should be in its own file. This helps keep things organized.
 ## Publishing the Addon
 1. Always bump the version number to the correct number
     - E.g. if you are working in the `v1.3` branch, when creating a pull request to main, make sure you bump the manifest number.
-2. You should have **Node** installed. Run `node esbuild.js` to run the `esbuild` file.
+2. You should have **Node** installed. Run `npm run dev` to build the addon with Dev guild_id, otherwise `npm run bundle`
     - This will create a `main.js` script in the `scripts` directory.
     - Minecraft does NOT accept Typescript files, so we MUST convert it to javascript.
 
