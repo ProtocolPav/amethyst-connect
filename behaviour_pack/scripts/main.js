@@ -6851,7 +6851,7 @@ var Objective = class {
       } else if (reward.item) {
         rewards.push(`${reward.count} \xA77${utils_default.clean_id(reward.item)}\xA7r`);
       } else if (reward.balance) {
-        rewards.push(`${reward.balance} \xA7mNugs\xA7r`);
+        rewards.push(`\xA7p${reward.balance} Nugs\xA7r`);
       }
     }
     return rewards.join(", ");
@@ -6872,24 +6872,28 @@ var Objective = class {
     }
     return requirements.join("\n");
   }
-  generate_objective_string(objective_index, quest_title) {
+  generate_objective_string(objective_index, total_objectives, quest_title) {
     const task_type = this.objective_type.replace(/\b\w/g, (char) => char.toUpperCase());
     const title = `\xA7a+=+=+=+=+ ${quest_title} +=+=+=+=+\xA7r
-\xA7s+=+=+=+=+ Objective ${objective_index} +=+=+=+=+\xA7r
+Objective Progress: ${objective_index}/${total_objectives}
 `;
     const description = `\xA77${this.description}\xA7r
+
 `;
-    let full_task = `Your Task: \xA7s${task_type} \xA7l${this.objective_count} ${utils_default.clean_id(this.objective)}\xA7r
+    let full_task = `Your Task: \xA7b${task_type} \xA7l${this.objective_count} ${utils_default.clean_id(this.objective)}\xA7r
 `;
     if (this.display) {
-      full_task = `Your Task: \xA7s${this.display}\xA7r
+      full_task = `Your Task: \xA7b${this.display}\xA7r
 `;
     }
     const rewards = `Rewards: ${this.get_clean_rewards()}
 `;
-    const requirements = `\xA7u+=+=+=+=+ Requirements +=+=+=+=+\xA7r
+    let requirements = "";
+    if (this.get_clean_requirements()) {
+      requirements = `\xA7u+=+=+=+=+ Requirements +=+=+=+=+\xA7r
 ${this.get_clean_requirements()}
 `;
+    }
     const final_line = `\xA7a+=+=+=+=+=+=+=+=+=+=+=+=+=+=+\xA7r`;
     return `${title}${description}${full_task}${rewards}${requirements}${final_line}`;
   }
@@ -6978,7 +6982,7 @@ var ObjectiveWithProgress = class extends Objective {
     utils_default.commands.send_message(
       interaction.dimension,
       this.thorny_user.gamertag,
-      quest.objectives[index + 1].generate_objective_string(index, quest.title)
+      quest.objectives[index + 1].generate_objective_string(index + 1, quest.objectives.length, quest.title)
     );
   }
   async update_user_objective(quest) {

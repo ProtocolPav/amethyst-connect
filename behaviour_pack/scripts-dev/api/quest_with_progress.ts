@@ -50,7 +50,7 @@ class ObjectiveWithProgress extends Objective {
         utils.commands.send_message(
             interaction.dimension,
             this.thorny_user.gamertag,
-            quest.objectives[index+1].generate_objective_string(index, quest.title)
+            quest.objectives[index+1].generate_objective_string(index+1, quest.objectives.length, quest.title)
         )
     }
 

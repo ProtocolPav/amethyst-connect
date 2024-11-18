@@ -111,7 +111,7 @@ export class Objective {
             } else if (reward.item) {
                 rewards.push(`${reward.count} §7${utils.clean_id(reward.item)}§r`)
             } else if (reward.balance) {
-                rewards.push(`${reward.balance} §mNugs§r`)
+                rewards.push(`§p${reward.balance} Nugs§r`)
             }
         }
 
@@ -140,19 +140,20 @@ export class Objective {
         return requirements.join('\n')
     }
 
-    protected generate_objective_string(objective_index: number, quest_title: string) {
+    protected generate_objective_string(objective_index: number, total_objectives: number, quest_title: string) {
         const task_type = this.objective_type.replace(/\b\w/g, (char) => char.toUpperCase());
 
-        const title = `§a+=+=+=+=+ ${quest_title} +=+=+=+=+§r\n§s+=+=+=+=+ Objective ${objective_index} +=+=+=+=+§r\n`
-        const description = `§7${this.description}§r\n`
+        const title = `§a+=+=+=+=+ ${quest_title} +=+=+=+=+§r\nObjective Progress: ${objective_index}/${total_objectives}\n`
+        const description = `§7${this.description}§r\n\n`
 
-        let full_task = `Your Task: §s${task_type} §l${this.objective_count} ${utils.clean_id(this.objective)}§r\n`
+        let full_task = `Your Task: §b${task_type} §l${this.objective_count} ${utils.clean_id(this.objective)}§r\n`
 
         if (this.display) {
-            full_task = `Your Task: §s${this.display}§r\n`
+            full_task = `Your Task: §b${this.display}§r\n`
         }
         const rewards = `Rewards: ${this.get_clean_rewards()}\n`
-        const requirements = `§u+=+=+=+=+ Requirements +=+=+=+=+§r\n${this.get_clean_requirements()}\n`
+        let requirements = ''
+        if (this.get_clean_requirements()) {requirements = `§u+=+=+=+=+ Requirements +=+=+=+=+§r\n${this.get_clean_requirements()}\n`}
         const final_line = `§a+=+=+=+=+=+=+=+=+=+=+=+=+=+=+§r`
 
         return `${title}${description}${full_task}${rewards}${requirements}${final_line}`
