@@ -50,20 +50,23 @@ export default function load_kill_event_handler() {
     
                     }
                 )
+
+                // Set reference back to player so that Quests can
+                // correctly handle them :))
+                interaction.reference = MinecraftEntityTypes.Player
+
+                // Log kill interaction
+                interaction.post_interaction()
                 
                 // Log death interaction
                 death_interaction.post_interaction()
 
                 // Relay death
                 api.Relay.event(utils.DeathMessage.random_pvp(player.name, dead_player.name), '', 'other')
+            } else {
+                // Log kill interaction
+                interaction.post_interaction()
             }
-            
-            // Log kill interaction
-            interaction.post_interaction()
-
-            // Set reference back to player so that Quests can
-            // correctly handle them :))
-            interaction.reference = MinecraftEntityTypes.Player
 
             api.Interaction.enqueue(interaction)
         }
