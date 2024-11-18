@@ -367,7 +367,7 @@ export class InteractionQueue {
     }
 }
 
-async function fetch_active_quest(thorny_user: nexus.ThornyUser, quest_cache: QuestCache): Promise<Quest | null> {
+async function fetch_active_quest(thorny_user: any, quest_cache: QuestCache): Promise<Quest | null> {
     // If there is already an in_progress quest in the cache, return it
     if (thorny_user.thorny_id in quest_cache && quest_cache[thorny_user.thorny_id].status === 'in_progress') {
     }

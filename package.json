@@ -3,12 +3,16 @@
     "@minecraft/server": "beta",
     "@minecraft/server-net": "beta",
     "@minecraft/vanilla-data": "latest",
-    "date-fns": "^3.6.0"
+    "cross-env": "^7.0.3"
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.13",
+    "@types/node": "^22.9.0",
+    "date-fns": "^4.1.0",
     "esbuild": "^0.21.1"
   },
   "scripts": {
-    "bundle": "node esbuild.js"
+    "bundle": "cross-env GUILD_ID=611008530077712395 node esbuild.js",
+    "dev": "cross-env GUILD_ID=1213827104945471538 node esbuild.js"
   }
 }
