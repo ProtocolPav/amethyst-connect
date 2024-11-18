@@ -7354,11 +7354,13 @@ function load_kill_event_handler() {
             dimension: dimension.id
           }
         );
+        interaction.reference = MinecraftEntityTypes.Player;
+        interaction.post_interaction();
         death_interaction.post_interaction();
         api_default.Relay.event(utils_default.DeathMessage.random_pvp(player.name, dead_player.name), "", "other");
+      } else {
+        interaction.post_interaction();
       }
-      interaction.post_interaction();
-      interaction.reference = MinecraftEntityTypes.Player;
       api_default.Interaction.enqueue(interaction);
     } else if (event.deadEntity instanceof Player4 && event.damageSource.damagingEntity) {
       const killer = event.damageSource.damagingEntity;
