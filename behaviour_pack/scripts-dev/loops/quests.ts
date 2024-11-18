@@ -1,6 +1,5 @@
 import api from "../api";
 import { system } from "@minecraft/server";
-import QuestWithProgress from "../api/quest_with_progress";
 
 async function check_quests() {
     if (!api.Interaction.is_processing()) {

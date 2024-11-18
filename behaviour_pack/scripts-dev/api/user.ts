@@ -92,7 +92,7 @@ export default class ThornyUser implements IThornyUser {
             new HttpHeader("Content-Type", "application/json"),
             new HttpHeader("auth", "my-auth-token"),
         ];
-    
+        // modify this to not update every field
         await http.request(request);
     }
 
