@@ -1,5 +1,5 @@
 // behaviour_pack/scripts-dev/components/fungus_spread.ts
-import { world } from "@minecraft/server";
+import { TicksPerSecond, world } from "@minecraft/server";
 
 // node_modules/@minecraft/vanilla-data/lib/index.js
 var MinecraftBiomeTypes = ((MinecraftBiomeTypes2) => {
@@ -2947,12 +2947,53 @@ function load_fungus_spreading_component() {
       }
     }
   }
+  function fungus_destroy(event) {
+    const random_choice = Math.random();
+    const mobs = [
+      MinecraftEntityTypes.CaveSpider,
+      MinecraftEntityTypes.Spider,
+      MinecraftEntityTypes.Zombie,
+      MinecraftEntityTypes.Bogged,
+      MinecraftEntityTypes.Witch,
+      MinecraftEntityTypes.Breeze,
+      MinecraftEntityTypes.Frog,
+      MinecraftEntityTypes.Strider,
+      MinecraftEntityTypes.GlowSquid,
+      MinecraftEntityTypes.Goat,
+      MinecraftEntityTypes.Warden
+    ];
+    const effects = [
+      MinecraftEffectTypes.Hunger,
+      MinecraftEffectTypes.Blindness,
+      MinecraftEffectTypes.Nausea,
+      MinecraftEffectTypes.Weakness,
+      MinecraftEffectTypes.Poison,
+      MinecraftEffectTypes.Haste,
+      MinecraftEffectTypes.Invisibility,
+      MinecraftEffectTypes.MiningFatigue,
+      MinecraftEffectTypes.Regeneration
+    ];
+    if (random_choice < 0.5) {
+      event.dimension.spawnEntity(
+        mobs[Math.floor(Math.random() * mobs.length)],
+        event.block.location
+      );
+    } else if (random_choice > 0.5) {
+      event.player?.addEffect(
+        effects[Math.floor(Math.random() * effects.length)],
+        TicksPerSecond * 30
+      );
+    }
+  }
   world.beforeEvents.worldInitialize.subscribe((initEvent) => {
     initEvent.blockComponentRegistry.registerCustomComponent(
       "amethyst:fungus_spread",
       {
         onRandomTick(event) {
           fungus_spread(event);
+        },
+        onPlayerDestroy(event) {
+          fungus_destroy(event);
         }
       }
     );
@@ -6870,7 +6911,7 @@ var Objective = class {
   generate_objective_string(objective_index, total_objectives, quest_title) {
     const task_type = this.objective_type.replace(/\b\w/g, (char) => char.toUpperCase());
     const title = `\xA7a+=+=+=+=+ ${quest_title} +=+=+=+=+\xA7r
-Objective Progress: ${objective_index}/${total_objectives}
+Quest Progress: ${objective_index}/${total_objectives}
 `;
     const description = `\xA77${this.description}\xA7r
 
@@ -7407,6 +7448,19 @@ function load_kill_event_handler() {
 import { system as system7 } from "@minecraft/server";
 function load_script_event_handler() {
   system7.afterEvents.scriptEventReceive.subscribe((script_event) => {
+    const interaction = new api_default.Interaction(
+      {
+        thorny_id: api_default.ThornyUser.fetch_user(script_event.message)?.thorny_id ?? 0,
+        type: "scriptevent",
+        position_x: 0,
+        position_y: 0,
+        position_z: 0,
+        reference: script_event.id,
+        mainhand: null,
+        dimension: MinecraftDimensionTypes.Overworld
+      }
+    );
+    api_default.Interaction.enqueue(interaction);
   });
 }
 
@@ -7420,7 +7474,7 @@ function load_world_event_handlers(guild_id2) {
 }
 
 // behaviour_pack/scripts-dev/main.ts
-var guild_id = "611008530077712395";
+var guild_id = "1213827104945471538";
 load_loops();
 load_custom_components();
 load_world_event_handlers(guild_id);
