@@ -3,7 +3,7 @@ import { HttpRequest, HttpHeader, HttpRequestMethod, http } from '@minecraft/ser
 
 interface IInteraction {
     thorny_id: number
-    type: 'mine' | 'kill' | 'die' | 'place' | 'use'
+    type: 'mine' | 'kill' | 'die' | 'place' | 'use' | 'scriptevent'
     position_x: number
     position_y: number
     position_z: number
@@ -17,7 +17,7 @@ export default class Interaction implements IInteraction {
     private static processing: Boolean = false
 
     thorny_id: number
-    type: 'mine' | 'kill' | 'die' | 'place' | 'use'
+    type: 'mine' | 'kill' | 'die' | 'place' | 'use' | 'scriptevent'
     position_x: number
     position_y: number
     position_z: number
