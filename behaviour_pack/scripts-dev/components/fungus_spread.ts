@@ -1,5 +1,5 @@
-import { BlockComponentRandomTickEvent, world } from "@minecraft/server";
-import { MinecraftBlockTypes } from "@minecraft/vanilla-data";
+import {BlockComponentPlayerDestroyEvent, BlockComponentRandomTickEvent, TicksPerSecond, world} from "@minecraft/server";
+import {MinecraftBlockTypes, MinecraftEffectTypes, MinecraftEntityTypes} from "@minecraft/vanilla-data";
 
 
 export default function load_fungus_spreading_component() {
@@ -15,12 +15,59 @@ export default function load_fungus_spreading_component() {
             }
         }
     }
+
+    function fungus_destroy(event : BlockComponentPlayerDestroyEvent) {
+        const random_choice = Math.random()
+        const mobs = [
+            MinecraftEntityTypes.CaveSpider,
+            MinecraftEntityTypes.Spider,
+            MinecraftEntityTypes.Zombie,
+            MinecraftEntityTypes.Bogged,
+            MinecraftEntityTypes.Witch,
+            MinecraftEntityTypes.Breeze,
+            MinecraftEntityTypes.Frog,
+            MinecraftEntityTypes.Strider,
+            MinecraftEntityTypes.GlowSquid,
+            MinecraftEntityTypes.Goat,
+            MinecraftEntityTypes.Warden
+        ]
+        const effects = [
+            MinecraftEffectTypes.Hunger,
+            MinecraftEffectTypes.Blindness,
+            MinecraftEffectTypes.Nausea,
+            MinecraftEffectTypes.Weakness,
+            MinecraftEffectTypes.Poison,
+            MinecraftEffectTypes.Haste,
+            MinecraftEffectTypes.Invisibility,
+            MinecraftEffectTypes.MiningFatigue,
+            MinecraftEffectTypes.Regeneration
+        ]
+
+        // Summon Mob
+        if (random_choice < 0.5) {
+
+            event.dimension.spawnEntity(
+                mobs[Math.floor(Math.random() * mobs.length)],
+                event.block.location
+            )
+        }
+        // Effect Player
+        else if (random_choice > 0.5) {
+            event.player?.addEffect(
+                effects[Math.floor(Math.random() * effects.length)],
+                TicksPerSecond * 30
+                )
+        }
+    }
     
     world.beforeEvents.worldInitialize.subscribe(initEvent => {
         initEvent.blockComponentRegistry.registerCustomComponent('amethyst:fungus_spread', 
             {
                 onRandomTick(event) {
                     fungus_spread(event)
+                },
+                onPlayerDestroy(event) {
+                    fungus_destroy(event)
                 }
             }
         )
