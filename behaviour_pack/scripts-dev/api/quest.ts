@@ -143,7 +143,7 @@ export class Objective {
     protected generate_objective_string(objective_index: number, total_objectives: number, quest_title: string) {
         const task_type = this.objective_type.replace(/\b\w/g, (char) => char.toUpperCase());
 
-        const title = `§a+=+=+=+=+ ${quest_title} +=+=+=+=+§r\nObjective Progress: ${objective_index}/${total_objectives}\n`
+        const title = `§a+=+=+=+=+ ${quest_title} +=+=+=+=+§r\nQuest Progress: ${objective_index}/${total_objectives}\n`
         const description = `§7${this.description}§r\n\n`
 
         let full_task = `Your Task: §b${task_type} §l${this.objective_count} ${utils.clean_id(this.objective)}§r\n`
