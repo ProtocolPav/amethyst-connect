@@ -1,4 +1,4 @@
-import {BlockComponentPlayerDestroyEvent, BlockComponentRandomTickEvent, TicksPerSecond, world} from "@minecraft/server";
+import {BlockComponentPlayerDestroyEvent, BlockComponentRandomTickEvent, system, TicksPerSecond, world} from "@minecraft/server";
 import {MinecraftBlockTypes, MinecraftEffectTypes, MinecraftEntityTypes} from "@minecraft/vanilla-data";
 
 
@@ -34,7 +34,6 @@ export default function load_fungus_spreading_component() {
         const effects = [
             MinecraftEffectTypes.Hunger,
             MinecraftEffectTypes.Blindness,
-            MinecraftEffectTypes.Nausea,
             MinecraftEffectTypes.Weakness,
             MinecraftEffectTypes.Poison,
             MinecraftEffectTypes.Haste,
@@ -46,10 +45,14 @@ export default function load_fungus_spreading_component() {
         // Summon Mob
         if (random_choice < 0.5) {
 
-            event.dimension.spawnEntity(
+            const entity = event.dimension.spawnEntity(
                 mobs[Math.floor(Math.random() * mobs.length)],
                 event.block.location
             )
+
+            system.runTimeout(() => {
+                entity.kill()
+            }, TicksPerSecond * 30)
         }
         // Effect Player
         else if (random_choice > 0.5) {
