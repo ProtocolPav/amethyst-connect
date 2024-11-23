@@ -1,5 +1,5 @@
 import {system, world, TicksPerSecond, PlayerSoundOptions, EntityComponentTypes} from "@minecraft/server";
-import {MinecraftEffectTypes, MinecraftEntityTypes} from "@minecraft/vanilla-data";
+import {MinecraftEntityTypes} from "@minecraft/vanilla-data";
 
 function noise_glitch() {
     const noises: {name: string, options: PlayerSoundOptions}[][] = [
@@ -69,7 +69,7 @@ function vision_entity_glitch() {
             }
         })
 
-        system.waitTicks(TicksPerSecond*30).then(() => {
+        system.waitTicks(TicksPerSecond*15).then(() => {
             system.clearRun(sysid)
             current_entity.remove();
         })
@@ -86,7 +86,7 @@ function do_glitch() {
         // "effect"
     ]
 
-    if (random <= 1) {
+    if (random <= 0.05) {
         const glitch = glitches_type[Math.floor(Math.random() * glitches_type.length)]
 
         switch (glitch) {
@@ -111,6 +111,6 @@ function do_glitch() {
 }
 
 export default function load_glitch_loop() {
-    system.runInterval(() => {do_glitch()}, TicksPerSecond * 20)
+    system.runInterval(() => {do_glitch()}, TicksPerSecond * 60 * 30)
     console.log('[Loops] Loaded Glitches Loop')
 }
