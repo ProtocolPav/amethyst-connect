@@ -1,5 +1,5 @@
 // behaviour_pack/scripts-dev/components/fungus_spread.ts
-import { TicksPerSecond, world } from "@minecraft/server";
+import { system, TicksPerSecond, world } from "@minecraft/server";
 
 // node_modules/@minecraft/vanilla-data/lib/index.js
 var MinecraftBiomeTypes = ((MinecraftBiomeTypes2) => {
@@ -2965,7 +2965,6 @@ function load_fungus_spreading_component() {
     const effects = [
       MinecraftEffectTypes.Hunger,
       MinecraftEffectTypes.Blindness,
-      MinecraftEffectTypes.Nausea,
       MinecraftEffectTypes.Weakness,
       MinecraftEffectTypes.Poison,
       MinecraftEffectTypes.Haste,
@@ -2974,10 +2973,13 @@ function load_fungus_spreading_component() {
       MinecraftEffectTypes.Regeneration
     ];
     if (random_choice < 0.5) {
-      event.dimension.spawnEntity(
+      const entity = event.dimension.spawnEntity(
         mobs[Math.floor(Math.random() * mobs.length)],
         event.block.location
       );
+      system.runTimeout(() => {
+        entity.kill();
+      }, TicksPerSecond * 30);
     } else if (random_choice > 0.5) {
       event.player?.addEffect(
         effects[Math.floor(Math.random() * effects.length)],
@@ -3006,7 +3008,7 @@ function load_custom_components() {
 }
 
 // behaviour_pack/scripts-dev/loops/elytra_no_mending.ts
-import { EquipmentSlot, world as world2, system, EntityComponentTypes, ItemComponentTypes, EnchantmentType } from "@minecraft/server";
+import { EquipmentSlot, world as world2, system as system2, EntityComponentTypes, ItemComponentTypes, EnchantmentType } from "@minecraft/server";
 function elytraCheck(player) {
   const player_equipment = player.getComponent(EntityComponentTypes.Equippable);
   const item = player_equipment?.getEquipment(EquipmentSlot.Chest);
@@ -3036,7 +3038,7 @@ function elytraCheck(player) {
   }
 }
 function load_elytra_mending_checker() {
-  system.runInterval(() => {
+  system2.runInterval(() => {
     let playerlist = world2.getPlayers();
     playerlist.forEach((player) => {
       elytraCheck(player);
@@ -3046,7 +3048,7 @@ function load_elytra_mending_checker() {
 }
 
 // behaviour_pack/scripts-dev/loops/border.ts
-import { world as world3, system as system2, EntityDamageCause } from "@minecraft/server";
+import { world as world3, system as system3, EntityDamageCause } from "@minecraft/server";
 function borderCheck(player, dimensionID, border_size, warning_range, outside) {
   const position = player.location;
   const distance_2d = Math.sqrt(position.x ** 2 + position.z ** 2);
@@ -3074,7 +3076,7 @@ function borderCheck(player, dimensionID, border_size, warning_range, outside) {
 function load_world_border() {
   let players_100_blocks_away = { overworld: [], nether: [], end: [] };
   let players_outside_border = { overworld: [], nether: [], end: [] };
-  system2.runInterval(() => {
+  system3.runInterval(() => {
     let players = {
       overworld: world3.getDimension(MinecraftDimensionTypes.Overworld).getPlayers(),
       nether: world3.getDimension(MinecraftDimensionTypes.Nether).getPlayers(),
@@ -6737,7 +6739,7 @@ function send_motd(player) {
 }
 
 // behaviour_pack/scripts-dev/utils/commands.ts
-import { world as world5, system as system3 } from "@minecraft/server";
+import { world as world5, system as system4 } from "@minecraft/server";
 import { EntityComponentTypes as EntityComponentTypes2, ItemStack } from "@minecraft/server";
 function send_message(dimension, target, message2) {
   const msg = { "rawtext": [{ "text": message2 }] };
@@ -6749,7 +6751,7 @@ async function play_quest_progress_sound(gamertag) {
     "note.pling",
     { pitch: 1.5, volume: 100, location: player.location }
   );
-  system3.runTimeout(() => {
+  system4.runTimeout(() => {
     player.playSound(
       "note.pling",
       { pitch: 2, volume: 100, location: player.location }
@@ -6771,7 +6773,7 @@ function play_quest_complete_sound(gamertag) {
     { volume: 100, pitch: 1.5, location: player.location }
   );
   for (let i = 0; i < 5; i++) {
-    system3.runTimeout(() => {
+    system4.runTimeout(() => {
       player.runCommand(`particle minecraft:totem_particle ~ ~2 ~`);
     }, 10);
   }
@@ -7181,7 +7183,7 @@ var api = {
 var api_default = api;
 
 // behaviour_pack/scripts-dev/loops/quests.ts
-import { system as system4 } from "@minecraft/server";
+import { system as system5 } from "@minecraft/server";
 async function check_quests() {
   if (!api_default.Interaction.is_processing()) {
     api_default.Interaction.set_processing(true);
@@ -7207,7 +7209,7 @@ async function check_quests() {
   }
 }
 function load_quest_loop() {
-  system4.runInterval(async () => {
+  system5.runInterval(async () => {
     await check_quests();
   }, 1);
   console.log("[Loops] Loaded Quests Loop");
@@ -7221,7 +7223,7 @@ function load_loops() {
 }
 
 // behaviour_pack/scripts-dev/events/blocks.ts
-import { world as world6, system as system5 } from "@minecraft/server";
+import { world as world6, system as system6 } from "@minecraft/server";
 import { EntityComponentTypes as EntityComponentTypes3, EquipmentSlot as EquipmentSlot2 } from "@minecraft/server";
 function load_block_event_handler() {
   world6.beforeEvents.playerBreakBlock.subscribe((event) => {
@@ -7229,7 +7231,7 @@ function load_block_event_handler() {
     const block_location = [event.block.x, event.block.y, event.block.z];
     const dimension = event.player.dimension;
     const mainhand = event.player.getComponent(EntityComponentTypes3.Equippable)?.getEquipment(EquipmentSlot2.Mainhand);
-    system5.run(() => {
+    system6.run(() => {
       const interaction = new api_default.Interaction(
         {
           thorny_id: api_default.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
@@ -7251,7 +7253,7 @@ function load_block_event_handler() {
     const block_location = [event.block.x, event.block.y, event.block.z];
     const dimension = event.player.dimension;
     const mainhand = event.player.getComponent(EntityComponentTypes3.Equippable)?.getEquipment(EquipmentSlot2.Mainhand);
-    system5.run(() => {
+    system6.run(() => {
       const interaction = new api_default.Interaction(
         {
           thorny_id: api_default.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
@@ -7294,7 +7296,7 @@ function load_block_event_handler() {
       MinecraftBlockTypes.LightGrayShulkerBox
     ];
     if (all_blocks.includes(block_id)) {
-      system5.run(() => {
+      system6.run(() => {
         const interaction = new api_default.Interaction(
           {
             thorny_id: api_default.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
@@ -7314,7 +7316,7 @@ function load_block_event_handler() {
 }
 
 // behaviour_pack/scripts-dev/events/chat.ts
-import { world as world7, system as system6 } from "@minecraft/server";
+import { world as world7, system as system7 } from "@minecraft/server";
 function load_chat_handler() {
   world7.beforeEvents.chatSend.subscribe((chat_event) => {
     const gamertag = chat_event.sender.name;
@@ -7327,7 +7329,7 @@ function load_chat_handler() {
       ]
     });
     chat_event.cancel = true;
-    system6.run(() => {
+    system7.run(() => {
       api_default.Relay.message(gamertag, chat_event.message);
     });
   });
@@ -7445,9 +7447,9 @@ function load_kill_event_handler() {
 }
 
 // behaviour_pack/scripts-dev/events/script_events.ts
-import { system as system7 } from "@minecraft/server";
+import { system as system8 } from "@minecraft/server";
 function load_script_event_handler() {
-  system7.afterEvents.scriptEventReceive.subscribe((script_event) => {
+  system8.afterEvents.scriptEventReceive.subscribe((script_event) => {
     const interaction = new api_default.Interaction(
       {
         thorny_id: api_default.ThornyUser.fetch_user(script_event.message)?.thorny_id ?? 0,

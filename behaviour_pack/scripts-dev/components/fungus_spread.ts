@@ -44,7 +44,6 @@ export default function load_fungus_spreading_component() {
 
         // Summon Mob
         if (random_choice < 0.5) {
-
             const entity = event.dimension.spawnEntity(
                 mobs[Math.floor(Math.random() * mobs.length)],
                 event.block.location
@@ -52,7 +51,7 @@ export default function load_fungus_spreading_component() {
 
             system.runTimeout(() => {
                 entity.kill()
-            }, TicksPerSecond * 30)
+            }, entity.typeId == MinecraftEntityTypes.Warden ? TicksPerSecond * 45 : TicksPerSecond * 120)
         }
         // Effect Player
         else if (random_choice > 0.5) {
