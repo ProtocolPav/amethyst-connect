@@ -52,10 +52,9 @@ function vision_entity_glitch() {
     for (const player of all_players) {
         let location = player.location
         let facing = player.getViewDirection()
-        console.log(JSON.stringify(location), JSON.stringify(facing))
 
-        location.x -= facing.x
-        location.z -= facing.z
+        location.x -= facing.x + 2
+        location.z -= facing.z + 2
 
         let current_entity = player.dimension.spawnEntity(entity, location)
 
