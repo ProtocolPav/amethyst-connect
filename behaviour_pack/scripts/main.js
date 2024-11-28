@@ -7219,7 +7219,6 @@ function vision_entity_glitch() {
   for (const player of all_players) {
     let location = player.location;
     let facing = player.getViewDirection();
-    console.log(JSON.stringify(location), JSON.stringify(facing));
     location.x -= facing.x + 2;
     location.z -= facing.z + 2;
     let current_entity = player.dimension.spawnEntity(entity, location);
@@ -7238,17 +7237,44 @@ function vision_entity_glitch() {
     });
   }
 }
+function vision_block_glitch() {
+  const blocks = [
+    MinecraftBlockTypes.Bedrock,
+    MinecraftBlockTypes.LightBlock15,
+    MinecraftBlockTypes.BambooStairs,
+    MinecraftBlockTypes.Dispenser,
+    MinecraftBlockTypes.DarkOakFence,
+    MinecraftBlockTypes.EnchantingTable,
+    MinecraftBlockTypes.Campfire
+  ];
+  const block = blocks[Math.floor(Math.random() * blocks.length)];
+  const all_players = world6.getAllPlayers();
+  for (const player of all_players) {
+    let location = player.location;
+    let facing = player.getViewDirection();
+    location.x += facing.x + 2;
+    location.z += facing.z + 2;
+    let random_block = player.dimension.getBlock(location);
+    if (random_block?.typeId === MinecraftBlockTypes.Air && player.dimension.getEntitiesAtBlockLocation(location).length === 0) {
+      random_block.setType(block);
+      system5.waitTicks(TicksPerSecond).then(() => {
+        random_block.setType(MinecraftBlockTypes.Air);
+      });
+    }
+  }
+}
 function do_glitch() {
   const random = Math.random();
   const glitches_type = [
     "noise",
-    "vision_entity"
-    // "vision_block",
+    "vision_entity",
+    "vision_block"
     // "facing",
     // "effect"
   ];
-  if (random <= 0.05) {
+  if (random <= 1) {
     const glitch = glitches_type[Math.floor(Math.random() * glitches_type.length)];
+    console.log(`[Loops] Doing Glitches: ${glitch}`);
     switch (glitch) {
       case "noise":
         noise_glitch();
@@ -7257,18 +7283,25 @@ function do_glitch() {
         vision_entity_glitch();
         break;
       case "vision_block":
+        vision_block_glitch();
         break;
       case "facing":
         break;
       case "effect":
         break;
     }
+    const all_players = world6.getAllPlayers();
+    for (const player of all_players) {
+      player.sendMessage("\xA7oWhat was that?");
+      const facing = player.getViewDirection();
+      player.sendMessage(`${facing.x}, ${facing.y}, ${facing.z}`);
+    }
   }
 }
 function load_glitch_loop() {
   system5.runInterval(() => {
     do_glitch();
-  }, TicksPerSecond * 60 * 30);
+  }, TicksPerSecond * 20);
   console.log("[Loops] Loaded Glitches Loop");
 }
 
