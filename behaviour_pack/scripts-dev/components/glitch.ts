@@ -17,17 +17,18 @@ export default function load_glitch_component() {
             };
         }
 
-        event.dimension.spawnParticle("minecraft:minecraft:eyeofender_death_explode_particle")
+        console.log(JSON.stringify(random_location));
+        event.dimension.spawnParticle("minecraft:minecraft:eyeofender_death_explode_particle", random_location)
         if (Math.random() < 0.1) {
 
         }
     }
 
     world.beforeEvents.worldInitialize.subscribe(initEvent => {
-        initEvent.blockComponentRegistry.registerCustomComponent('amethyst:fungus_spread',
+        initEvent.blockComponentRegistry.registerCustomComponent('amethyst:glitch',
             {
                 onRandomTick(event) {
-                    fungus_spread(event)
+                    glitch(event)
                 }
             }
         )

@@ -6,6 +6,9 @@
 	"texture_data": {
 		"fungus_block": {
 			"textures": "textures/blocks/fungus_block.png"
+		},
+		"glitch_block": {
+			"textures": "textures/blocks/glitch_block.png"
 		}
 	}
 }
