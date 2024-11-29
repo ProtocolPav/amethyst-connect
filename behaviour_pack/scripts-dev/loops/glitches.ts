@@ -1,7 +1,7 @@
-import {system, world, TicksPerSecond, PlayerSoundOptions, EntityComponentTypes} from "@minecraft/server";
+import {system, world, TicksPerSecond, PlayerSoundOptions, EntityComponentTypes, Player} from "@minecraft/server";
 import {MinecraftBlockTypes, MinecraftEntityTypes} from "@minecraft/vanilla-data";
 
-function noise_glitch() {
+function noise_glitch(player: Player) {
     const noises: {name: string, options: PlayerSoundOptions}[][] = [
         [{"name": "mob.villager.yes", "options": { "volume": 100, "pitch": 1}}],
         [
@@ -21,19 +21,16 @@ function noise_glitch() {
         [{"name": "mob.cat.meow", "options": { "volume": 100, "pitch": 1}}],
     ]
 
-    const all_players = world.getAllPlayers()
+    const noise = noises[Math.floor(Math.random() * noises.length)]
 
-    for (const player of all_players) {
-        const noise = noises[Math.floor(Math.random() * noises.length)]
-
-        for (const noise_instance of noise) {
-            system.waitTicks(5).then(
-                () => player.playSound(noise_instance.name, noise_instance.options))
-        }
+    for (const noise_instance of noise) {
+        system.runTimeout(
+            () => {player.playSound(noise_instance.name, noise_instance.options)},
+            5)
     }
 }
 
-function vision_entity_glitch() {
+function vision_entity_glitch(player: Player) {
     const entities = [
         MinecraftEntityTypes.Enderman,
         MinecraftEntityTypes.Panda,
@@ -47,35 +44,31 @@ function vision_entity_glitch() {
 
     const entity = entities[Math.floor(Math.random() * entities.length)]
 
-    const all_players = world.getAllPlayers()
+    let location = player.location
+    let facing = player.getViewDirection()
 
-    for (const player of all_players) {
-        let location = player.location
-        let facing = player.getViewDirection()
+    location.x -= facing.x * 2
+    location.z -= facing.z * 2
 
-        location.x -= facing.x * 2
-        location.z -= facing.z * 2
+    let current_entity = player.dimension.spawnEntity(entity, location)
 
-        let current_entity = player.dimension.spawnEntity(entity, location)
-
-        let sysid = system.runInterval(() => {
-            if (current_entity.isValid()) {
-                current_entity.teleport(location);
-                current_entity.getComponent(EntityComponentTypes.Health)?.resetToMaxValue()
-            } else {
-                system.clearRun(sysid)
-                current_entity.remove();
-            }
-        })
-
-        system.waitTicks(TicksPerSecond*15).then(() => {
+    let sysid = system.runInterval(() => {
+        if (current_entity.isValid()) {
+            current_entity.teleport(location);
+            current_entity.getComponent(EntityComponentTypes.Health)?.resetToMaxValue()
+        } else {
             system.clearRun(sysid)
             current_entity.remove();
-        })
-    }
+        }
+    })
+
+    system.waitTicks(TicksPerSecond*15).then(() => {
+        system.clearRun(sysid)
+        current_entity.remove();
+    })
 }
 
-function vision_block_glitch() {
+function vision_block_glitch(player: Player) {
     const blocks = [
         MinecraftBlockTypes.Bedrock,
         MinecraftBlockTypes.LightBlock15,
@@ -87,23 +80,20 @@ function vision_block_glitch() {
     ]
     
     const block = blocks[Math.floor(Math.random() * blocks.length)]
-    const all_players = world.getAllPlayers()
-    
-    for (const player of all_players) {
-        let location = player.location
-        let facing = player.getViewDirection()
 
-        location.x += facing.x * 2
-        location.z += facing.z * 2
+    let location = player.location
+    let facing = player.getViewDirection()
 
-        let random_block = player.dimension.getBlock(location)
+    location.x += facing.x * 2
+    location.z += facing.z * 2
 
-        if (random_block?.typeId === MinecraftBlockTypes.Air
-            && player.dimension.getEntitiesAtBlockLocation(location).length === 0) {
-            random_block.setType(block)
+    let random_block = player.dimension.getBlock(location)
 
-            system.waitTicks(TicksPerSecond).then(() => {random_block.setType(MinecraftBlockTypes.Air)})
-        }
+    if (random_block?.typeId === MinecraftBlockTypes.Air
+        && player.dimension.getEntitiesAtBlockLocation(location).length === 0) {
+        random_block.setType(block)
+
+        system.waitTicks(TicksPerSecond).then(() => {random_block.setType(MinecraftBlockTypes.Air)})
     }
 }
 
@@ -122,15 +112,21 @@ function do_glitch() {
         console.log(`[Loops] Doing Glitches: ${glitch}`)
         switch (glitch) {
             case "noise":
-                noise_glitch()
+                for (const player of world.getAllPlayers()) {
+                    noise_glitch(player)
+                }
                 break;
 
             case "vision_entity":
-                vision_entity_glitch()
+                for (const player of world.getAllPlayers()) {
+                    vision_entity_glitch(player)
+                }
                 break;
 
             case "vision_block":
-                vision_block_glitch()
+                for (const player of world.getAllPlayers()) {
+                    vision_block_glitch(player)
+                }
                 break;
 
             case "facing":
