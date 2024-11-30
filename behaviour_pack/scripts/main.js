@@ -2959,287 +2959,213 @@ function load_fungus_spreading_component() {
   });
 }
 
-// behaviour_pack/scripts-dev/components/index.ts
-function load_custom_components() {
-  load_fungus_spreading_component();
-}
+// behaviour_pack/scripts-dev/components/glitch.ts
+import { world as world4 } from "@minecraft/server";
 
-// behaviour_pack/scripts-dev/loops/elytra_no_mending.ts
-import { EquipmentSlot, world as world2, system, EntityComponentTypes, ItemComponentTypes, EnchantmentType } from "@minecraft/server";
-function elytraCheck(player) {
-  const player_equipment = player.getComponent(EntityComponentTypes.Equippable);
-  const item = player_equipment?.getEquipment(EquipmentSlot.Chest);
-  if (item) {
-    const enchantments = item?.getComponent(ItemComponentTypes.Enchantable);
-    const has_mending = enchantments?.hasEnchantment(MinecraftEnchantmentTypes.Mending);
-    if (has_mending && item?.typeId == MinecraftItemTypes.Elytra) {
-      if (!enchantments?.hasEnchantment(MinecraftEnchantmentTypes.Vanishing)) {
-        enchantments?.addEnchantment(
-          {
-            type: new EnchantmentType(MinecraftEnchantmentTypes.Vanishing),
-            level: 1
-          }
-        );
-      }
-      enchantments?.removeEnchantment(MinecraftEnchantmentTypes.Mending);
-      const durability_component = item.getComponent(ItemComponentTypes.Durability);
-      if (durability_component) {
-        durability_component.damage = durability_component.maxDurability;
-      }
-      item.setLore([`
-\xA7o"My wings are cursed!"`]);
-      world2.getDimension("overworld").runCommand(`title "${player.name}" actionbar \xA7o\xA7iMy Elytra feels different...`);
-      player_equipment?.setEquipment(EquipmentSlot.Chest, item);
-      console.log(`[ElytraCheck] Player ${player.name} has elytra with mending. Removing Mending.`);
-    }
-  }
-}
-function load_elytra_mending_checker() {
-  system.runInterval(() => {
-    let playerlist = world2.getPlayers();
-    playerlist.forEach((player) => {
-      elytraCheck(player);
-    });
-  }, 20);
-  console.log("[Loops] Loaded Elytra Checker Loop");
-}
-
-// behaviour_pack/scripts-dev/loops/border.ts
-import { world as world3, system as system2, EntityDamageCause } from "@minecraft/server";
-function borderCheck(player, dimensionID, border_size, warning_range, outside) {
-  const position = player.location;
-  const distance_2d = Math.sqrt(position.x ** 2 + position.z ** 2);
-  if (border_size < distance_2d && outside.indexOf(player.name) == -1) {
-    outside.push(player.name);
-    console.log(`[Plugin] [Border] Player ${player.name} is outside of the ${dimensionID} border.`);
-  } else if (border_size > distance_2d && outside.indexOf(player.name) != -1) {
-    outside.splice(outside.indexOf(player.name), 1);
-    console.log(`[Plugin] [Border] Player ${player.name} has re-entered the ${dimensionID} border.`);
-  }
-  if (border_size < distance_2d) {
-    world3.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iI shouldn't go any further. It's too dangerous here.`);
-    world3.getDimension(dimensionID).runCommand(`effect "${player.name}" blindness 4 2`);
-    player.applyDamage(1.3, { cause: EntityDamageCause.void });
-  } else if (border_size - 20 < distance_2d) {
-    world3.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iThe Monolith's protection is wearing off. I can feel it...`);
-  }
-  if (border_size - 100 < distance_2d && warning_range.indexOf(player.name) == -1) {
-    warning_range.push(player.name);
-    world3.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iMaybe I should start heading back now...`);
-  } else if (border_size - 100 > distance_2d && warning_range.indexOf(player.name) != -1) {
-    warning_range.splice(warning_range.indexOf(player.name), 1);
-  }
-}
-function load_world_border() {
-  let players_100_blocks_away = { overworld: [], nether: [], end: [] };
-  let players_outside_border = { overworld: [], nether: [], end: [] };
-  system2.runInterval(() => {
-    let players = {
-      overworld: world3.getDimension(MinecraftDimensionTypes.Overworld).getPlayers(),
-      nether: world3.getDimension(MinecraftDimensionTypes.Nether).getPlayers(),
-      end: world3.getDimension(MinecraftDimensionTypes.TheEnd).getPlayers()
-    };
-    players.overworld.forEach((player) => {
-      borderCheck(player, MinecraftDimensionTypes.Overworld, 2050, players_100_blocks_away.overworld, players_outside_border.overworld);
-    });
-    players.nether.forEach((player) => {
-      borderCheck(player, MinecraftDimensionTypes.Nether, 1500, players_100_blocks_away.nether, players_outside_border.nether);
-    });
-    players.end.forEach((player) => {
-      borderCheck(player, MinecraftDimensionTypes.TheEnd, 500, players_100_blocks_away.end, players_outside_border.end);
-    });
-  }, 20);
-  console.log("[Loops] Loaded World Border Loop");
-}
-
-// behaviour_pack/scripts-dev/api/user.ts
-import { HttpRequest, HttpHeader, HttpRequestMethod, http } from "@minecraft/server-net";
-var ThornyUser = class _ThornyUser {
-  static {
-    this.thorny_user_map = {};
-  }
-  static {
-    this.thorny_id_map = {};
-  }
-  constructor(api_data) {
-    this.thorny_id = api_data.thorny_id;
-    this.user_id = api_data.user_id;
-    this.guild_id = api_data.guild_id;
-    this.username = api_data.username;
-    this.join_date = api_data.join_date;
-    this.birthday = api_data.birthday;
-    this.balance = api_data.balance;
-    this.active = api_data.active;
-    this.role = api_data.role;
-    this.patron = api_data.patron;
-    this.level = api_data.level;
-    this.xp = api_data.xp;
-    this.required_xp = api_data.required_xp;
-    this.last_message = api_data.last_message;
-    this.gamertag = api_data.gamertag;
-    this.whitelist = api_data.whitelist;
-  }
-  static async get_user_from_api(guild_id2, gamertag) {
-    try {
-      return http.get(`http://nexuscore:8000/api/v0.1/users/guild/${guild_id2}/${gamertag.replace(" ", "%20")}`).then((response) => {
-        try {
-          console.log(response.body, response.status);
-          const thorny_user = new _ThornyUser(JSON.parse(response.body));
-          _ThornyUser.thorny_user_map[gamertag] = thorny_user;
-          _ThornyUser.thorny_id_map[thorny_user.thorny_id] = thorny_user;
-          thorny_user.gamertag = gamertag;
-          return thorny_user;
-        } catch (e) {
-          console.error("Failed to parse JSON:", e);
-          throw e;
-        }
-      });
-    } catch (e) {
-      console.error(`Big error in getting ThornyUser for ${gamertag}`, e);
-      throw e;
-    }
-  }
-  static fetch_user(gamertag) {
-    return _ThornyUser.thorny_user_map[gamertag];
-  }
-  static fetch_user_by_id(thorny_id) {
-    return _ThornyUser.thorny_id_map[thorny_id];
-  }
-  /**
-   * Update this user in NexusCore
-   */
-  async update() {
-    const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/users/${this.thorny_id}`);
-    request.method = HttpRequestMethod.Put;
-    request.body = JSON.stringify(this);
-    request.headers = [
-      new HttpHeader("Content-Type", "application/json"),
-      new HttpHeader("auth", "my-auth-token")
+// behaviour_pack/scripts-dev/utils/death_messages.ts
+var DeathMessage = class {
+  static random_pvp(killer, dead) {
+    const deathMessages = [
+      // Quirky messages
+      `${killer} ended ${dead}'s life with style`,
+      `${killer} cut ${dead}'s journey short`,
+      `${killer} turned ${dead} into a spectator`,
+      `${killer} sent ${dead} on a one-way trip to respawn`,
+      `${killer} said goodbye to ${dead}, permanently`,
+      `${killer} reminded ${dead} why armor is important`,
+      `${killer} made sure ${dead} won't see another sunrise`,
+      `${killer} put an end to ${dead}'s ambitions`,
+      `${killer} decided ${dead} needed a timeout`,
+      `${killer} proved ${dead} wasn't ready for the fight`,
+      `${killer} gave ${dead} a firsthand lesson in humility`,
+      `${killer} turned ${dead} into an unwilling fireworks display`,
+      `${killer} showed ${dead} the real power of an enchanted weapon`,
+      `${killer} made ${dead} regret forgetting their shield`,
+      `${killer} casually yeeted ${dead} into the afterlife`,
+      `${killer} turned ${dead} into a pi\xF1ata full of loot`,
+      `${killer} made ${dead} wonder why they even logged in today`,
+      `${killer} turned ${dead}'s health bar into a suggestion`,
+      `${killer} gave ${dead} a one-way ticket to spectator mode`,
+      // More serious messages
+      `${killer} struck the final blow, ending ${dead}'s fight`,
+      `${killer} executed ${dead} with precision and skill`,
+      `${killer} proved to be the stronger warrior against ${dead}`,
+      `${killer} ended ${dead}'s journey with a decisive strike`,
+      `${killer} overwhelmed ${dead} with superior tactics`,
+      `${killer} delivered a critical hit, silencing ${dead}`,
+      `${killer} claimed victory over ${dead} in a fierce battle`,
+      `${killer} vanquished ${dead}, leaving no room for doubt`,
+      `${killer} dominated ${dead}, proving their superiority`,
+      `${killer} took ${dead}'s life in a moment of triumph`,
+      `${killer} emerged victorious over ${dead} in combat`,
+      `${killer} brought an end to ${dead}'s reign on the battlefield`,
+      `${killer} showed no mercy and finished off ${dead}`,
+      `${killer} shattered ${dead}'s defenses, claiming victory`,
+      `${killer} crushed ${dead} with unrelenting force`,
+      `${killer} left no chance for ${dead} to recover`,
+      `${killer} turned the tide of battle, defeating ${dead}`,
+      `${killer} demonstrated unmatched skill, taking down ${dead}`,
+      `${killer} secured their dominance by defeating ${dead}`
     ];
-    await http.request(request);
+    return deathMessages[Math.floor(Math.random() * deathMessages.length)];
   }
-  /**
-   * Send a connection event to NexusCore, either
-   * connect or disconnect
-   */
-  send_connect_event(event_type) {
-    const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/events/connection`);
-    request.method = HttpRequestMethod.Post;
-    request.headers = [
-      new HttpHeader("Content-Type", "application/json"),
-      new HttpHeader("auth", "my-auth-token")
+  static random_pve(player, entity) {
+    entity = entity.replace("minecraft:", "").replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
+    const deathMessages = [
+      // Funny Death Messages
+      `${player} picked a fight with a ${entity} and lost... miserably`,
+      `${player} thought they could outsmart a ${entity}. Spoiler: They couldn't`,
+      `${player} tried to pet a ${entity}. It was not in the mood`,
+      `${player} challenged a ${entity} to a duel. Only one of them read the rules`,
+      `${player} learned that ${entity}s are not for cuddling`,
+      `${player} thought they were the hunter. The ${entity} disagreed`,
+      `${player} got turned into loot by a ${entity}`,
+      `${player} thought they could YOLO past a ${entity}. They YOLO'd too hard`,
+      `${player} underestimated the bite of a ${entity}`,
+      `${player} wanted to be brave. The ${entity} wanted them to respawn`,
+      `${player} was schooled by a ${entity} in PvP 101`,
+      `${player} tried to befriend a ${entity}. It wasn't interested`,
+      `${player} was taught a hard lesson in humility by a ${entity}`,
+      `${player} learned the definition of pain from a ${entity}`,
+      `${player} thought shields were optional. The ${entity} proved otherwise`,
+      `${player} charged at a ${entity} with confidence. The ${entity} sent them back to respawn`,
+      `${player} tried to roast a ${entity}, but it roasted them instead`,
+      `${player} got smacked into next Tuesday by a ${entity}`,
+      `${player} tried diplomacy with a ${entity}. The ${entity} voted "No."`,
+      `${player} found out what happens when you ignore ${entity}s`,
+      // Serious Death Messages
+      `${player} fought valiantly but was slain by a ${entity}`,
+      `${player} fell in battle to a ${entity}`,
+      `${player} was overpowered by the relentless assault of a ${entity}`,
+      `${player} met their end at the hands of a ${entity}`,
+      `${player} was defeated by the ferocity of a ${entity}`,
+      `${player} tried to stand their ground but was overwhelmed by a ${entity}`,
+      `${player}'s journey was cut short by a ${entity}`,
+      `${player} underestimated the strength of a ${entity} and paid the price`,
+      `${player} was caught off guard by a ${entity} and didn't make it`,
+      `${player} was brought down by a ${entity} in a brutal fight`,
+      `${player} gave their all but couldn't survive the wrath of a ${entity}`,
+      `${player} fought to the bitter end against a ${entity}`,
+      `${player} fell to the might of a ${entity}`,
+      `${player} couldn't withstand the power of a ${entity}`,
+      `${player} was outmatched in combat by a ${entity}`,
+      `${player} succumbed to their wounds after a fight with a ${entity}`,
+      `${player} met their match in a ${entity}`,
+      `${player} was slain by a ${entity} in a moment of intense combat`,
+      `${player} fought with honor but was defeated by a ${entity}`,
+      `${player} was overwhelmed by a ${entity} after a fierce struggle`,
+      // Ambiguous Death Messages
+      `${player} fought valiantly... or so they thought`,
+      `${player} couldn't stand against their foe`,
+      `${player} gave it their all but couldn't survive the battle`,
+      `${player} fell in a moment of chaos`,
+      `${player} met their end in the heat of battle`,
+      `${player} was overwhelmed by a deadly opponent`,
+      `${player} tried to fight back, but it wasn't enough`,
+      `${player} was taken down in a fierce skirmish`,
+      `${player} lost their life in a brutal confrontation`,
+      `${player} perished in the heat of combat`,
+      `${player} was struck down in the middle of a fight`,
+      `${player} fought bravely but ultimately succumbed`,
+      `${player} couldn't escape the fury of their attacker`,
+      `${player} miscalculated during a tense battle`,
+      `${player}'s life ended during a relentless assault`,
+      `${player} couldn't recover from the damage dealt`,
+      `${player} was caught in the chaos of combat`,
+      `${player} lost the fight and paid the ultimate price`,
+      `${player} was overcome by an insurmountable challenge`
     ];
-    request.body = JSON.stringify({ "type": event_type, "thorny_id": this.thorny_id });
-    console.log(`[CONNECTION] Sending ${event_type} to NexusCore for ThornyID ${this.thorny_id} (${this.whitelist} / ${this.gamertag})`);
-    http.request(request);
+    return deathMessages[Math.floor(Math.random() * deathMessages.length)];
   }
-  /**
-   * Returns a decorated role string for chat decoration
-   */
-  get_role_display() {
-    let role = this.role;
-    let colour = "\xA7b";
-    if (this.patron) {
-      role = "Patron";
-      colour = "\xA7c";
+  static random_suicide(player, cause) {
+    let deathMessages;
+    const fallDeathMessages = [
+      `${player} took a tumble and couldn't recover from the fall`,
+      `${player} had a long drop. Too bad they didn't stick the landing`,
+      `${player} fell from a great height... and didn't make it`,
+      `${player} misjudged the fall, and gravity made sure they paid`,
+      `${player} learned the hard way that falling isn't a safe way down`
+    ];
+    const lavaDeathMessages = [
+      `${player} got too close to the heat and didn't survive the burn`,
+      `${player} decided to take a swim in lava. It didn't end well`,
+      `${player} got cooked alive in lava`,
+      `${player} thought lava was just a harmless pool. It was not`,
+      `${player} learned that lava isn't as warm as it looks`
+    ];
+    const drowningDeathMessages = [
+      `${player} couldn't hold their breath long enough and drowned`,
+      `${player} tried to swim but forgot how to breathe`,
+      `${player} sank to the depths... and stayed there`,
+      `${player} was caught in the water's grip and couldn't escape`,
+      `${player} drowned while exploring the depths of the ocean`
+    ];
+    const fireDeathMessages = [
+      `${player} got too close to the fire and burned to a crisp`,
+      `${player} spent too much time in the flames`,
+      `${player} felt the heat... and it was the last thing they felt`,
+      `${player} tried to walk through fire. It didn't work out`,
+      `${player} got roasted by a fire they couldn't escape`
+    ];
+    const fallingBlockDeathMessages = [
+      `${player} was crushed by a falling block`,
+      `${player} didn't stand a chance against the falling blocks`,
+      `${player} took a hit from a falling block and didn't make it`,
+      `${player} miscalculated and was crushed by falling debris`,
+      `${player} learned to watch out for falling blocks the hard way`
+    ];
+    const contactDeathMessages = [
+      `${player} couldn't handle the sharp prick of a cactus`,
+      `${player} made contact with a cactus and it didn't end well`,
+      `${player} took a wrong step into a cactus patch`,
+      `${player} tried to walk through a sweet berry bush and learned its lesson`,
+      `${player} found out the hard way that cactus isn't friendly`
+    ];
+    const magicDeathMessages = [
+      `${player} couldn't resist the effects of the potion and fell`,
+      `${player} was too weak to survive the magic that hit them`,
+      `${player} couldn't outlast the effects of the enchanted potion`,
+      `${player} succumbed to the magic that surrounded them`,
+      `${player} was struck by a magical force beyond their control`
+    ];
+    const defaultDeathMessages = [
+      `${player} met an untimely end due to mysterious circumstances`,
+      `${player} was caught off guard by the unforgiving world`,
+      `${player} disappeared, leaving behind only questions`,
+      `${player} succumbed to forces beyond understanding`,
+      `${player} didn't make it`,
+      `${player} encountered something they couldn't survive`,
+      `${player} was claimed by the unknown`,
+      `${player} was no match for whatever happened`,
+      `${player} fell victim to an unforeseen fate`,
+      `${player} perished, but no one knows how or why`,
+      `${player} met their end, and the details remain a mystery`,
+      `${player} passed away under unknown circumstances`,
+      `${player} was taken by the world in an unknown way`,
+      `${player} didn't live to tell the tale... for unknown reasons`,
+      `${player} didn't survive, but the cause will forever remain a secret`,
+      `${player} faced an untold fate, leaving behind no explanation`
+    ];
+    if (cause === "fall") {
+      deathMessages = fallDeathMessages;
+    } else if (cause === "lava") {
+      deathMessages = lavaDeathMessages;
+    } else if (cause === "drowning") {
+      deathMessages = drowningDeathMessages;
+    } else if (cause === "fire") {
+      deathMessages = fireDeathMessages;
+    } else if (cause === "fallingBlock") {
+      deathMessages = fallingBlockDeathMessages;
+    } else if (cause === "contact") {
+      deathMessages = contactDeathMessages;
+    } else if (cause === "magic") {
+      deathMessages = magicDeathMessages;
+    } else {
+      deathMessages = defaultDeathMessages;
     }
-    if (this.role == "Community Manager") {
-      role = "Manager";
-      colour = "\xA7e";
-    }
-    if (this.role == "Owner") {
-      colour = "\xA7l\xA7a";
-    }
-    return colour + role;
+    return deathMessages[Math.floor(Math.random() * deathMessages.length)];
   }
 };
-
-// behaviour_pack/scripts-dev/api/relay.ts
-import { HttpRequest as HttpRequest2, HttpHeader as HttpHeader2, HttpRequestMethod as HttpRequestMethod2, http as http2 } from "@minecraft/server-net";
-var Relay = class {
-  static message(nametag, content) {
-    const request = new HttpRequest2("http://nexuscore:8000/api/v0.1/events/relay");
-    request.method = HttpRequestMethod2.Post;
-    request.body = JSON.stringify({
-      "type": "message",
-      "content": content,
-      "embed_title": "",
-      "embed_content": "",
-      "name": nametag
-    });
-    request.headers = [
-      new HttpHeader2("Content-Type", "application/json"),
-      new HttpHeader2("auth", "my-auth-token")
-    ];
-    http2.request(request);
-  }
-  static event(title, content, event_type) {
-    const request = new HttpRequest2("http://nexuscore:8000/api/v0.1/events/relay");
-    request.method = HttpRequestMethod2.Post;
-    request.body = JSON.stringify({
-      "type": event_type,
-      "content": "",
-      "embed_title": title,
-      "embed_content": content,
-      "name": "Server"
-    });
-    request.headers = [
-      new HttpHeader2("Content-Type", "application/json"),
-      new HttpHeader2("auth", "my-auth-token")
-    ];
-    http2.request(request);
-  }
-};
-
-// behaviour_pack/scripts-dev/api/interaction.ts
-import { HttpRequest as HttpRequest3, HttpHeader as HttpHeader3, HttpRequestMethod as HttpRequestMethod3, http as http3 } from "@minecraft/server-net";
-var Interaction = class _Interaction {
-  static {
-    this.queue = [];
-  }
-  static {
-    this.processing = false;
-  }
-  constructor(data) {
-    this.thorny_id = data.thorny_id;
-    this.type = data.type;
-    this.position_x = Math.round(data.position_x);
-    this.position_y = Math.round(data.position_y);
-    this.position_z = Math.round(data.position_z);
-    this.reference = data.reference;
-    this.mainhand = data.mainhand;
-    this.dimension = data.dimension;
-    this.time = /* @__PURE__ */ new Date();
-  }
-  /**
-   * Post interaction to NexusCore
-   */
-  async post_interaction() {
-    const request = new HttpRequest3(`http://nexuscore:8000/api/v0.1/events/interaction`);
-    request.method = HttpRequestMethod3.Post;
-    request.body = JSON.stringify(this);
-    request.headers = [
-      new HttpHeader3("Content-Type", "application/json"),
-      new HttpHeader3("auth", "my-auth-token")
-    ];
-    await http3.request(request);
-  }
-  static set_processing(value) {
-    _Interaction.processing = value;
-  }
-  static is_processing() {
-    return _Interaction.processing;
-  }
-  static enqueue(interaction) {
-    _Interaction.queue.push(interaction);
-  }
-  static dequeue() {
-    return _Interaction.queue.shift();
-  }
-};
-
-// behaviour_pack/scripts-dev/api/quest.ts
-import { http as http4 } from "@minecraft/server-net";
 
 // node_modules/date-fns/constants.js
 var daysInYear = 365.2425;
@@ -6468,215 +6394,10 @@ function cleanEscapedString2(input) {
   return input.match(escapedStringRegExp2)[1].replace(doubleQuoteRegExp2, "'");
 }
 
-// behaviour_pack/scripts-dev/utils/death_messages.ts
-var DeathMessage = class {
-  static random_pvp(killer, dead) {
-    const deathMessages = [
-      // Quirky messages
-      `${killer} ended ${dead}'s life with style`,
-      `${killer} cut ${dead}'s journey short`,
-      `${killer} turned ${dead} into a spectator`,
-      `${killer} sent ${dead} on a one-way trip to respawn`,
-      `${killer} said goodbye to ${dead}, permanently`,
-      `${killer} reminded ${dead} why armor is important`,
-      `${killer} made sure ${dead} won't see another sunrise`,
-      `${killer} put an end to ${dead}'s ambitions`,
-      `${killer} decided ${dead} needed a timeout`,
-      `${killer} proved ${dead} wasn't ready for the fight`,
-      `${killer} gave ${dead} a firsthand lesson in humility`,
-      `${killer} turned ${dead} into an unwilling fireworks display`,
-      `${killer} showed ${dead} the real power of an enchanted weapon`,
-      `${killer} made ${dead} regret forgetting their shield`,
-      `${killer} casually yeeted ${dead} into the afterlife`,
-      `${killer} turned ${dead} into a pi\xF1ata full of loot`,
-      `${killer} made ${dead} wonder why they even logged in today`,
-      `${killer} turned ${dead}'s health bar into a suggestion`,
-      `${killer} gave ${dead} a one-way ticket to spectator mode`,
-      // More serious messages
-      `${killer} struck the final blow, ending ${dead}'s fight`,
-      `${killer} executed ${dead} with precision and skill`,
-      `${killer} proved to be the stronger warrior against ${dead}`,
-      `${killer} ended ${dead}'s journey with a decisive strike`,
-      `${killer} overwhelmed ${dead} with superior tactics`,
-      `${killer} delivered a critical hit, silencing ${dead}`,
-      `${killer} claimed victory over ${dead} in a fierce battle`,
-      `${killer} vanquished ${dead}, leaving no room for doubt`,
-      `${killer} dominated ${dead}, proving their superiority`,
-      `${killer} took ${dead}'s life in a moment of triumph`,
-      `${killer} emerged victorious over ${dead} in combat`,
-      `${killer} brought an end to ${dead}'s reign on the battlefield`,
-      `${killer} showed no mercy and finished off ${dead}`,
-      `${killer} shattered ${dead}'s defenses, claiming victory`,
-      `${killer} crushed ${dead} with unrelenting force`,
-      `${killer} left no chance for ${dead} to recover`,
-      `${killer} turned the tide of battle, defeating ${dead}`,
-      `${killer} demonstrated unmatched skill, taking down ${dead}`,
-      `${killer} secured their dominance by defeating ${dead}`
-    ];
-    return deathMessages[Math.floor(Math.random() * deathMessages.length)];
-  }
-  static random_pve(player, entity) {
-    entity = entity.replace("minecraft:", "").replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
-    const deathMessages = [
-      // Funny Death Messages
-      `${player} picked a fight with a ${entity} and lost... miserably`,
-      `${player} thought they could outsmart a ${entity}. Spoiler: They couldn't`,
-      `${player} tried to pet a ${entity}. It was not in the mood`,
-      `${player} challenged a ${entity} to a duel. Only one of them read the rules`,
-      `${player} learned that ${entity}s are not for cuddling`,
-      `${player} thought they were the hunter. The ${entity} disagreed`,
-      `${player} got turned into loot by a ${entity}`,
-      `${player} thought they could YOLO past a ${entity}. They YOLO'd too hard`,
-      `${player} underestimated the bite of a ${entity}`,
-      `${player} wanted to be brave. The ${entity} wanted them to respawn`,
-      `${player} was schooled by a ${entity} in PvP 101`,
-      `${player} tried to befriend a ${entity}. It wasn't interested`,
-      `${player} was taught a hard lesson in humility by a ${entity}`,
-      `${player} learned the definition of pain from a ${entity}`,
-      `${player} thought shields were optional. The ${entity} proved otherwise`,
-      `${player} charged at a ${entity} with confidence. The ${entity} sent them back to respawn`,
-      `${player} tried to roast a ${entity}, but it roasted them instead`,
-      `${player} got smacked into next Tuesday by a ${entity}`,
-      `${player} tried diplomacy with a ${entity}. The ${entity} voted "No."`,
-      `${player} found out what happens when you ignore ${entity}s`,
-      // Serious Death Messages
-      `${player} fought valiantly but was slain by a ${entity}`,
-      `${player} fell in battle to a ${entity}`,
-      `${player} was overpowered by the relentless assault of a ${entity}`,
-      `${player} met their end at the hands of a ${entity}`,
-      `${player} was defeated by the ferocity of a ${entity}`,
-      `${player} tried to stand their ground but was overwhelmed by a ${entity}`,
-      `${player}'s journey was cut short by a ${entity}`,
-      `${player} underestimated the strength of a ${entity} and paid the price`,
-      `${player} was caught off guard by a ${entity} and didn't make it`,
-      `${player} was brought down by a ${entity} in a brutal fight`,
-      `${player} gave their all but couldn't survive the wrath of a ${entity}`,
-      `${player} fought to the bitter end against a ${entity}`,
-      `${player} fell to the might of a ${entity}`,
-      `${player} couldn't withstand the power of a ${entity}`,
-      `${player} was outmatched in combat by a ${entity}`,
-      `${player} succumbed to their wounds after a fight with a ${entity}`,
-      `${player} met their match in a ${entity}`,
-      `${player} was slain by a ${entity} in a moment of intense combat`,
-      `${player} fought with honor but was defeated by a ${entity}`,
-      `${player} was overwhelmed by a ${entity} after a fierce struggle`,
-      // Ambiguous Death Messages
-      `${player} fought valiantly... or so they thought`,
-      `${player} couldn't stand against their foe`,
-      `${player} gave it their all but couldn't survive the battle`,
-      `${player} fell in a moment of chaos`,
-      `${player} met their end in the heat of battle`,
-      `${player} was overwhelmed by a deadly opponent`,
-      `${player} tried to fight back, but it wasn't enough`,
-      `${player} was taken down in a fierce skirmish`,
-      `${player} lost their life in a brutal confrontation`,
-      `${player} perished in the heat of combat`,
-      `${player} was struck down in the middle of a fight`,
-      `${player} fought bravely but ultimately succumbed`,
-      `${player} couldn't escape the fury of their attacker`,
-      `${player} miscalculated during a tense battle`,
-      `${player}'s life ended during a relentless assault`,
-      `${player} couldn't recover from the damage dealt`,
-      `${player} was caught in the chaos of combat`,
-      `${player} lost the fight and paid the ultimate price`,
-      `${player} was overcome by an insurmountable challenge`
-    ];
-    return deathMessages[Math.floor(Math.random() * deathMessages.length)];
-  }
-  static random_suicide(player, cause) {
-    let deathMessages;
-    const fallDeathMessages = [
-      `${player} took a tumble and couldn't recover from the fall`,
-      `${player} had a long drop. Too bad they didn't stick the landing`,
-      `${player} fell from a great height... and didn't make it`,
-      `${player} misjudged the fall, and gravity made sure they paid`,
-      `${player} learned the hard way that falling isn't a safe way down`
-    ];
-    const lavaDeathMessages = [
-      `${player} got too close to the heat and didn't survive the burn`,
-      `${player} decided to take a swim in lava. It didn't end well`,
-      `${player} got cooked alive in lava`,
-      `${player} thought lava was just a harmless pool. It was not`,
-      `${player} learned that lava isn't as warm as it looks`
-    ];
-    const drowningDeathMessages = [
-      `${player} couldn't hold their breath long enough and drowned`,
-      `${player} tried to swim but forgot how to breathe`,
-      `${player} sank to the depths... and stayed there`,
-      `${player} was caught in the water's grip and couldn't escape`,
-      `${player} drowned while exploring the depths of the ocean`
-    ];
-    const fireDeathMessages = [
-      `${player} got too close to the fire and burned to a crisp`,
-      `${player} spent too much time in the flames`,
-      `${player} felt the heat... and it was the last thing they felt`,
-      `${player} tried to walk through fire. It didn't work out`,
-      `${player} got roasted by a fire they couldn't escape`
-    ];
-    const fallingBlockDeathMessages = [
-      `${player} was crushed by a falling block`,
-      `${player} didn't stand a chance against the falling blocks`,
-      `${player} took a hit from a falling block and didn't make it`,
-      `${player} miscalculated and was crushed by falling debris`,
-      `${player} learned to watch out for falling blocks the hard way`
-    ];
-    const contactDeathMessages = [
-      `${player} couldn't handle the sharp prick of a cactus`,
-      `${player} made contact with a cactus and it didn't end well`,
-      `${player} took a wrong step into a cactus patch`,
-      `${player} tried to walk through a sweet berry bush and learned its lesson`,
-      `${player} found out the hard way that cactus isn't friendly`
-    ];
-    const magicDeathMessages = [
-      `${player} couldn't resist the effects of the potion and fell`,
-      `${player} was too weak to survive the magic that hit them`,
-      `${player} couldn't outlast the effects of the enchanted potion`,
-      `${player} succumbed to the magic that surrounded them`,
-      `${player} was struck by a magical force beyond their control`
-    ];
-    const defaultDeathMessages = [
-      `${player} met an untimely end due to mysterious circumstances`,
-      `${player} was caught off guard by the unforgiving world`,
-      `${player} disappeared, leaving behind only questions`,
-      `${player} succumbed to forces beyond understanding`,
-      `${player} didn't make it`,
-      `${player} encountered something they couldn't survive`,
-      `${player} was claimed by the unknown`,
-      `${player} was no match for whatever happened`,
-      `${player} fell victim to an unforeseen fate`,
-      `${player} perished, but no one knows how or why`,
-      `${player} met their end, and the details remain a mystery`,
-      `${player} passed away under unknown circumstances`,
-      `${player} was taken by the world in an unknown way`,
-      `${player} didn't live to tell the tale... for unknown reasons`,
-      `${player} didn't survive, but the cause will forever remain a secret`,
-      `${player} faced an untold fate, leaving behind no explanation`
-    ];
-    if (cause === "fall") {
-      deathMessages = fallDeathMessages;
-    } else if (cause === "lava") {
-      deathMessages = lavaDeathMessages;
-    } else if (cause === "drowning") {
-      deathMessages = drowningDeathMessages;
-    } else if (cause === "fire") {
-      deathMessages = fireDeathMessages;
-    } else if (cause === "fallingBlock") {
-      deathMessages = fallingBlockDeathMessages;
-    } else if (cause === "contact") {
-      deathMessages = contactDeathMessages;
-    } else if (cause === "magic") {
-      deathMessages = magicDeathMessages;
-    } else {
-      deathMessages = defaultDeathMessages;
-    }
-    return deathMessages[Math.floor(Math.random() * deathMessages.length)];
-  }
-};
-
 // behaviour_pack/scripts-dev/utils/checks.ts
 function distance_check(c1, c2, radius) {
   const distance = Math.sqrt((c1[0] - c2[0]) ** 2 + (c1[1] - c2[1]) ** 2);
-  if (distance <= radius * 2) {
+  if (distance <= radius) {
     return true;
   }
   return false;
@@ -6694,11 +6415,11 @@ var checks = {
 var checks_default = checks;
 
 // behaviour_pack/scripts-dev/utils/motd.ts
-import { world as world4 } from "@minecraft/server";
+import { world as world2 } from "@minecraft/server";
 function send_motd(player) {
   const motd_short = "Hope you have fun!";
   const motd = "\xA7oHey... Do you even pay attention to these?";
-  world4.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`title "${player.name}" actionbar \xA7a\xA7lWelcome to Everthorn!\xA7r ${motd_short}`);
+  world2.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`title ${player.name} actionbar \xA7a\xA7lWelcome to Everthorn!\xA7r ${motd_short}`);
   player.sendMessage(`\xA7aWelcome to Everthorn, \xA7l${player.name}\xA7r
 | ${motd_short}\xA7r
 | ${motd}\xA7r
@@ -6707,19 +6428,19 @@ function send_motd(player) {
 }
 
 // behaviour_pack/scripts-dev/utils/commands.ts
-import { world as world5, system as system3 } from "@minecraft/server";
-import { EntityComponentTypes as EntityComponentTypes2, ItemStack } from "@minecraft/server";
+import { world as world3, system } from "@minecraft/server";
+import { EntityComponentTypes, ItemStack } from "@minecraft/server";
 function send_message(dimension, target, message2) {
   const msg = { "rawtext": [{ "text": message2 }] };
-  world5.getDimension(dimension).runCommand(`tellraw "${target}" ${JSON.stringify(msg)}`);
+  world3.getDimension(dimension).runCommand(`tellraw ${target} ${JSON.stringify(msg)}`);
 }
 async function play_quest_progress_sound(gamertag) {
-  let player = world5.getPlayers({ name: gamertag })[0];
+  let player = world3.getPlayers({ name: gamertag })[0];
   player.playSound(
     "note.pling",
     { pitch: 1.5, volume: 100, location: player.location }
   );
-  system3.runTimeout(() => {
+  system.runTimeout(() => {
     player.playSound(
       "note.pling",
       { pitch: 2, volume: 100, location: player.location }
@@ -6727,7 +6448,7 @@ async function play_quest_progress_sound(gamertag) {
   }, 2);
 }
 function play_quest_complete_sound(gamertag) {
-  let player = world5.getPlayers({ name: gamertag })[0];
+  let player = world3.getPlayers({ name: gamertag })[0];
   player.playSound(
     "mace.heavy_smash_ground",
     { volume: 100, location: player.location }
@@ -6741,23 +6462,23 @@ function play_quest_complete_sound(gamertag) {
     { volume: 100, pitch: 1.5, location: player.location }
   );
   for (let i = 0; i < 5; i++) {
-    system3.runTimeout(() => {
+    system.runTimeout(() => {
       player.runCommand(`particle minecraft:totem_particle ~ ~2 ~`);
     }, 10);
   }
 }
 function play_objective_complete_sound(gamertag) {
-  let player = world5.getPlayers({ name: gamertag })[0];
+  let player = world3.getPlayers({ name: gamertag })[0];
   player.playSound(
     "random.levelup",
     { volume: 100, pitch: 0.8, location: player.location }
   );
 }
 function send_title(dimension, target, type, message2) {
-  world5.getDimension(dimension).runCommand(`title "${target}" ${type} ${message2}`);
+  world3.getDimension(dimension).runCommand(`title ${target} ${type} ${message2}`);
 }
 function give_item(gamertag, item, amount) {
-  world5.getPlayers({ name: gamertag })[0].getComponent(EntityComponentTypes2.Inventory)?.container?.addItem(
+  world3.getPlayers({ name: gamertag })[0].getComponent(EntityComponentTypes.Inventory)?.container?.addItem(
     new ItemStack(item, amount)
   );
 }
@@ -6805,7 +6526,307 @@ var utils = {
 };
 var utils_default = utils;
 
+// behaviour_pack/scripts-dev/components/glitch.ts
+function load_glitch_component() {
+  function glitch(event) {
+    const location = event.block.location;
+    const radius = Math.floor(Math.random() * 10);
+    let random_location = { x: location.x + 20, y: location.y + 20, z: location.z + 20 };
+    while (!utils_default.checks.distance_check([location.x, location.z], [random_location.x, random_location.z], radius)) {
+      let random_location2 = {
+        x: location.x + Math.floor(Math.random() * radius),
+        y: location.y + Math.floor(Math.random() * 3),
+        z: location.z + Math.floor(Math.random() * radius)
+      };
+    }
+    console.log(JSON.stringify(random_location));
+    event.dimension.spawnParticle("minecraft:minecraft:eyeofender_death_explode_particle", random_location);
+    if (Math.random() < 0.1) {
+    }
+  }
+  world4.beforeEvents.worldInitialize.subscribe((initEvent) => {
+    initEvent.blockComponentRegistry.registerCustomComponent(
+      "amethyst:glitch",
+      {
+        onRandomTick(event) {
+          glitch(event);
+        }
+      }
+    );
+  });
+}
+
+// behaviour_pack/scripts-dev/components/index.ts
+function load_custom_components() {
+  load_fungus_spreading_component();
+  load_glitch_component();
+}
+
+// behaviour_pack/scripts-dev/loops/elytra_no_mending.ts
+import { EquipmentSlot, world as world5, system as system2, EntityComponentTypes as EntityComponentTypes2, ItemComponentTypes, EnchantmentType } from "@minecraft/server";
+function elytraCheck(player) {
+  const player_equipment = player.getComponent(EntityComponentTypes2.Equippable);
+  const item = player_equipment?.getEquipment(EquipmentSlot.Chest);
+  if (item) {
+    const enchantments = item?.getComponent(ItemComponentTypes.Enchantable);
+    const has_mending = enchantments?.hasEnchantment(MinecraftEnchantmentTypes.Mending);
+    if (has_mending && item?.typeId == MinecraftItemTypes.Elytra) {
+      if (!enchantments?.hasEnchantment(MinecraftEnchantmentTypes.Vanishing)) {
+        enchantments?.addEnchantment(
+          {
+            type: new EnchantmentType(MinecraftEnchantmentTypes.Vanishing),
+            level: 1
+          }
+        );
+      }
+      enchantments?.removeEnchantment(MinecraftEnchantmentTypes.Mending);
+      const durability_component = item.getComponent(ItemComponentTypes.Durability);
+      if (durability_component) {
+        durability_component.damage = durability_component.maxDurability;
+      }
+      item.setLore([`
+\xA7o"My wings are cursed!"`]);
+      world5.getDimension("overworld").runCommand(`title "${player.name}" actionbar \xA7o\xA7iMy Elytra feels different...`);
+      player_equipment?.setEquipment(EquipmentSlot.Chest, item);
+      console.log(`[ElytraCheck] Player ${player.name} has elytra with mending. Removing Mending.`);
+    }
+  }
+}
+function load_elytra_mending_checker() {
+  system2.runInterval(() => {
+    let playerlist = world5.getPlayers();
+    playerlist.forEach((player) => {
+      elytraCheck(player);
+    });
+  }, 20);
+  console.log("[Loops] Loaded Elytra Checker Loop");
+}
+
+// behaviour_pack/scripts-dev/loops/border.ts
+import { world as world6, system as system3, EntityDamageCause } from "@minecraft/server";
+function borderCheck(player, dimensionID, border_size, warning_range, outside) {
+  const position = player.location;
+  const distance_2d = Math.sqrt(position.x ** 2 + position.z ** 2);
+  if (border_size < distance_2d && outside.indexOf(player.name) == -1) {
+    outside.push(player.name);
+    console.log(`[Plugin] [Border] Player ${player.name} is outside of the ${dimensionID} border.`);
+  } else if (border_size > distance_2d && outside.indexOf(player.name) != -1) {
+    outside.splice(outside.indexOf(player.name), 1);
+    console.log(`[Plugin] [Border] Player ${player.name} has re-entered the ${dimensionID} border.`);
+  }
+  if (border_size < distance_2d) {
+    world6.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iI shouldn't go any further. It's too dangerous here.`);
+    world6.getDimension(dimensionID).runCommand(`effect "${player.name}" blindness 4 2`);
+    player.applyDamage(1.3, { cause: EntityDamageCause.void });
+  } else if (border_size - 20 < distance_2d) {
+    world6.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iThe Monolith's protection is wearing off. I can feel it...`);
+  }
+  if (border_size - 100 < distance_2d && warning_range.indexOf(player.name) == -1) {
+    warning_range.push(player.name);
+    world6.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iMaybe I should start heading back now...`);
+  } else if (border_size - 100 > distance_2d && warning_range.indexOf(player.name) != -1) {
+    warning_range.splice(warning_range.indexOf(player.name), 1);
+  }
+}
+function load_world_border() {
+  let players_100_blocks_away = { overworld: [], nether: [], end: [] };
+  let players_outside_border = { overworld: [], nether: [], end: [] };
+  system3.runInterval(() => {
+    let players = {
+      overworld: world6.getDimension(MinecraftDimensionTypes.Overworld).getPlayers(),
+      nether: world6.getDimension(MinecraftDimensionTypes.Nether).getPlayers(),
+      end: world6.getDimension(MinecraftDimensionTypes.TheEnd).getPlayers()
+    };
+    players.overworld.forEach((player) => {
+      borderCheck(player, MinecraftDimensionTypes.Overworld, 2050, players_100_blocks_away.overworld, players_outside_border.overworld);
+    });
+    players.nether.forEach((player) => {
+      borderCheck(player, MinecraftDimensionTypes.Nether, 1500, players_100_blocks_away.nether, players_outside_border.nether);
+    });
+    players.end.forEach((player) => {
+      borderCheck(player, MinecraftDimensionTypes.TheEnd, 500, players_100_blocks_away.end, players_outside_border.end);
+    });
+  }, 20);
+  console.log("[Loops] Loaded World Border Loop");
+}
+
+// behaviour_pack/scripts-dev/api/user.ts
+import { HttpRequest, HttpHeader, HttpRequestMethod, http } from "@minecraft/server-net";
+var ThornyUser = class _ThornyUser {
+  static {
+    this.thorny_user_map = {};
+  }
+  static {
+    this.thorny_id_map = {};
+  }
+  constructor(api_data) {
+    this.thorny_id = api_data.thorny_id;
+    this.user_id = api_data.user_id;
+    this.guild_id = api_data.guild_id;
+    this.username = api_data.username;
+    this.join_date = api_data.join_date;
+    this.birthday = api_data.birthday;
+    this.balance = api_data.balance;
+    this.active = api_data.active;
+    this.role = api_data.role;
+    this.patron = api_data.patron;
+    this.level = api_data.level;
+    this.xp = api_data.xp;
+    this.required_xp = api_data.required_xp;
+    this.last_message = api_data.last_message;
+    this.gamertag = api_data.gamertag;
+    this.whitelist = api_data.whitelist;
+  }
+  static async get_user_from_api(guild_id2, gamertag) {
+    return http.get(`http://nexuscore:8000/api/v0.1/users/guild/${guild_id2}/${gamertag.replace(" ", "%20")}`).then((response) => {
+      const thorny_user = new _ThornyUser(JSON.parse(response.body));
+      _ThornyUser.thorny_user_map[gamertag] = thorny_user;
+      _ThornyUser.thorny_id_map[thorny_user.thorny_id] = thorny_user;
+      thorny_user.gamertag = gamertag;
+      return thorny_user;
+    });
+  }
+  static fetch_user(gamertag) {
+    return _ThornyUser.thorny_user_map[gamertag];
+  }
+  static fetch_user_by_id(thorny_id) {
+    return _ThornyUser.thorny_id_map[thorny_id];
+  }
+  /**
+   * Update this user in NexusCore
+   */
+  async update() {
+    const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/users/${this.thorny_id}`);
+    request.method = HttpRequestMethod.Put;
+    request.body = JSON.stringify(this);
+    request.headers = [
+      new HttpHeader("Content-Type", "application/json"),
+      new HttpHeader("auth", "my-auth-token")
+    ];
+    await http.request(request);
+  }
+  /**
+   * Send a connection event to NexusCore, either
+   * connect or disconnect
+   */
+  send_connect_event(event_type) {
+    const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/events/connection`);
+    request.method = HttpRequestMethod.Post;
+    request.headers = [
+      new HttpHeader("Content-Type", "application/json"),
+      new HttpHeader("auth", "my-auth-token")
+    ];
+    request.body = JSON.stringify({ "type": event_type, "thorny_id": this.thorny_id });
+    console.log(`[CONNECTION] Sending ${event_type} to NexusCore for ThornyID ${this.thorny_id} (${this.whitelist} / ${this.gamertag})`);
+    http.request(request);
+  }
+  /**
+   * Returns a decorated role string for chat decoration
+   */
+  get_role_display() {
+    let role = this.role;
+    let colour = "\xA7b";
+    if (this.patron) {
+      role = "Patron";
+      colour = "\xA7c";
+    }
+    if (this.role == "Community Manager") {
+      role = "Manager";
+      colour = "\xA7e";
+    }
+    if (this.role == "Owner") {
+      colour = "\xA7l\xA7a";
+    }
+    return colour + role;
+  }
+};
+
+// behaviour_pack/scripts-dev/api/relay.ts
+import { HttpRequest as HttpRequest2, HttpHeader as HttpHeader2, HttpRequestMethod as HttpRequestMethod2, http as http2 } from "@minecraft/server-net";
+var Relay = class {
+  static message(nametag, content) {
+    const request = new HttpRequest2("http://nexuscore:8000/api/v0.1/events/relay");
+    request.method = HttpRequestMethod2.Post;
+    request.body = JSON.stringify({
+      "type": "message",
+      "content": content,
+      "embed_title": "",
+      "embed_content": "",
+      "name": nametag
+    });
+    request.headers = [
+      new HttpHeader2("Content-Type", "application/json"),
+      new HttpHeader2("auth", "my-auth-token")
+    ];
+    http2.request(request);
+  }
+  static event(title, content, event_type) {
+    const request = new HttpRequest2("http://nexuscore:8000/api/v0.1/events/relay");
+    request.method = HttpRequestMethod2.Post;
+    request.body = JSON.stringify({
+      "type": event_type,
+      "content": "",
+      "embed_title": title,
+      "embed_content": content,
+      "name": "Server"
+    });
+    request.headers = [
+      new HttpHeader2("Content-Type", "application/json"),
+      new HttpHeader2("auth", "my-auth-token")
+    ];
+    http2.request(request);
+  }
+};
+
+// behaviour_pack/scripts-dev/api/interaction.ts
+import { HttpRequest as HttpRequest3, HttpHeader as HttpHeader3, HttpRequestMethod as HttpRequestMethod3, http as http3 } from "@minecraft/server-net";
+var Interaction = class _Interaction {
+  static {
+    this.queue = [];
+  }
+  static {
+    this.processing = false;
+  }
+  constructor(data) {
+    this.thorny_id = data.thorny_id;
+    this.type = data.type;
+    this.position_x = Math.round(data.position_x);
+    this.position_y = Math.round(data.position_y);
+    this.position_z = Math.round(data.position_z);
+    this.reference = data.reference;
+    this.mainhand = data.mainhand;
+    this.dimension = data.dimension;
+    this.time = /* @__PURE__ */ new Date();
+  }
+  /**
+   * Post interaction to NexusCore
+   */
+  async post_interaction() {
+    const request = new HttpRequest3(`http://nexuscore:8000/api/v0.1/events/interaction`);
+    request.method = HttpRequestMethod3.Post;
+    request.body = JSON.stringify(this);
+    request.headers = [
+      new HttpHeader3("Content-Type", "application/json"),
+      new HttpHeader3("auth", "my-auth-token")
+    ];
+    await http3.request(request);
+  }
+  static set_processing(value) {
+    _Interaction.processing = value;
+  }
+  static is_processing() {
+    return _Interaction.processing;
+  }
+  static enqueue(interaction) {
+    _Interaction.queue.push(interaction);
+  }
+  static dequeue() {
+    return _Interaction.queue.shift();
+  }
+};
+
 // behaviour_pack/scripts-dev/api/quest.ts
+import { http as http4 } from "@minecraft/server-net";
 var Reward = class {
   constructor(data) {
     this.display_name = data.display_name;
@@ -7047,7 +7068,7 @@ var QuestWithProgress = class _QuestWithProgress extends Quest {
     this.status = data.status;
     this.objectives = objectives;
   }
-  static clear_cache(thorny_user) {
+  static async clear_cache(thorny_user) {
     delete this.quest_cache[thorny_user.thorny_id];
   }
   static async get_active_quest(thorny_user) {
@@ -7183,23 +7204,157 @@ function load_quest_loop() {
   console.log("[Loops] Loaded Quests Loop");
 }
 
+// behaviour_pack/scripts-dev/loops/glitches.ts
+import { system as system5, world as world7, TicksPerSecond, EntityComponentTypes as EntityComponentTypes3 } from "@minecraft/server";
+function noise_glitch(player) {
+  const noises = [
+    [{ "name": "mob.villager.yes", "options": { "volume": 100, "pitch": 1 } }],
+    [
+      { "name": "block.bell.hit", "options": { "volume": 100, "pitch": 0.3 } },
+      { "name": "block.bell.hit", "options": { "volume": 100, "pitch": 0.5 } },
+      { "name": "block.bell.hit", "options": { "volume": 100, "pitch": 0.8 } },
+      { "name": "block.bell.hit", "options": { "volume": 100, "pitch": 0.4 } }
+    ],
+    [{ "name": "random.fuse", "options": { "volume": 100, "pitch": 1 } }],
+    [{ "name": "mob.llama.idle", "options": { "volume": 100, "pitch": 1 } }],
+    [{ "name": "random.anvil_land", "options": { "volume": 100, "pitch": 1 } }],
+    [{ "name": "block.end_portal.spawn", "options": { "volume": 100, "pitch": 1 } }],
+    [
+      { "name": "mob.shulker.ambient", "options": { "volume": 100, "pitch": 0.75 } },
+      { "name": "mob.shulker.ambient", "options": { "volume": 100, "pitch": 1.25 } }
+    ],
+    [{ "name": "mob.cat.meow", "options": { "volume": 100, "pitch": 1 } }]
+  ];
+  const noise = noises[Math.floor(Math.random() * noises.length)];
+  for (const noise_instance of noise) {
+    system5.runTimeout(
+      () => {
+        player.playSound(noise_instance.name, noise_instance.options);
+      },
+      5
+    );
+  }
+}
+function vision_entity_glitch(player) {
+  const entities = [
+    MinecraftEntityTypes.Enderman,
+    MinecraftEntityTypes.Panda,
+    MinecraftEntityTypes.Rabbit,
+    MinecraftEntityTypes.ZombieHorse,
+    MinecraftEntityTypes.Breeze,
+    MinecraftEntityTypes.Camel,
+    MinecraftEntityTypes.Sheep,
+    MinecraftEntityTypes.Stray
+  ];
+  const entity = entities[Math.floor(Math.random() * entities.length)];
+  let location = player.location;
+  let facing = player.getViewDirection();
+  location.x -= facing.x * 2;
+  location.z -= facing.z * 2;
+  let current_entity = player.dimension.spawnEntity(entity, location);
+  let sysid = system5.runInterval(() => {
+    if (current_entity.isValid()) {
+      current_entity.teleport(location);
+      current_entity.getComponent(EntityComponentTypes3.Health)?.resetToMaxValue();
+    } else {
+      system5.clearRun(sysid);
+      current_entity.remove();
+    }
+  });
+  system5.waitTicks(TicksPerSecond * 15).then(() => {
+    system5.clearRun(sysid);
+    current_entity.remove();
+  });
+}
+function vision_block_glitch(player) {
+  const blocks = [
+    MinecraftBlockTypes.Bedrock,
+    MinecraftBlockTypes.LightBlock15,
+    MinecraftBlockTypes.BambooStairs,
+    MinecraftBlockTypes.Dispenser,
+    MinecraftBlockTypes.DarkOakFence,
+    MinecraftBlockTypes.EnchantingTable,
+    MinecraftBlockTypes.Campfire
+  ];
+  const block = blocks[Math.floor(Math.random() * blocks.length)];
+  let location = player.location;
+  let facing = player.getViewDirection();
+  location.x += facing.x * 2;
+  location.z += facing.z * 2;
+  let random_block = player.dimension.getBlock(location);
+  if (random_block?.typeId === MinecraftBlockTypes.Air && player.dimension.getEntitiesAtBlockLocation(location).length === 0) {
+    random_block.setType(block);
+    system5.waitTicks(TicksPerSecond).then(() => {
+      random_block.setType(MinecraftBlockTypes.Air);
+    });
+  }
+}
+function do_glitch() {
+  const random = Math.random();
+  const glitches_type = [
+    "noise",
+    "vision_entity",
+    "vision_block"
+    // "facing",
+    // "effect"
+  ];
+  if (random <= 1) {
+    const glitch = glitches_type[Math.floor(Math.random() * glitches_type.length)];
+    console.log(`[Loops] Doing Glitches: ${glitch}`);
+    switch (glitch) {
+      case "noise":
+        for (const player of world7.getAllPlayers()) {
+          noise_glitch(player);
+        }
+        break;
+      case "vision_entity":
+        for (const player of world7.getAllPlayers()) {
+          vision_entity_glitch(player);
+        }
+        break;
+      case "vision_block":
+        for (const player of world7.getAllPlayers()) {
+          vision_block_glitch(player);
+        }
+        break;
+      case "facing":
+        break;
+      case "effect":
+        break;
+    }
+    const all_players = world7.getAllPlayers();
+    for (const player of all_players) {
+      player.sendMessage("\xA7oWhat was that?");
+      const facing = player.getViewDirection();
+      player.sendMessage(`${facing.x}, ${facing.y}, ${facing.z}`);
+    }
+  }
+}
+function load_glitch_loop() {
+  system5.runInterval(() => {
+    do_glitch();
+  }, TicksPerSecond * 60 * 30);
+  console.log("[Loops] Loaded Glitches Loop");
+}
+
 // behaviour_pack/scripts-dev/loops/index.ts
 function load_loops() {
   load_elytra_mending_checker();
   load_world_border();
   load_quest_loop();
+  load_glitch_loop();
 }
 
 // behaviour_pack/scripts-dev/events/blocks.ts
-import { world as world6, system as system5 } from "@minecraft/server";
-import { EntityComponentTypes as EntityComponentTypes3, EquipmentSlot as EquipmentSlot2 } from "@minecraft/server";
+import { world as world8, system as system6 } from "@minecraft/server";
+import { EntityComponentTypes as EntityComponentTypes4, EquipmentSlot as EquipmentSlot2 } from "@minecraft/server";
 function load_block_event_handler() {
-  world6.beforeEvents.playerBreakBlock.subscribe((event) => {
+  world8.beforeEvents.playerBreakBlock.subscribe((event) => {
     const block_id = event.block.typeId;
     const block_location = [event.block.x, event.block.y, event.block.z];
     const dimension = event.player.dimension;
-    const mainhand = event.player.getComponent(EntityComponentTypes3.Equippable)?.getEquipment(EquipmentSlot2.Mainhand);
-    system5.run(() => {
+    const mainhand = event.player.getComponent(EntityComponentTypes4.Equippable)?.getEquipment(EquipmentSlot2.Mainhand);
+    system6.run(() => {
       const interaction = new api_default.Interaction(
         {
           thorny_id: api_default.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
@@ -7216,12 +7371,12 @@ function load_block_event_handler() {
       api_default.Interaction.enqueue(interaction);
     });
   });
-  world6.afterEvents.playerPlaceBlock.subscribe((event) => {
+  world8.afterEvents.playerPlaceBlock.subscribe((event) => {
     const block_id = event.block.typeId;
     const block_location = [event.block.x, event.block.y, event.block.z];
     const dimension = event.player.dimension;
-    const mainhand = event.player.getComponent(EntityComponentTypes3.Equippable)?.getEquipment(EquipmentSlot2.Mainhand);
-    system5.run(() => {
+    const mainhand = event.player.getComponent(EntityComponentTypes4.Equippable)?.getEquipment(EquipmentSlot2.Mainhand);
+    system6.run(() => {
       const interaction = new api_default.Interaction(
         {
           thorny_id: api_default.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
@@ -7237,11 +7392,11 @@ function load_block_event_handler() {
       interaction.post_interaction();
     });
   });
-  world6.afterEvents.playerInteractWithBlock.subscribe((event) => {
+  world8.afterEvents.playerInteractWithBlock.subscribe((event) => {
     const block_id = event.block.typeId;
     const block_location = [event.block.x, event.block.y, event.block.z];
     const dimension = event.player.dimension;
-    const mainhand = event.player.getComponent(EntityComponentTypes3.Equippable)?.getEquipment(EquipmentSlot2.Mainhand);
+    const mainhand = event.player.getComponent(EntityComponentTypes4.Equippable)?.getEquipment(EquipmentSlot2.Mainhand);
     const all_blocks = [
       MinecraftBlockTypes.Chest,
       MinecraftBlockTypes.Barrel,
@@ -7264,7 +7419,7 @@ function load_block_event_handler() {
       MinecraftBlockTypes.LightGrayShulkerBox
     ];
     if (all_blocks.includes(block_id)) {
-      system5.run(() => {
+      system6.run(() => {
         const interaction = new api_default.Interaction(
           {
             thorny_id: api_default.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
@@ -7284,12 +7439,12 @@ function load_block_event_handler() {
 }
 
 // behaviour_pack/scripts-dev/events/chat.ts
-import { world as world7, system as system6 } from "@minecraft/server";
+import { world as world9, system as system7 } from "@minecraft/server";
 function load_chat_handler() {
-  world7.beforeEvents.chatSend.subscribe((chat_event) => {
+  world9.beforeEvents.chatSend.subscribe((chat_event) => {
     const gamertag = chat_event.sender.name;
     const thorny_user = api_default.ThornyUser.fetch_user(gamertag);
-    world7.sendMessage({
+    world9.sendMessage({
       rawtext: [
         {
           text: `\xA7l\xA78[\xA7r${thorny_user?.get_role_display()}\xA7l\xA78]\xA7r \xA77${gamertag}:\xA7r ${chat_event.message}`
@@ -7297,32 +7452,28 @@ function load_chat_handler() {
       ]
     });
     chat_event.cancel = true;
-    system6.run(() => {
+    system7.run(() => {
       api_default.Relay.message(gamertag, chat_event.message);
     });
   });
 }
 
 // behaviour_pack/scripts-dev/events/connections.ts
-import { world as world8 } from "@minecraft/server";
+import { world as world10 } from "@minecraft/server";
 function load_connections_handler(guild_id2) {
-  world8.afterEvents.playerSpawn.subscribe((spawn_event) => {
+  world10.afterEvents.playerSpawn.subscribe((spawn_event) => {
     if (spawn_event.initialSpawn) {
-      try {
-        api_default.ThornyUser.get_user_from_api(guild_id2, spawn_event.player.name).then((thorny_user) => {
-          thorny_user.send_connect_event("connect");
-          api_default.Relay.event(`${spawn_event.player.name} has joined the server`, "", "join");
-          utils_default.send_motd(spawn_event.player);
-          if (thorny_user.patron) {
-            spawn_event.player.nameTag = `\xA7l\xA7c${spawn_event.player.nameTag}`;
-          }
-        });
-      } catch (e) {
-        console.error(e);
-      }
+      api_default.ThornyUser.get_user_from_api(guild_id2, spawn_event.player.name).then((thorny_user) => {
+        thorny_user.send_connect_event("connect");
+        api_default.Relay.event(`${spawn_event.player.name} has joined the server`, "", "join");
+        utils_default.send_motd(spawn_event.player);
+        if (thorny_user.patron) {
+          spawn_event.player.nameTag = `\xA7l\xA7c${spawn_event.player.nameTag}`;
+        }
+      });
     }
   });
-  world8.afterEvents.playerLeave.subscribe((leave_event) => {
+  world10.afterEvents.playerLeave.subscribe((leave_event) => {
     const thorny_user = api_default.ThornyUser.fetch_user(leave_event.playerName);
     if (thorny_user) {
       api_default.QuestWithProgress.clear_cache(thorny_user);
@@ -7333,14 +7484,14 @@ function load_connections_handler(guild_id2) {
 }
 
 // behaviour_pack/scripts-dev/events/kills.ts
-import { world as world9 } from "@minecraft/server";
-import { EntityComponentTypes as EntityComponentTypes4, EquipmentSlot as EquipmentSlot3, Player as Player4 } from "@minecraft/server";
+import { world as world11 } from "@minecraft/server";
+import { EntityComponentTypes as EntityComponentTypes5, EquipmentSlot as EquipmentSlot3, Player as Player5 } from "@minecraft/server";
 function load_kill_event_handler() {
-  world9.afterEvents.entityDie.subscribe((event) => {
-    if (event.damageSource.damagingEntity instanceof Player4) {
+  world11.afterEvents.entityDie.subscribe((event) => {
+    if (event.damageSource.damagingEntity instanceof Player5) {
       const player = event.damageSource.damagingEntity;
       const dimension = player.dimension;
-      const mainhand = player.getComponent(EntityComponentTypes4.Equippable)?.getEquipment(EquipmentSlot3.Mainhand);
+      const mainhand = player.getComponent(EntityComponentTypes5.Equippable)?.getEquipment(EquipmentSlot3.Mainhand);
       const interaction = new api_default.Interaction(
         {
           thorny_id: api_default.ThornyUser.fetch_user(player.name)?.thorny_id ?? 0,
@@ -7353,9 +7504,9 @@ function load_kill_event_handler() {
           dimension: dimension.id
         }
       );
-      if (event.deadEntity instanceof Player4) {
+      if (event.deadEntity instanceof Player5) {
         const dead_player = event.deadEntity;
-        const dead_mainhand = dead_player.getComponent(EntityComponentTypes4.Equippable)?.getEquipment(EquipmentSlot3.Mainhand);
+        const dead_mainhand = dead_player.getComponent(EntityComponentTypes5.Equippable)?.getEquipment(EquipmentSlot3.Mainhand);
         interaction.reference = dead_player.name;
         const death_interaction = new api_default.Interaction(
           {
@@ -7377,11 +7528,11 @@ function load_kill_event_handler() {
         interaction.post_interaction();
       }
       api_default.Interaction.enqueue(interaction);
-    } else if (event.deadEntity instanceof Player4 && event.damageSource.damagingEntity) {
+    } else if (event.deadEntity instanceof Player5 && event.damageSource.damagingEntity) {
       const killer = event.damageSource.damagingEntity;
       const player = event.deadEntity;
       const dimension = player.dimension;
-      const mainhand = player.getComponent(EntityComponentTypes4.Equippable)?.getEquipment(EquipmentSlot3.Mainhand);
+      const mainhand = player.getComponent(EntityComponentTypes5.Equippable)?.getEquipment(EquipmentSlot3.Mainhand);
       const death_interaction = new api_default.Interaction(
         {
           thorny_id: api_default.ThornyUser.fetch_user(player.name)?.thorny_id ?? 0,
@@ -7396,10 +7547,10 @@ function load_kill_event_handler() {
       );
       death_interaction.post_interaction();
       api_default.Relay.event(utils_default.DeathMessage.random_pve(player.name, killer.typeId), "", "other");
-    } else if (event.deadEntity instanceof Player4 && !event.damageSource.damagingEntity) {
+    } else if (event.deadEntity instanceof Player5 && !event.damageSource.damagingEntity) {
       const player = event.deadEntity;
       const dimension = player.dimension;
-      const mainhand = player.getComponent(EntityComponentTypes4.Equippable)?.getEquipment(EquipmentSlot3.Mainhand);
+      const mainhand = player.getComponent(EntityComponentTypes5.Equippable)?.getEquipment(EquipmentSlot3.Mainhand);
       const death_interaction = new api_default.Interaction(
         {
           thorny_id: api_default.ThornyUser.fetch_user(player.name)?.thorny_id ?? 0,
@@ -7419,26 +7570,22 @@ function load_kill_event_handler() {
 }
 
 // behaviour_pack/scripts-dev/events/script_events.ts
-import { system as system7 } from "@minecraft/server";
+import { system as system8 } from "@minecraft/server";
 function load_script_event_handler() {
-  system7.afterEvents.scriptEventReceive.subscribe((script_event) => {
-    const thorny_user = api_default.ThornyUser.fetch_user(script_event.message);
-    if (thorny_user) {
-      const interaction = new api_default.Interaction(
-        {
-          thorny_id: thorny_user.thorny_id,
-          type: "scriptevent",
-          position_x: 0,
-          position_y: 0,
-          position_z: 0,
-          reference: script_event.id,
-          mainhand: null,
-          dimension: MinecraftDimensionTypes.Overworld
-        }
-      );
-      api_default.Interaction.enqueue(interaction);
-      interaction.post_interaction().then();
-    }
+  system8.afterEvents.scriptEventReceive.subscribe((script_event) => {
+    const interaction = new api_default.Interaction(
+      {
+        thorny_id: api_default.ThornyUser.fetch_user(script_event.message)?.thorny_id ?? 0,
+        type: "scriptevent",
+        position_x: 0,
+        position_y: 0,
+        position_z: 0,
+        reference: script_event.id,
+        mainhand: null,
+        dimension: MinecraftDimensionTypes.Overworld
+      }
+    );
+    api_default.Interaction.enqueue(interaction);
   });
 }
 
@@ -7452,7 +7599,7 @@ function load_world_event_handlers(guild_id2) {
 }
 
 // behaviour_pack/scripts-dev/main.ts
-var guild_id = "611008530077712395";
+var guild_id = "1213827104945471538";
 load_loops();
 load_custom_components();
 load_world_event_handlers(guild_id);
