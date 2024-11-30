@@ -1,11 +1,10 @@
 import { world, system } from '@minecraft/server';
-import sleep from './sleep';
 import { EntityComponentTypes, ItemStack } from '@minecraft/server';
 
 
 function send_message(dimension: string, target: string, message: string) {
     const msg = {'rawtext': [{'text': message}]}
-    world.getDimension(dimension).runCommand(`tellraw ${target} ${JSON.stringify(msg)}`)
+    world.getDimension(dimension).runCommand(`tellraw "${target}" ${JSON.stringify(msg)}`)
 }
 
 async function play_quest_progress_sound(gamertag: string) {
@@ -55,7 +54,7 @@ function play_objective_complete_sound(gamertag: string) {
 }
 
 function send_title(dimension: string, target: string, type: 'title' | 'actionbar', message: string) {
-    world.getDimension(dimension).runCommand(`title ${target} ${type} ${message}`)
+    world.getDimension(dimension).runCommand(`title "${target}" ${type} ${message}`)
 }
 
 function give_item(gamertag: string, item: string, amount: number) {

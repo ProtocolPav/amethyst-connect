@@ -1,0 +1,20 @@
+{
+  "format_version": "1.21.40",
+  "minecraft:block": {
+    "description": {
+      "identifier": "amethyst:glitch_block",
+      "menu_category": {
+        "category": "construction",
+        "is_hidden_in_commands": false
+      }
+    },
+    "components": {
+      "minecraft:destructible_by_mining": false,
+      "minecraft:destructible_by_explosion": false,
+      "minecraft:display_name": "Glitch Block",
+      "minecraft:custom_components": [
+        "amethyst:glitch"
+      ]
+    }
+  }
+}

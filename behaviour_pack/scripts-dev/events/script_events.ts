@@ -5,22 +5,25 @@ import {MinecraftDimensionTypes} from "@minecraft/vanilla-data";
 export default function load_script_event_handler() {
 
     system.afterEvents.scriptEventReceive.subscribe((script_event) => {
-        const interaction = new api.Interaction(
-            {
-                thorny_id: api.ThornyUser.fetch_user(script_event.message)?.thorny_id ?? 0,
-                type: 'scriptevent',
-                position_x: 0,
-                position_y: 0,
-                position_z: 0,
-                reference: script_event.id,
-                mainhand: null,
-                dimension: MinecraftDimensionTypes.Overworld,
-            }
-        )
+        const thorny_user = api.ThornyUser.fetch_user(script_event.message)
 
-        api.Interaction.enqueue(interaction)
+        if (thorny_user) {
+            const interaction = new api.Interaction(
+                {
+                    thorny_id: thorny_user.thorny_id,
+                    type: 'scriptevent',
+                    position_x: 0,
+                    position_y: 0,
+                    position_z: 0,
+                    reference: script_event.id,
+                    mainhand: null,
+                    dimension: MinecraftDimensionTypes.Overworld,
+                }
+            )
 
-        // and log interaction to NexusCore
+            api.Interaction.enqueue(interaction)
+            interaction.post_interaction().then()
+        }
     })
 
 }
