@@ -6419,7 +6419,7 @@ import { world as world2 } from "@minecraft/server";
 function send_motd(player) {
   const motd_short = "Hope you have fun!";
   const motd = "\xA7oHey... Do you even pay attention to these?";
-  world2.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`title ${player.name} actionbar \xA7a\xA7lWelcome to Everthorn!\xA7r ${motd_short}`);
+  world2.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`title "${player.name}" actionbar \xA7a\xA7lWelcome to Everthorn!\xA7r ${motd_short}`);
   player.sendMessage(`\xA7aWelcome to Everthorn, \xA7l${player.name}\xA7r
 | ${motd_short}\xA7r
 | ${motd}\xA7r
@@ -6432,7 +6432,7 @@ import { world as world3, system } from "@minecraft/server";
 import { EntityComponentTypes, ItemStack } from "@minecraft/server";
 function send_message(dimension, target, message2) {
   const msg = { "rawtext": [{ "text": message2 }] };
-  world3.getDimension(dimension).runCommand(`tellraw ${target} ${JSON.stringify(msg)}`);
+  world3.getDimension(dimension).runCommand(`tellraw "${target}" ${JSON.stringify(msg)}`);
 }
 async function play_quest_progress_sound(gamertag) {
   let player = world3.getPlayers({ name: gamertag })[0];
@@ -6475,7 +6475,7 @@ function play_objective_complete_sound(gamertag) {
   );
 }
 function send_title(dimension, target, type, message2) {
-  world3.getDimension(dimension).runCommand(`title ${target} ${type} ${message2}`);
+  world3.getDimension(dimension).runCommand(`title "${target}" ${type} ${message2}`);
 }
 function give_item(gamertag, item, amount) {
   world3.getPlayers({ name: gamertag })[0].getComponent(EntityComponentTypes.Inventory)?.container?.addItem(
@@ -6678,13 +6678,24 @@ var ThornyUser = class _ThornyUser {
     this.whitelist = api_data.whitelist;
   }
   static async get_user_from_api(guild_id2, gamertag) {
-    return http.get(`http://nexuscore:8000/api/v0.1/users/guild/${guild_id2}/${gamertag.replace(" ", "%20")}`).then((response) => {
-      const thorny_user = new _ThornyUser(JSON.parse(response.body));
-      _ThornyUser.thorny_user_map[gamertag] = thorny_user;
-      _ThornyUser.thorny_id_map[thorny_user.thorny_id] = thorny_user;
-      thorny_user.gamertag = gamertag;
-      return thorny_user;
-    });
+    try {
+      return http.get(`http://nexuscore:8000/api/v0.1/users/guild/${guild_id2}/${gamertag.replace(" ", "%20")}`).then((response) => {
+        try {
+          console.log(response.body, response.status);
+          const thorny_user = new _ThornyUser(JSON.parse(response.body));
+          _ThornyUser.thorny_user_map[gamertag] = thorny_user;
+          _ThornyUser.thorny_id_map[thorny_user.thorny_id] = thorny_user;
+          thorny_user.gamertag = gamertag;
+          return thorny_user;
+        } catch (e) {
+          console.error("Failed to parse JSON:", e);
+          throw e;
+        }
+      });
+    } catch (e) {
+      console.error(`Big error in getting ThornyUser for ${gamertag}`, e);
+      throw e;
+    }
   }
   static fetch_user(gamertag) {
     return _ThornyUser.thorny_user_map[gamertag];
@@ -7068,7 +7079,7 @@ var QuestWithProgress = class _QuestWithProgress extends Quest {
     this.status = data.status;
     this.objectives = objectives;
   }
-  static async clear_cache(thorny_user) {
+  static clear_cache(thorny_user) {
     delete this.quest_cache[thorny_user.thorny_id];
   }
   static async get_active_quest(thorny_user) {
@@ -7463,14 +7474,18 @@ import { world as world10 } from "@minecraft/server";
 function load_connections_handler(guild_id2) {
   world10.afterEvents.playerSpawn.subscribe((spawn_event) => {
     if (spawn_event.initialSpawn) {
-      api_default.ThornyUser.get_user_from_api(guild_id2, spawn_event.player.name).then((thorny_user) => {
-        thorny_user.send_connect_event("connect");
-        api_default.Relay.event(`${spawn_event.player.name} has joined the server`, "", "join");
-        utils_default.send_motd(spawn_event.player);
-        if (thorny_user.patron) {
-          spawn_event.player.nameTag = `\xA7l\xA7c${spawn_event.player.nameTag}`;
-        }
-      });
+      try {
+        api_default.ThornyUser.get_user_from_api(guild_id2, spawn_event.player.name).then((thorny_user) => {
+          thorny_user.send_connect_event("connect");
+          api_default.Relay.event(`${spawn_event.player.name} has joined the server`, "", "join");
+          utils_default.send_motd(spawn_event.player);
+          if (thorny_user.patron) {
+            spawn_event.player.nameTag = `\xA7l\xA7c${spawn_event.player.nameTag}`;
+          }
+        });
+      } catch (e) {
+        console.error(e);
+      }
     }
   });
   world10.afterEvents.playerLeave.subscribe((leave_event) => {
@@ -7573,19 +7588,23 @@ function load_kill_event_handler() {
 import { system as system8 } from "@minecraft/server";
 function load_script_event_handler() {
   system8.afterEvents.scriptEventReceive.subscribe((script_event) => {
-    const interaction = new api_default.Interaction(
-      {
-        thorny_id: api_default.ThornyUser.fetch_user(script_event.message)?.thorny_id ?? 0,
-        type: "scriptevent",
-        position_x: 0,
-        position_y: 0,
-        position_z: 0,
-        reference: script_event.id,
-        mainhand: null,
-        dimension: MinecraftDimensionTypes.Overworld
-      }
-    );
-    api_default.Interaction.enqueue(interaction);
+    const thorny_user = api_default.ThornyUser.fetch_user(script_event.message);
+    if (thorny_user) {
+      const interaction = new api_default.Interaction(
+        {
+          thorny_id: thorny_user.thorny_id,
+          type: "scriptevent",
+          position_x: 0,
+          position_y: 0,
+          position_z: 0,
+          reference: script_event.id,
+          mainhand: null,
+          dimension: MinecraftDimensionTypes.Overworld
+        }
+      );
+      api_default.Interaction.enqueue(interaction);
+      interaction.post_interaction().then();
+    }
   });
 }
 
@@ -7599,7 +7618,7 @@ function load_world_event_handlers(guild_id2) {
 }
 
 // behaviour_pack/scripts-dev/main.ts
-var guild_id = "1213827104945471538";
+var guild_id = "611008530077712395";
 load_loops();
 load_custom_components();
 load_world_event_handlers(guild_id);
