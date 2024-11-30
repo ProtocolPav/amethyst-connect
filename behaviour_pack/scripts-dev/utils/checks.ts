@@ -8,7 +8,7 @@ import { differenceInSeconds } from 'date-fns';
 function distance_check(c1: [number, number], c2: [number, number], radius: number): Boolean {
     const distance = Math.sqrt((c1[0] - c2[0]) ** 2 + (c1[1] - c2[1]) ** 2)
 
-    if (distance <= radius*2) {
+    if (distance <= radius) {
         return true
     }
 

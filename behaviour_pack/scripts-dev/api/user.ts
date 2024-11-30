@@ -60,17 +60,31 @@ export default class ThornyUser implements IThornyUser {
     }
 
     public static async get_user_from_api(guild_id: string, gamertag: string): Promise<ThornyUser> {
-        return http.get(`http://nexuscore:8000/api/v0.1/users/guild/${guild_id}/${gamertag.replace(" ", "%20")}`)
+        try {
+            return http.get(`http://nexuscore:8000/api/v0.1/users/guild/${guild_id}/${gamertag.replace(" ", "%20")}`)
                 .then(response => {
-                    const thorny_user = new ThornyUser(JSON.parse(response.body) as IThornyUser)
+                    try {
+                        console.log(response.body, response.status)
+                        const thorny_user = new ThornyUser(JSON.parse(response.body) as IThornyUser)
 
-                    // Adds user to map for quick fetching
-                    ThornyUser.thorny_user_map[gamertag] = thorny_user
-                    ThornyUser.thorny_id_map[thorny_user.thorny_id] = thorny_user
-                    thorny_user.gamertag = gamertag
+                        // Adds user to map for quick fetching
+                        ThornyUser.thorny_user_map[gamertag] = thorny_user
+                        ThornyUser.thorny_id_map[thorny_user.thorny_id] = thorny_user
+                        thorny_user.gamertag = gamertag
 
-                    return thorny_user
+                        return thorny_user
+                    }
+                    catch (e) {
+                        console.error("Failed to parse JSON:", e);
+                        throw e;
+                    }
+
                 });
+        }
+        catch (e) {
+            console.error(`Big error in getting ThornyUser for ${gamertag}`, e);
+            throw e;
+        }
     }
 
     public static fetch_user(gamertag: string): ThornyUser | undefined {

@@ -129,7 +129,7 @@ export default class QuestWithProgress extends Quest {
         this.objectives = objectives
     }
 
-    public static async clear_cache(thorny_user: ThornyUser) {
+    public static clear_cache(thorny_user: ThornyUser) {
         delete this.quest_cache[thorny_user.thorny_id]
     }
 
