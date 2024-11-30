@@ -7,16 +7,21 @@ export default function load_connections_handler(guild_id: string) {
     // Handle Player Join Event
     world.afterEvents.playerSpawn.subscribe((spawn_event) => {
         if (spawn_event.initialSpawn) {
-            api.ThornyUser.get_user_from_api(guild_id, spawn_event.player.name)
-            .then(thorny_user => {
-                thorny_user.send_connect_event('connect')
-                api.Relay.event(`${spawn_event.player.name} has joined the server`, '', 'join')
-                utils.send_motd(spawn_event.player)
+            try {
+                api.ThornyUser.get_user_from_api(guild_id, spawn_event.player.name)
+                    .then(thorny_user => {
+                        thorny_user.send_connect_event('connect')
+                        api.Relay.event(`${spawn_event.player.name} has joined the server`, '', 'join')
+                        utils.send_motd(spawn_event.player)
 
-                if (thorny_user.patron) {
-                    spawn_event.player.nameTag = `§l§c${spawn_event.player.nameTag}`
-                }
-            });
+                        if (thorny_user.patron) {
+                            spawn_event.player.nameTag = `§l§c${spawn_event.player.nameTag}`
+                        }
+                    });
+            }
+            catch (e) {
+                console.error(e);
+            }
         }
     })
 
