@@ -61,7 +61,6 @@ export default class ThornyUser implements IThornyUser {
 
     public static async get_user_from_api(guild_id: string, gamertag: string): Promise<ThornyUser> {
         const response = await http.get(`http://nexuscore:8000/api/v0.1/users/guild/${guild_id}/${gamertag.replace(" ", "%20")}`)
-        console.log(response.body, response.status, response.request.uri, response.request.body, response.request.method)
         const thorny_user = new ThornyUser(JSON.parse(response.body) as IThornyUser)
 
         // Adds user to map for quick fetching

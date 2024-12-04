@@ -3081,7 +3081,6 @@ var ThornyUser = class _ThornyUser {
   }
   static async get_user_from_api(guild_id2, gamertag) {
     const response = await http.get(`http://nexuscore:8000/api/v0.1/users/guild/${guild_id2}/${gamertag.replace(" ", "%20")}`);
-    console.log(response.body, response.status, response.request.uri, response.request.body, response.request.method);
     const thorny_user = new _ThornyUser(JSON.parse(response.body));
     _ThornyUser.thorny_user_map[gamertag] = thorny_user;
     _ThornyUser.thorny_id_map[thorny_user.thorny_id] = thorny_user;
@@ -3497,8 +3496,8 @@ var formatDistance = (token, count, options) => {
 function buildFormatLongFn(args) {
   return (options = {}) => {
     const width = options.width ? String(options.width) : args.defaultWidth;
-    const format3 = args.formats[width] || args.formats[args.defaultWidth];
-    return format3;
+    const format2 = args.formats[width] || args.formats[args.defaultWidth];
+    return format2;
   };
 }
 
@@ -4687,14 +4686,14 @@ function isProtectedDayOfYearToken(token) {
 function isProtectedWeekYearToken(token) {
   return weekYearTokenRE.test(token);
 }
-function warnOrThrowProtectedError(token, format3, input) {
-  const _message = message(token, format3, input);
+function warnOrThrowProtectedError(token, format2, input) {
+  const _message = message(token, format2, input);
   console.warn(_message);
   if (throwTokens.includes(token)) throw new RangeError(_message);
 }
-function message(token, format3, input) {
+function message(token, format2, input) {
   const subject = token[0] === "Y" ? "years" : "days of the month";
-  return `Use \`${token.toLowerCase()}\` instead of \`${token}\` (in \`${format3}\`) for formatting ${subject} to the input \`${input}\`; see: https://github.com/date-fns/date-fns/blob/master/docs/unicodeTokens.md`;
+  return `Use \`${token.toLowerCase()}\` instead of \`${token}\` (in \`${format2}\`) for formatting ${subject} to the input \`${input}\`; see: https://github.com/date-fns/date-fns/blob/master/docs/unicodeTokens.md`;
 }
 
 // node_modules/date-fns/format.js
@@ -6917,7 +6916,7 @@ ${this.get_clean_requirements()}
   }
   async give_rewards(interation, thorny_user) {
     for (let reward of this.rewards) {
-      reward.give_reward(interation, thorny_user);
+      await reward.give_reward(interation, thorny_user);
     }
   }
 };
@@ -7001,7 +7000,7 @@ var ObjectiveWithProgress = class extends Objective {
   async increment_completion(interaction, quest) {
     if (await this.check_requirements(interaction, this.start ?? /* @__PURE__ */ new Date())) {
       this.completion++;
-      utils_default.commands.play_quest_progress_sound(this.thorny_user.gamertag);
+      await utils_default.commands.play_quest_progress_sound(this.thorny_user.gamertag);
       utils_default.commands.send_title(
         interaction.dimension,
         this.thorny_user.gamertag,
@@ -7013,9 +7012,9 @@ var ObjectiveWithProgress = class extends Objective {
         this.end = /* @__PURE__ */ new Date();
         const index = quest.objectives.indexOf(this);
         if (index < quest.objectives.length) {
-          this.complete_objective(interaction, quest);
+          await this.complete_objective(interaction, quest);
         }
-        this.give_rewards(interaction, this.thorny_user);
+        await this.give_rewards(interaction, this.thorny_user);
       } else if (this.completion === 1) {
         this.start = /* @__PURE__ */ new Date();
       }
@@ -7444,6 +7443,9 @@ function load_connections_handler(guild_id2) {
       }
     }
   });
+  world9.afterEvents.playerJoin.subscribe((join_event) => {
+    console.log("Join Log! ", join_event.playerName, join_event.playerId);
+  });
   world9.afterEvents.playerLeave.subscribe((leave_event) => {
     const thorny_user = api_default.ThornyUser.fetch_user(leave_event.playerName);
     if (thorny_user) {
@@ -7574,7 +7576,7 @@ function load_world_event_handlers(guild_id2) {
 }
 
 // behaviour_pack/scripts-dev/main.ts
-var guild_id = "1213827104945471538";
+var guild_id = "611008530077712395";
 load_loops();
 load_custom_components();
 load_world_event_handlers(guild_id);
