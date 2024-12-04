@@ -107,7 +107,7 @@ function do_glitch() {
         // "effect"
     ]
 
-    if (random <= 1) {
+    if (random <= 0.1) {
         const glitch = glitches_type[Math.floor(Math.random() * glitches_type.length)]
         console.log(`[Loops] Doing Glitches: ${glitch}`)
         switch (glitch) {
@@ -140,7 +140,6 @@ function do_glitch() {
         for (const player of all_players) {
             player.sendMessage('§oWhat was that?')
             const facing = player.getViewDirection()
-            player.sendMessage(`${facing.x}, ${facing.y}, ${facing.z}`)
         }
     }
 }

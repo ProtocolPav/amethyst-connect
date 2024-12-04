@@ -78,7 +78,7 @@ class ObjectiveWithProgress extends Objective {
         if (await this.check_requirements(interaction, this.start ?? new Date())) {
             this.completion++
 
-            utils.commands.play_quest_progress_sound(this.thorny_user.gamertag)
+            await utils.commands.play_quest_progress_sound(this.thorny_user.gamertag)
 
             utils.commands.send_title(
                 interaction.dimension, 
@@ -94,10 +94,10 @@ class ObjectiveWithProgress extends Objective {
                 const index = quest.objectives.indexOf(this)
 
                 if (index < quest.objectives.length) {
-                    this.complete_objective(interaction, quest)
+                    await this.complete_objective(interaction, quest)
                 }
 
-                this.give_rewards(interaction, this.thorny_user)
+                await this.give_rewards(interaction, this.thorny_user)
             }
             else if (this.completion === 1) {
                 this.start = new Date()
