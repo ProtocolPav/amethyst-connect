@@ -1,5 +1,5 @@
 import { http } from "@minecraft/server-net"
-import { format, parse } from "date-fns"
+import { parse } from "date-fns"
 import utils from "../utils"
 import ThornyUser from "./user"
 import Interaction from "./interaction"
@@ -198,7 +198,7 @@ export class Objective {
 
     protected async give_rewards(interation: Interaction, thorny_user: ThornyUser) {
         for (let reward of this.rewards) {
-            reward.give_reward(interation, thorny_user)
+            await reward.give_reward(interation, thorny_user)
         }
     }
 
