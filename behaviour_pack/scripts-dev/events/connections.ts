@@ -25,6 +25,10 @@ export default function load_connections_handler(guild_id: string) {
         }
     })
 
+    world.afterEvents.playerJoin.subscribe((join_event) => {
+        console.log('Join Log! ', join_event.playerName, join_event.playerId)
+    })
+
     // Handle Player Leave Event
     world.afterEvents.playerLeave.subscribe((leave_event) => {
         const thorny_user = api.ThornyUser.fetch_user(leave_event.playerName)
