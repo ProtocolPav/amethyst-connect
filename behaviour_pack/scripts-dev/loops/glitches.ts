@@ -11,7 +11,7 @@ function do_glitch() {
         // "effect"
     ]
 
-    if (random <= 0.1) {
+    if (random <= 0.2) {
         const glitch = glitches_type[Math.floor(Math.random() * glitches_type.length)]
         console.log(`[Loops] Doing Glitches: ${glitch}`)
         switch (glitch) {
