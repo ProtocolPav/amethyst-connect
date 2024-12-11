@@ -134,17 +134,17 @@ export default class QuestWithProgress extends Quest {
     }
 
     public static async get_active_quest(thorny_user: ThornyUser): Promise<QuestWithProgress | null> {
-
-        if (this.quest_cache[thorny_user.thorny_id]) {
-            return this.quest_cache[thorny_user.thorny_id]
-        }
-
         try {
             const active_quest = await http.get(`http://nexuscore:8000/api/v0.1/users/${thorny_user.thorny_id}/quest/active`);
 
             if (active_quest.status === 200) {
                 const active_quest_data = JSON.parse(active_quest.body)
                 const quest_id = active_quest_data['quest_id']
+
+                // Check if quest exists in cache and return
+                if (this.quest_cache[thorny_user.thorny_id].quest_id === quest_id) {
+                    return this.quest_cache[thorny_user.thorny_id]
+                }
 
                 // Merge active quest data
                 const quest_response = await http.get(`http://nexuscore:8000/api/v0.1/quests/${quest_id}`);
