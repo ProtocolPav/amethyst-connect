@@ -10,12 +10,13 @@
         },
         "components": {
             "minecraft:destructible_by_mining": {
-                "seconds_to_destroy": 4.5
+                "seconds_to_destroy": 4
             },
             "minecraft:display_name": "Unstable Fungus",
             "minecraft:custom_components": [
                 "amethyst:fungus_spread"
-            ]
+            ],
+            "minecraft:loot": "loot_tables/empty.json"
         }
     }
 }
