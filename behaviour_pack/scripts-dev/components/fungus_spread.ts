@@ -22,14 +22,13 @@ export default function load_fungus_spreading_component() {
             MinecraftEntityTypes.CaveSpider,
             MinecraftEntityTypes.Spider,
             MinecraftEntityTypes.Zombie,
-            MinecraftEntityTypes.Bogged,
+            MinecraftEntityTypes.Stray,
             MinecraftEntityTypes.Witch,
-            MinecraftEntityTypes.Breeze,
+            MinecraftEntityTypes.Blaze,
             MinecraftEntityTypes.Frog,
             MinecraftEntityTypes.Strider,
             MinecraftEntityTypes.GlowSquid,
-            MinecraftEntityTypes.Goat,
-            MinecraftEntityTypes.Warden
+            MinecraftEntityTypes.Goat
         ]
         const effects = [
             MinecraftEffectTypes.Hunger,
@@ -53,7 +52,7 @@ export default function load_fungus_spreading_component() {
                 if (entity.isValid()) {
                     entity.kill()
                 }
-            }, entity.typeId == MinecraftEntityTypes.Warden ? TicksPerSecond * 20 : TicksPerSecond * 120)
+            }, TicksPerSecond * 120)
         }
         // Effect Player
         else if (random_choice > 0.5) {

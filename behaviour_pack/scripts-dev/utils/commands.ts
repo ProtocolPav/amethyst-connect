@@ -172,7 +172,7 @@ function effect_glitch(player: Player) {
         MinecraftEffectTypes.Hunger
     ]
 
-    const effect = effects[Math.floor(effects.length)]
+    const effect = effects[Math.floor(Math.random() * effects.length)]
 
 
     system.run(
