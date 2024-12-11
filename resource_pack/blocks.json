@@ -3,5 +3,9 @@
 	"amethyst:fungus_block": {
 		"textures": "fungus_block",
 		"sound": "glass"
+	},
+	"amethyst:glitch_block": {
+		"textures": "glitch_block",
+		"sound": "obsidian"
 	}
 }
