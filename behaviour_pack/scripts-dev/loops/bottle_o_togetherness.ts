@@ -2,7 +2,7 @@ import {system, world, Player, EffectType, ItemStack, EquipmentSlot, EntityCompo
 import { MinecraftEffectTypes,MinecraftItemTypes} from '@minecraft/vanilla-data';
 
 
-const Bottle = "amethyst:bottle_o_togetherness";
+const Bottle = "amethyst:totem_of_togetherness";
 const healthboost = MinecraftEffectTypes.HealthBoost;
 const range = 16;
 
@@ -25,7 +25,7 @@ world.beforeEvents.worldInitialize.subscribe(() => {
         const inventory = player.getComponent("inventory");
         if (!inventory) return;
 
-        const hasBottle = inventory.container.any((item) => item?.typeId === Bottle);
+        const hasBottle = inventory.container?.any((item) => item?.typeId === Bottle);
         if (hasBottle) {
             const nearbyPlayers = nearbyplayercount(player, range);
             const togethernesslevel = Math.min(nearbyPlayers + 1, 10); 
