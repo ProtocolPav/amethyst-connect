@@ -50,8 +50,10 @@ export default function load_fungus_spreading_component() {
             )
 
             system.runTimeout(() => {
-                entity.kill()
-            }, entity.typeId == MinecraftEntityTypes.Warden ? TicksPerSecond * 45 : TicksPerSecond * 120)
+                if (entity.isValid()) {
+                    entity.kill()
+                }
+            }, entity.typeId == MinecraftEntityTypes.Warden ? TicksPerSecond * 20 : TicksPerSecond * 120)
         }
         // Effect Player
         else if (random_choice > 0.5) {
