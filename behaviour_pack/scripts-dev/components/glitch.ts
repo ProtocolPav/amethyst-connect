@@ -13,7 +13,6 @@ export default function load_glitch_component() {
             z: location.z + Math.floor(Math.random() * radius)
         };
 
-        console.log(JSON.stringify(random_location), utils.checks.distance_check([location.x, location.z], [random_location.x, random_location.z], radius));
         event.dimension.spawnParticle("minecraft:eyeofender_death_explode_particle", random_location)
         if (Math.random() < 0.7) {
             const glitches_type = [
