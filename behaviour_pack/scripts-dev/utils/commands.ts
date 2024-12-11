@@ -1,6 +1,5 @@
-import {world, system, Player, PlayerSoundOptions, TicksPerSecond} from '@minecraft/server';
-import { EntityComponentTypes, ItemStack } from '@minecraft/server';
-import {MinecraftBlockTypes, MinecraftEntityTypes} from "@minecraft/vanilla-data";
+import {EntityComponentTypes, ItemStack, Player, PlayerSoundOptions, system, TicksPerSecond, world} from '@minecraft/server';
+import {MinecraftBlockTypes, MinecraftEffectTypes, MinecraftEntityTypes} from "@minecraft/vanilla-data";
 
 
 function send_message(dimension: string, target: string, message: string) {
@@ -163,6 +162,24 @@ function vision_block_glitch(player: Player) {
     }
 }
 
+function effect_glitch(player: Player) {
+    const effects: MinecraftEffectTypes[] = [
+        MinecraftEffectTypes.Haste,
+        MinecraftEffectTypes.MiningFatigue,
+        MinecraftEffectTypes.SlowFalling,
+        MinecraftEffectTypes.JumpBoost,
+        MinecraftEffectTypes.HealthBoost,
+        MinecraftEffectTypes.Hunger
+    ]
+
+    const effect = effects[Math.floor(effects.length)]
+
+
+    system.run(
+        () => {player.addEffect(effect, TicksPerSecond*20)}
+    )
+}
+
 const commands = {
     send_message,
     play_quest_complete_sound,
@@ -172,7 +189,8 @@ const commands = {
     give_item,
     noise_glitch,
     vision_block_glitch,
-    vision_entity_glitch
+    vision_entity_glitch,
+    effect_glitch
 }
 
 export default commands

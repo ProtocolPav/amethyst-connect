@@ -4,46 +4,18 @@ import utils from "../utils";
 function do_glitch() {
     const random = Math.random()
     const glitches_type = [
-        "noise",
-        "vision_entity",
-        "vision_block",
-        // "facing",
-        // "effect"
+        utils.commands.vision_block_glitch,
+        utils.commands.vision_entity_glitch,
+        utils.commands.noise_glitch,
+        utils.commands.effect_glitch
     ]
 
     if (random <= 0.2) {
         const glitch = glitches_type[Math.floor(Math.random() * glitches_type.length)]
         console.log(`[Loops] Doing Glitches: ${glitch}`)
-        switch (glitch) {
-            case "noise":
-                for (const player of world.getAllPlayers()) {
-                    utils.commands.noise_glitch(player)
-                }
-                break;
-
-            case "vision_entity":
-                for (const player of world.getAllPlayers()) {
-                    utils.commands.vision_entity_glitch(player)
-                }
-                break;
-
-            case "vision_block":
-                for (const player of world.getAllPlayers()) {
-                    utils.commands.vision_block_glitch(player)
-                }
-                break;
-
-            case "facing":
-                break;
-
-            case "effect":
-                break;
-        }
-
-        const all_players = world.getAllPlayers()
-        for (const player of all_players) {
+        for (const player of world.getAllPlayers()) {
+            glitch(player)
             player.sendMessage('§oWhat was that?')
-            const facing = player.getViewDirection()
         }
     }
 }

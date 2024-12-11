@@ -1,5 +1,4 @@
 import {BlockComponentRandomTickEvent, Player, world} from "@minecraft/server";
-import { MinecraftBlockTypes } from "@minecraft/vanilla-data";
 import utils from "../utils";
 
 
@@ -20,7 +19,8 @@ export default function load_glitch_component() {
             const glitches_type = [
                 utils.commands.noise_glitch,
                 utils.commands.vision_block_glitch,
-                utils.commands.vision_entity_glitch
+                utils.commands.vision_entity_glitch,
+                utils.commands.effect_glitch
             ]
 
             const glitch = glitches_type[Math.floor(Math.random() * glitches_type.length)]
