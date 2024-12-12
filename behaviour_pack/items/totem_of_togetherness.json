@@ -13,7 +13,7 @@
 				"texture": "totem_of_togetherness"
 			},
 			"minecraft:display_name": {
-				"value": "Totem of Togetherness"
+				"value": "§dTotem of Togetherness"
 			},
 			"minecraft:glint": true,
 			"minecraft:can_destroy_in_creative": {

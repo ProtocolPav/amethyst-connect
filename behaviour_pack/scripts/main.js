@@ -7172,23 +7172,54 @@ function load_quest_loop() {
   console.log("[Loops] Loaded Quests Loop");
 }
 
+// behaviour_pack/scripts-dev/loops/totem_of_togetherness.ts
+import { EntityComponentTypes as EntityComponentTypes3, EquipmentSlot as EquipmentSlot2, system as system5, world as world6 } from "@minecraft/server";
+var healthboost = MinecraftEffectTypes.HealthBoost;
+function togetherness(player) {
+  const position = player.location;
+  const equippable = player.getComponent(EntityComponentTypes3.Equippable);
+  const offhand = equippable?.getEquipment(EquipmentSlot2.Offhand);
+  const mainhand = equippable?.getEquipment(EquipmentSlot2.Mainhand);
+  if (offhand?.hasComponent("amethyst:togetherness") || mainhand?.hasComponent("amethyst:togetherness")) {
+    const uniqueplayerslist = player.dimension.getPlayers({ location: position, maxDistance: 16 });
+    player.addEffect(healthboost, 1, { amplifier: uniqueplayerslist.length, showParticles: false });
+  }
+  if (offhand?.typeId === "amethyst:totem_of_togetherness" && offhand.getLore().length === 0) {
+    offhand.setLore(["\xA7r\xA7qEverthorn Christmas 2024", "\n\xA7r\xA79+1\uE10C per nearby player"]);
+    equippable?.setEquipment(EquipmentSlot2.Offhand, offhand);
+  } else if (mainhand?.typeId === "amethyst:totem_of_togetherness" && mainhand.getLore().length === 0) {
+    mainhand.setLore(["\xA7r\xA7qEverthorn Christmas 2024", "\n\xA7r\xA79+1\uE10C per nearby player"]);
+    equippable?.setEquipment(EquipmentSlot2.Mainhand, mainhand);
+  }
+}
+function load_totem_o_togetherness() {
+  system5.runInterval(() => {
+    let playerlist = world6.getPlayers();
+    playerlist.forEach((player) => {
+      togetherness(player);
+    });
+  }, 1);
+  console.log("[Loops] Loaded Bottle Of Togetheness Loop");
+}
+
 // behaviour_pack/scripts-dev/loops/index.ts
 function load_loops() {
   load_elytra_mending_checker();
   load_world_border();
   load_quest_loop();
+  load_totem_o_togetherness();
 }
 
 // behaviour_pack/scripts-dev/events/blocks.ts
-import { world as world6, system as system5 } from "@minecraft/server";
-import { EntityComponentTypes as EntityComponentTypes3, EquipmentSlot as EquipmentSlot2 } from "@minecraft/server";
+import { world as world7, system as system6 } from "@minecraft/server";
+import { EntityComponentTypes as EntityComponentTypes4, EquipmentSlot as EquipmentSlot3 } from "@minecraft/server";
 function load_block_event_handler() {
-  world6.beforeEvents.playerBreakBlock.subscribe((event) => {
+  world7.beforeEvents.playerBreakBlock.subscribe((event) => {
     const block_id = event.block.typeId;
     const block_location = [event.block.x, event.block.y, event.block.z];
     const dimension = event.player.dimension;
-    const mainhand = event.player.getComponent(EntityComponentTypes3.Equippable)?.getEquipment(EquipmentSlot2.Mainhand);
-    system5.run(() => {
+    const mainhand = event.player.getComponent(EntityComponentTypes4.Equippable)?.getEquipment(EquipmentSlot3.Mainhand);
+    system6.run(() => {
       const interaction = new api_default.Interaction(
         {
           thorny_id: api_default.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
@@ -7205,12 +7236,12 @@ function load_block_event_handler() {
       api_default.Interaction.enqueue(interaction);
     });
   });
-  world6.afterEvents.playerPlaceBlock.subscribe((event) => {
+  world7.afterEvents.playerPlaceBlock.subscribe((event) => {
     const block_id = event.block.typeId;
     const block_location = [event.block.x, event.block.y, event.block.z];
     const dimension = event.player.dimension;
-    const mainhand = event.player.getComponent(EntityComponentTypes3.Equippable)?.getEquipment(EquipmentSlot2.Mainhand);
-    system5.run(() => {
+    const mainhand = event.player.getComponent(EntityComponentTypes4.Equippable)?.getEquipment(EquipmentSlot3.Mainhand);
+    system6.run(() => {
       const interaction = new api_default.Interaction(
         {
           thorny_id: api_default.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
@@ -7226,11 +7257,11 @@ function load_block_event_handler() {
       interaction.post_interaction();
     });
   });
-  world6.afterEvents.playerInteractWithBlock.subscribe((event) => {
+  world7.afterEvents.playerInteractWithBlock.subscribe((event) => {
     const block_id = event.block.typeId;
     const block_location = [event.block.x, event.block.y, event.block.z];
     const dimension = event.player.dimension;
-    const mainhand = event.player.getComponent(EntityComponentTypes3.Equippable)?.getEquipment(EquipmentSlot2.Mainhand);
+    const mainhand = event.player.getComponent(EntityComponentTypes4.Equippable)?.getEquipment(EquipmentSlot3.Mainhand);
     const all_blocks = [
       MinecraftBlockTypes.Chest,
       MinecraftBlockTypes.Barrel,
@@ -7253,7 +7284,7 @@ function load_block_event_handler() {
       MinecraftBlockTypes.LightGrayShulkerBox
     ];
     if (all_blocks.includes(block_id)) {
-      system5.run(() => {
+      system6.run(() => {
         const interaction = new api_default.Interaction(
           {
             thorny_id: api_default.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
@@ -7273,12 +7304,12 @@ function load_block_event_handler() {
 }
 
 // behaviour_pack/scripts-dev/events/chat.ts
-import { world as world7, system as system6 } from "@minecraft/server";
+import { world as world8, system as system7 } from "@minecraft/server";
 function load_chat_handler() {
-  world7.beforeEvents.chatSend.subscribe((chat_event) => {
+  world8.beforeEvents.chatSend.subscribe((chat_event) => {
     const gamertag = chat_event.sender.name;
     const thorny_user = api_default.ThornyUser.fetch_user(gamertag);
-    world7.sendMessage({
+    world8.sendMessage({
       rawtext: [
         {
           text: `\xA7l\xA78[\xA7r${thorny_user?.get_role_display()}\xA7l\xA78]\xA7r \xA77${gamertag}:\xA7r ${chat_event.message}`
@@ -7286,16 +7317,16 @@ function load_chat_handler() {
       ]
     });
     chat_event.cancel = true;
-    system6.run(() => {
+    system7.run(() => {
       api_default.Relay.message(gamertag, chat_event.message);
     });
   });
 }
 
 // behaviour_pack/scripts-dev/events/connections.ts
-import { world as world8 } from "@minecraft/server";
+import { world as world9 } from "@minecraft/server";
 function load_connections_handler(guild_id2) {
-  world8.afterEvents.playerSpawn.subscribe((spawn_event) => {
+  world9.afterEvents.playerSpawn.subscribe((spawn_event) => {
     if (spawn_event.initialSpawn) {
       api_default.ThornyUser.get_user_from_api(guild_id2, spawn_event.player.name).then((thorny_user) => {
         thorny_user.send_connect_event("connect");
@@ -7307,7 +7338,7 @@ function load_connections_handler(guild_id2) {
       });
     }
   });
-  world8.afterEvents.playerLeave.subscribe((leave_event) => {
+  world9.afterEvents.playerLeave.subscribe((leave_event) => {
     const thorny_user = api_default.ThornyUser.fetch_user(leave_event.playerName);
     if (thorny_user) {
       api_default.QuestWithProgress.clear_cache(thorny_user);
@@ -7318,14 +7349,14 @@ function load_connections_handler(guild_id2) {
 }
 
 // behaviour_pack/scripts-dev/events/kills.ts
-import { world as world9 } from "@minecraft/server";
-import { EntityComponentTypes as EntityComponentTypes4, EquipmentSlot as EquipmentSlot3, Player as Player4 } from "@minecraft/server";
+import { world as world10 } from "@minecraft/server";
+import { EntityComponentTypes as EntityComponentTypes5, EquipmentSlot as EquipmentSlot4, Player as Player5 } from "@minecraft/server";
 function load_kill_event_handler() {
-  world9.afterEvents.entityDie.subscribe((event) => {
-    if (event.damageSource.damagingEntity instanceof Player4) {
+  world10.afterEvents.entityDie.subscribe((event) => {
+    if (event.damageSource.damagingEntity instanceof Player5) {
       const player = event.damageSource.damagingEntity;
       const dimension = player.dimension;
-      const mainhand = player.getComponent(EntityComponentTypes4.Equippable)?.getEquipment(EquipmentSlot3.Mainhand);
+      const mainhand = player.getComponent(EntityComponentTypes5.Equippable)?.getEquipment(EquipmentSlot4.Mainhand);
       const interaction = new api_default.Interaction(
         {
           thorny_id: api_default.ThornyUser.fetch_user(player.name)?.thorny_id ?? 0,
@@ -7338,9 +7369,9 @@ function load_kill_event_handler() {
           dimension: dimension.id
         }
       );
-      if (event.deadEntity instanceof Player4) {
+      if (event.deadEntity instanceof Player5) {
         const dead_player = event.deadEntity;
-        const dead_mainhand = dead_player.getComponent(EntityComponentTypes4.Equippable)?.getEquipment(EquipmentSlot3.Mainhand);
+        const dead_mainhand = dead_player.getComponent(EntityComponentTypes5.Equippable)?.getEquipment(EquipmentSlot4.Mainhand);
         interaction.reference = dead_player.name;
         const death_interaction = new api_default.Interaction(
           {
@@ -7362,11 +7393,11 @@ function load_kill_event_handler() {
         interaction.post_interaction();
       }
       api_default.Interaction.enqueue(interaction);
-    } else if (event.deadEntity instanceof Player4 && event.damageSource.damagingEntity) {
+    } else if (event.deadEntity instanceof Player5 && event.damageSource.damagingEntity) {
       const killer = event.damageSource.damagingEntity;
       const player = event.deadEntity;
       const dimension = player.dimension;
-      const mainhand = player.getComponent(EntityComponentTypes4.Equippable)?.getEquipment(EquipmentSlot3.Mainhand);
+      const mainhand = player.getComponent(EntityComponentTypes5.Equippable)?.getEquipment(EquipmentSlot4.Mainhand);
       const death_interaction = new api_default.Interaction(
         {
           thorny_id: api_default.ThornyUser.fetch_user(player.name)?.thorny_id ?? 0,
@@ -7381,10 +7412,10 @@ function load_kill_event_handler() {
       );
       death_interaction.post_interaction();
       api_default.Relay.event(utils_default.DeathMessage.random_pve(player.name, killer.typeId), "", "other");
-    } else if (event.deadEntity instanceof Player4 && !event.damageSource.damagingEntity) {
+    } else if (event.deadEntity instanceof Player5 && !event.damageSource.damagingEntity) {
       const player = event.deadEntity;
       const dimension = player.dimension;
-      const mainhand = player.getComponent(EntityComponentTypes4.Equippable)?.getEquipment(EquipmentSlot3.Mainhand);
+      const mainhand = player.getComponent(EntityComponentTypes5.Equippable)?.getEquipment(EquipmentSlot4.Mainhand);
       const death_interaction = new api_default.Interaction(
         {
           thorny_id: api_default.ThornyUser.fetch_user(player.name)?.thorny_id ?? 0,
@@ -7404,9 +7435,9 @@ function load_kill_event_handler() {
 }
 
 // behaviour_pack/scripts-dev/events/script_events.ts
-import { system as system7 } from "@minecraft/server";
+import { system as system8 } from "@minecraft/server";
 function load_script_event_handler() {
-  system7.afterEvents.scriptEventReceive.subscribe((script_event) => {
+  system8.afterEvents.scriptEventReceive.subscribe((script_event) => {
   });
 }
 
