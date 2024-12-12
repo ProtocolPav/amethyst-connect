@@ -18,20 +18,17 @@
 			"minecraft:glint": true,
 			"minecraft:can_destroy_in_creative": {
 				"value": false
-			},
+			}, 
 			
 			"minecraft:should_despawn": {
 				"value": false
-			}, "minecraft:allow_off_hand": {
-    "value": true
-
-		},
-	
-	"minecraft:rarity": "epic"
-
-
-	
-		
-		
+			},
+			 "minecraft:allow_off_hand": { 
+				"value": true
+			},
+			 "minecraft:rarity": "epic",
+			 "minecraft:custom_components": ["amethyst:togetherness"]
+			
+		}
 	}
-}}
+}
