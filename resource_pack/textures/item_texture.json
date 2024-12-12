@@ -4,8 +4,8 @@
 	"texture_data": {
 		"nexus_mysterious_shard": {
 			"textures": "textures/items/mysterious_shard.png"
-		},"bottle_o_togetherness_texture": {
-			"textures": "textures/items/bottle_o_togetherness.png"}
+		},"totem_of_togetherness": {
+			"textures": "textures/items/totem_of_togetherness.png"}
 		
 	}
 }
