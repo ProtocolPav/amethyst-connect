@@ -6676,7 +6676,7 @@ var utils_default = utils;
 function load_glitch_component() {
   function glitch(event) {
     const location = event.block.location;
-    const radius = Math.floor(Math.random() * 10);
+    const radius = 20;
     let random_location = {
       x: location.x + Math.floor(Math.random() * radius),
       y: location.y + 3,
@@ -7077,22 +7077,25 @@ ${this.get_clean_requirements()}
   }
   async check_requirements(interaction, start_time) {
     if (interaction.reference !== this.objective) {
-      return false;
+      return { check: false, fail_objective: false };
     }
     if (this.required_mainhand && this.required_mainhand !== interaction.mainhand) {
-      return false;
+      return { check: false, fail_objective: false };
     }
     const interaction_location = [interaction.position_x, interaction.position_z];
     if (this.required_location && !utils_default.checks.distance_check(interaction_location, this.required_location, this.location_radius)) {
-      return false;
+      return { check: false, fail_objective: false };
     }
     if (this.objective_timer && !utils_default.checks.timer_check(interaction.time, start_time, this.objective_timer)) {
-      return false;
+      return { check: false, fail_objective: true };
     }
     if (this.objective_type == "mine" && this.natural_block) {
-      return !await this.check_if_natural(interaction.position_x, interaction.position_y, interaction.position_z);
+      return {
+        check: !await this.check_if_natural(interaction.position_x, interaction.position_y, interaction.position_z),
+        fail_objective: false
+      };
     }
-    return true;
+    return { check: true, fail_objective: false };
   }
   async check_if_natural(x, y, z) {
     const response = await http4.get(`http://nexuscore:8000/api/v0.1/events/interaction?x=${x}&y=${y}&z=${z}`);
@@ -7182,7 +7185,8 @@ var ObjectiveWithProgress = class extends Objective {
    * @returns a Boolean representing if completion was incremented
    */
   async increment_completion(interaction, quest) {
-    if (await this.check_requirements(interaction, this.start ?? /* @__PURE__ */ new Date())) {
+    const requirement_check = await this.check_requirements(interaction, this.start ?? /* @__PURE__ */ new Date());
+    if (requirement_check.check) {
       this.completion++;
       await utils_default.commands.play_quest_progress_sound(this.thorny_user.gamertag);
       utils_default.commands.send_title(
@@ -7199,10 +7203,13 @@ var ObjectiveWithProgress = class extends Objective {
           await this.complete_objective(interaction, quest);
         }
         await this.give_rewards(interaction, this.thorny_user);
-      } else if (this.completion === 1) {
-        this.start = /* @__PURE__ */ new Date();
       }
       return true;
+    } else if (requirement_check.fail_objective) {
+      this.status = "failed";
+      this.end = /* @__PURE__ */ new Date();
+      await quest.fail_quest(interaction.thorny_id);
+      return false;
     }
     return false;
   }
@@ -7223,14 +7230,14 @@ var QuestWithProgress = class _QuestWithProgress extends Quest {
     delete this.quest_cache[thorny_user.thorny_id];
   }
   static async get_active_quest(thorny_user) {
-    if (this.quest_cache[thorny_user.thorny_id]) {
-      return this.quest_cache[thorny_user.thorny_id];
-    }
     try {
       const active_quest = await http5.get(`http://nexuscore:8000/api/v0.1/users/${thorny_user.thorny_id}/quest/active`);
       if (active_quest.status === 200) {
         const active_quest_data = JSON.parse(active_quest.body);
         const quest_id = active_quest_data["quest_id"];
+        if (this.quest_cache[thorny_user.thorny_id].quest_id === quest_id) {
+          return this.quest_cache[thorny_user.thorny_id];
+        }
         const quest_response = await http5.get(`http://nexuscore:8000/api/v0.1/quests/${quest_id}`);
         const quest_data = { ...JSON.parse(quest_response.body), ...active_quest_data };
         const objectives_response = await http5.get(`http://nexuscore:8000/api/v0.1/quests/${quest_id}/objectives`);
@@ -7276,6 +7283,17 @@ var QuestWithProgress = class _QuestWithProgress extends Quest {
       await objective.update_user_objective(this);
     }
   }
+  async fail_quest(thorny_id) {
+    this.status = "failed";
+    const request = new HttpRequest4(`http://nexuscore:8000/api/v0.1/users/${thorny_id}/quest/active`);
+    request.method = HttpRequestMethod4.Delete;
+    request.body = JSON.stringify({});
+    request.headers = [
+      new HttpHeader4("Content-Type", "application/json"),
+      new HttpHeader4("auth", "my-auth-token")
+    ];
+    await http5.request(request);
+  }
   /**
    * @returns
    * A boolean representing if the objective has been incremented or not
@@ -7285,6 +7303,7 @@ var QuestWithProgress = class _QuestWithProgress extends Quest {
     if (active_objective) {
       if (active_objective.completion == 0 && this.objectives.indexOf(active_objective) == 0) {
         this.started_on = /* @__PURE__ */ new Date();
+        active_objective.start = /* @__PURE__ */ new Date();
       }
       const incremented = await active_objective.increment_completion(interaction, this);
       const next_objective = this.get_active_objective();
@@ -7304,6 +7323,17 @@ var QuestWithProgress = class _QuestWithProgress extends Quest {
           `\xA7a+=+=+=+=+=+=+ Quest Completed! +=+=+=+=+=+=+\xA7r
 ${this.thorny_user.gamertag} has just completed \xA7l\xA7n${this.title}\xA7r!
 Run \xA75/quests view\xA7r on Discord to start it!`
+        );
+      } else if (next_objective.objective_id !== active_objective.objective_id) {
+        next_objective.start = /* @__PURE__ */ new Date();
+      } else if (active_objective.status === "failed") {
+        this.status = "failed";
+        this.end_time = /* @__PURE__ */ new Date();
+        utils_default.commands.send_title(
+          interaction.dimension,
+          this.thorny_user.gamertag,
+          "title",
+          `\xA7lQuest Failed :(`
         );
       }
       return incremented;
@@ -7342,6 +7372,14 @@ async function check_quests() {
           );
           api_default.QuestWithProgress.clear_cache(thorny_user);
         }
+      } else if (quest && quest.status == "failed") {
+        api_default.Relay.event(
+          `${thorny_user.gamertag} has failed *${quest.title}!*`,
+          "Better luck next time!",
+          "other"
+        );
+        await quest.fail_quest(thorny_user.thorny_id);
+        api_default.QuestWithProgress.clear_cache(thorny_user);
       }
       interaction = api_default.Interaction.dequeue();
     }

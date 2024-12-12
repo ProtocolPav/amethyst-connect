@@ -34,6 +34,11 @@ export interface IQuest {
     description: string
 }
 
+interface RequirementCheck {
+    check: boolean
+    fail_objective: boolean
+}
+
 export class Reward {
     display_name: string
     balance: number
@@ -159,36 +164,39 @@ export class Objective {
         return `${title}${description}${full_task}${rewards}${requirements}${final_line}`
     }
 
-    protected async check_requirements(interaction: Interaction, start_time: Date): Promise<Boolean> {
+    protected async check_requirements(interaction: Interaction, start_time: Date): Promise<RequirementCheck> {
 
         // Check if the block/mob/encounter is correct
         if (interaction.reference !== this.objective) {
-            return false;
+            return {check: false, fail_objective: false};
         }
 
         // Check Mainhand
         if (this.required_mainhand && this.required_mainhand !== interaction.mainhand) {
-            return false;
+            return {check: false, fail_objective: false};
         }
 
         const interaction_location: [number, number] = [interaction.position_x, interaction.position_z]
 
         // Check location
         if (this.required_location && !utils.checks.distance_check(interaction_location, this.required_location, this.location_radius)) {
-            return false;
+            return {check: false, fail_objective: false};
         }
 
         // Check timer
         if (this.objective_timer && !utils.checks.timer_check(interaction.time, start_time, this.objective_timer)) {
-            return false;
+            return {check: false, fail_objective: true};
         }
 
         // Check natural block
         if (this.objective_type == 'mine' && this.natural_block) {
-            return !(await this.check_if_natural(interaction.position_x, interaction.position_y, interaction.position_z))
+            return {
+                check: !(await this.check_if_natural(interaction.position_x, interaction.position_y, interaction.position_z)),
+                fail_objective: false
+            }
         }
 
-        return true;
+        return {check: true, fail_objective: false};
     }
 
     protected async check_if_natural(x: number, y: number, z: number): Promise<Boolean> {

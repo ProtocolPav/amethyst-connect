@@ -21,6 +21,14 @@ async function check_quests() {
 
                     api.QuestWithProgress.clear_cache(thorny_user)
                 }
+            } else if (quest && quest.status == 'failed') {
+                api.Relay.event(
+                    `${thorny_user.gamertag} has failed *${quest.title}!*`,
+                    'Better luck next time!',
+                    'other')
+
+                await quest.fail_quest(thorny_user.thorny_id)
+                api.QuestWithProgress.clear_cache(thorny_user)
             }
 
             interaction = api.Interaction.dequeue()
