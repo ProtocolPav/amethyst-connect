@@ -100,9 +100,6 @@ class ObjectiveWithProgress extends Objective {
 
                 await this.give_rewards(interaction, this.thorny_user)
             }
-            else if (this.completion === 1) {
-                this.start = new Date()
-            }
 
             return true;
         }
@@ -239,6 +236,7 @@ export default class QuestWithProgress extends Quest {
         if (active_objective) {
             if (active_objective.completion == 0 && this.objectives.indexOf(active_objective) == 0) {
                 this.started_on = new Date()
+                active_objective.start = new Date()
             }
 
             const incremented = await active_objective.increment_completion(interaction, this)
@@ -265,7 +263,11 @@ export default class QuestWithProgress extends Quest {
                     `${this.thorny_user.gamertag} has just completed §l§n${this.title}§r!\n` +
                     `Run §5/quests view§r on Discord to start it!`
                 )
-            } else if (active_objective.status === 'failed') {
+            }
+            else if (next_objective.objective_id !== active_objective.objective_id) {
+                next_objective.start = new Date()
+            }
+            else if (active_objective.status === 'failed') {
                 this.status = 'failed'
                 this.end_time = new Date()
 
