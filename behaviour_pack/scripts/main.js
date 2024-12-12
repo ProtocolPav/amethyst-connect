@@ -6675,15 +6675,9 @@ var utils_default = utils;
 // behaviour_pack/scripts-dev/components/glitch.ts
 function load_glitch_component() {
   function glitch(event) {
-    const location = event.block.location;
-    const radius = 20;
-    let random_location = {
-      x: location.x + Math.floor(Math.random() * radius),
-      y: location.y + 3,
-      z: location.z + Math.floor(Math.random() * radius)
-    };
-    event.dimension.spawnParticle("minecraft:eyeofender_death_explode_particle", random_location);
-    if (Math.random() < 0.7) {
+    if (Math.random() < 0.03) {
+      const location = event.block.location;
+      const radius = 20;
       const glitches_type = [
         utils_default.commands.noise_glitch,
         utils_default.commands.vision_block_glitch,
@@ -6691,16 +6685,27 @@ function load_glitch_component() {
         utils_default.commands.effect_glitch
       ];
       const glitch2 = glitches_type[Math.floor(Math.random() * glitches_type.length)];
-      event.block.dimension.getPlayers({ location: event.block.location, maxDistance: radius }).forEach((player) => {
+      event.block.dimension.getPlayers({ location, maxDistance: radius }).forEach((player) => {
         glitch2(player);
       });
     }
+  }
+  function glitch_particles(event) {
+    const location = event.block.location;
+    const radius = 20;
+    let random_location = {
+      x: location.x + Math.floor(Math.random() * radius) * (Math.random() < 0.5 ? -1 : 1),
+      y: location.y + Math.floor(Math.random() * 4),
+      z: location.z + Math.floor(Math.random() * radius) * (Math.random() < 0.5 ? -1 : 1)
+    };
+    event.dimension.spawnParticle("minecraft:eyeofender_death_explode_particle", random_location);
   }
   world4.beforeEvents.worldInitialize.subscribe((initEvent) => {
     initEvent.blockComponentRegistry.registerCustomComponent(
       "amethyst:glitch",
       {
-        onRandomTick(event) {
+        onTick(event) {
+          glitch_particles(event);
           glitch(event);
         }
       }
@@ -7692,7 +7697,7 @@ function load_world_event_handlers(guild_id2) {
 }
 
 // behaviour_pack/scripts-dev/main.ts
-var guild_id = "611008530077712395";
+var guild_id = "1213827104945471538";
 load_loops();
 load_custom_components();
 load_world_event_handlers(guild_id);
