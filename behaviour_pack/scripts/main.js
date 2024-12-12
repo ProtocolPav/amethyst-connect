@@ -6676,7 +6676,7 @@ var utils_default = utils;
 function load_glitch_component() {
   function glitch(event) {
     const location = event.block.location;
-    const radius = Math.floor(Math.random() * 10);
+    const radius = 20;
     let random_location = {
       x: location.x + Math.floor(Math.random() * radius),
       y: location.y + 3,
@@ -7203,8 +7203,6 @@ var ObjectiveWithProgress = class extends Objective {
           await this.complete_objective(interaction, quest);
         }
         await this.give_rewards(interaction, this.thorny_user);
-      } else if (this.completion === 1) {
-        this.start = /* @__PURE__ */ new Date();
       }
       return true;
     } else if (requirement_check.fail_objective) {
@@ -7232,14 +7230,14 @@ var QuestWithProgress = class _QuestWithProgress extends Quest {
     delete this.quest_cache[thorny_user.thorny_id];
   }
   static async get_active_quest(thorny_user) {
-    if (this.quest_cache[thorny_user.thorny_id]) {
-      return this.quest_cache[thorny_user.thorny_id];
-    }
     try {
       const active_quest = await http5.get(`http://nexuscore:8000/api/v0.1/users/${thorny_user.thorny_id}/quest/active`);
       if (active_quest.status === 200) {
         const active_quest_data = JSON.parse(active_quest.body);
         const quest_id = active_quest_data["quest_id"];
+        if (this.quest_cache[thorny_user.thorny_id].quest_id === quest_id) {
+          return this.quest_cache[thorny_user.thorny_id];
+        }
         const quest_response = await http5.get(`http://nexuscore:8000/api/v0.1/quests/${quest_id}`);
         const quest_data = { ...JSON.parse(quest_response.body), ...active_quest_data };
         const objectives_response = await http5.get(`http://nexuscore:8000/api/v0.1/quests/${quest_id}/objectives`);
@@ -7305,6 +7303,7 @@ var QuestWithProgress = class _QuestWithProgress extends Quest {
     if (active_objective) {
       if (active_objective.completion == 0 && this.objectives.indexOf(active_objective) == 0) {
         this.started_on = /* @__PURE__ */ new Date();
+        active_objective.start = /* @__PURE__ */ new Date();
       }
       const incremented = await active_objective.increment_completion(interaction, this);
       const next_objective = this.get_active_objective();
@@ -7325,6 +7324,8 @@ var QuestWithProgress = class _QuestWithProgress extends Quest {
 ${this.thorny_user.gamertag} has just completed \xA7l\xA7n${this.title}\xA7r!
 Run \xA75/quests view\xA7r on Discord to start it!`
         );
+      } else if (next_objective.objective_id !== active_objective.objective_id) {
+        next_objective.start = /* @__PURE__ */ new Date();
       } else if (active_objective.status === "failed") {
         this.status = "failed";
         this.end_time = /* @__PURE__ */ new Date();
@@ -7691,7 +7692,7 @@ function load_world_event_handlers(guild_id2) {
 }
 
 // behaviour_pack/scripts-dev/main.ts
-var guild_id = "1213827104945471538";
+var guild_id = "611008530077712395";
 load_loops();
 load_custom_components();
 load_world_event_handlers(guild_id);
