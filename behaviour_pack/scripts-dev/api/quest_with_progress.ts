@@ -75,7 +75,8 @@ class ObjectiveWithProgress extends Objective {
      * @returns a Boolean representing if completion was incremented
      */
     public async increment_completion(interaction: Interaction, quest: QuestWithProgress): Promise<Boolean> {
-        if (await this.check_requirements(interaction, this.start ?? new Date())) {
+        const requirement_check = await this.check_requirements(interaction, this.start ?? new Date())
+        if (requirement_check.check) {
             this.completion++
 
             await utils.commands.play_quest_progress_sound(this.thorny_user.gamertag)
@@ -99,11 +100,16 @@ class ObjectiveWithProgress extends Objective {
 
                 await this.give_rewards(interaction, this.thorny_user)
             }
-            else if (this.completion === 1) {
-                this.start = new Date()
-            }
 
             return true;
+        }
+        else if (requirement_check.fail_objective) {
+            this.status = 'failed'
+            this.end = new Date()
+
+            await quest.fail_quest(interaction.thorny_id)
+
+            return false
         }
 
         return false;
@@ -206,6 +212,20 @@ export default class QuestWithProgress extends Quest {
         }
     }
 
+    public async fail_quest(thorny_id: number): Promise<void> {
+        this.status = 'failed'
+
+        const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/users/${thorny_id}/quest/active`);
+        request.method = HttpRequestMethod.Delete;
+        request.body = JSON.stringify({})
+        request.headers = [
+            new HttpHeader("Content-Type", "application/json"),
+            new HttpHeader("auth", "my-auth-token"),
+        ];
+
+        await http.request(request)
+    }
+
     /**
      * @returns
      * A boolean representing if the objective has been incremented or not
@@ -216,6 +236,7 @@ export default class QuestWithProgress extends Quest {
         if (active_objective) {
             if (active_objective.completion == 0 && this.objectives.indexOf(active_objective) == 0) {
                 this.started_on = new Date()
+                active_objective.start = new Date()
             }
 
             const incremented = await active_objective.increment_completion(interaction, this)
@@ -241,6 +262,20 @@ export default class QuestWithProgress extends Quest {
                     `§a+=+=+=+=+=+=+ Quest Completed! +=+=+=+=+=+=+§r\n` +
                     `${this.thorny_user.gamertag} has just completed §l§n${this.title}§r!\n` +
                     `Run §5/quests view§r on Discord to start it!`
+                )
+            }
+            else if (next_objective.objective_id !== active_objective.objective_id) {
+                next_objective.start = new Date()
+            }
+            else if (active_objective.status === 'failed') {
+                this.status = 'failed'
+                this.end_time = new Date()
+
+                utils.commands.send_title(
+                    interaction.dimension,
+                    this.thorny_user.gamertag,
+                    'title',
+                    `§lQuest Failed :(`
                 )
             }
 
