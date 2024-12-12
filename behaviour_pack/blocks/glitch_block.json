@@ -14,7 +14,11 @@
       "minecraft:display_name": "Glitch Block",
       "minecraft:custom_components": [
         "amethyst:glitch"
-      ]
+      ],
+      "minecraft:tick": {
+        "interval_range": [5, 20],
+        "looping": true
+      }
     }
   }
 }
