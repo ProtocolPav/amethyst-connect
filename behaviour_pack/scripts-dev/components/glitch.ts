@@ -4,7 +4,7 @@ import utils from "../utils";
 
 export default function load_glitch_component() {
     function glitch(event : BlockComponentTickEvent) {
-        if (Math.random() < 0.03) {
+        if (Math.random() < 0.07) {
             const location = event.block.location;
             const radius = 20;
 
