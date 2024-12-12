@@ -15,7 +15,6 @@
 			"minecraft:display_name": {
 				"value": "§dTotem of Togetherness"
 			},
-			"minecraft:glint": true,
 			"minecraft:can_destroy_in_creative": {
 				"value": false
 			}, 
