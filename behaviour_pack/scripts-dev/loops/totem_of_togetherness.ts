@@ -11,16 +11,23 @@ function togetherness(player: Player): void {
     const offhand = equippable?.getEquipment(EquipmentSlot.Offhand)
     const mainhand = equippable?.getEquipment(EquipmentSlot.Mainhand)
 
-    if (offhand?.hasComponent("amethyst:togetherness") || mainhand?.hasComponent("amethyst:togetherness") ) {
-        const uniqueplayerslist = player.dimension.getPlayers({location: position, maxDistance: 16 })
-        player.addEffect(healthboost, 1, {amplifier: uniqueplayerslist.length, showParticles: false})
+    if (offhand?.hasTag("amethyst:togetherness") || mainhand?.hasTag("amethyst:togetherness") ) {
+        const uniqueplayerslist = player.dimension.getPlayers({
+            location: position,
+            maxDistance: 16,
+            excludeNames: [player.name]
+        })
+        const effect_level = Math.min(5, Math.ceil(uniqueplayerslist.length / 2))
+        if (effect_level-1 > 0) {
+            player.addEffect(healthboost, 40, {amplifier: effect_level-1, showParticles: false})
+        }
     }
 
     if (offhand?.typeId === 'amethyst:totem_of_togetherness' && offhand.getLore().length === 0) {
-        offhand.setLore(['§r§qEverthorn Christmas 2024', '\n§r§9+1 per nearby player'])
+        offhand.setLore(['\n§r§qEverthorn Christmas 2024'])
         equippable?.setEquipment(EquipmentSlot.Offhand, offhand)
     } else if (mainhand?.typeId === 'amethyst:totem_of_togetherness' && mainhand.getLore().length === 0) {
-        mainhand.setLore(['§r§qEverthorn Christmas 2024', '\n§r§9+1 per nearby player'])
+        mainhand.setLore(['\n§r§qEverthorn Christmas 2024'])
         equippable?.setEquipment(EquipmentSlot.Mainhand, mainhand)
     }
 }
@@ -32,7 +39,7 @@ export default function load_totem_o_togetherness() {
         playerlist.forEach((player) => {
             togetherness(player)
         });
-    }, 1)
+    }, 20)
 
-    console.log('[Loops] Loaded Bottle Of Togetheness Loop') 
+    console.log('[Loops] Loaded Totem Of Togetherness Loop')
 }
