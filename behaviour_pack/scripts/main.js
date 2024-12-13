@@ -7432,15 +7432,20 @@ function togetherness(player) {
   const equippable = player.getComponent(EntityComponentTypes4.Equippable);
   const offhand = equippable?.getEquipment(EquipmentSlot2.Offhand);
   const mainhand = equippable?.getEquipment(EquipmentSlot2.Mainhand);
-  if (offhand?.hasComponent("amethyst:togetherness") || mainhand?.hasComponent("amethyst:togetherness")) {
-    const uniqueplayerslist = player.dimension.getPlayers({ location: position, maxDistance: 16 });
-    player.addEffect(healthboost, 1, { amplifier: uniqueplayerslist.length, showParticles: false });
+  if (offhand?.hasTag("amethyst:togetherness") || mainhand?.hasTag("amethyst:togetherness")) {
+    const uniqueplayerslist = player.dimension.getEntities({
+      location: position,
+      maxDistance: 16,
+      excludeNames: [player.name]
+    });
+    const effect_level = Math.min(5, Math.ceil(uniqueplayerslist.length / 2));
+    player.addEffect(healthboost, 40, { amplifier: effect_level - 1, showParticles: false });
   }
   if (offhand?.typeId === "amethyst:totem_of_togetherness" && offhand.getLore().length === 0) {
-    offhand.setLore(["\xA7r\xA7qEverthorn Christmas 2024", "\n\xA7r\xA79+1\uE10C per nearby player"]);
+    offhand.setLore(["\n\xA7r\xA7qEverthorn Christmas 2024"]);
     equippable?.setEquipment(EquipmentSlot2.Offhand, offhand);
   } else if (mainhand?.typeId === "amethyst:totem_of_togetherness" && mainhand.getLore().length === 0) {
-    mainhand.setLore(["\xA7r\xA7qEverthorn Christmas 2024", "\n\xA7r\xA79+1\uE10C per nearby player"]);
+    mainhand.setLore(["\n\xA7r\xA7qEverthorn Christmas 2024"]);
     equippable?.setEquipment(EquipmentSlot2.Mainhand, mainhand);
   }
 }
@@ -7450,7 +7455,7 @@ function load_totem_o_togetherness() {
     playerlist.forEach((player) => {
       togetherness(player);
     });
-  }, 1);
+  }, 20);
   console.log("[Loops] Loaded Bottle Of Togetheness Loop");
 }
 
@@ -7728,7 +7733,7 @@ function load_world_event_handlers(guild_id2) {
 }
 
 // behaviour_pack/scripts-dev/main.ts
-var guild_id = "611008530077712395";
+var guild_id = "1213827104945471538";
 load_loops();
 load_custom_components();
 load_world_event_handlers(guild_id);
