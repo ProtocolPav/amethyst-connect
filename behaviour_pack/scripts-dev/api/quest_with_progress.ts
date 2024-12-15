@@ -94,7 +94,7 @@ class ObjectiveWithProgress extends Objective {
 
                 const index = quest.objectives.indexOf(this)
 
-                if (index < quest.objectives.length) {
+                if (index < quest.objectives.length-1) {
                     await this.complete_objective(interaction, quest)
                 }
 
@@ -148,7 +148,7 @@ export default class QuestWithProgress extends Quest {
                 const quest_id = active_quest_data['quest_id']
 
                 // Check if quest exists in cache and return
-                if (this.quest_cache[thorny_user.thorny_id].quest_id === quest_id) {
+                if (this.quest_cache[thorny_user.thorny_id] && this.quest_cache[thorny_user.thorny_id].quest_id === quest_id) {
                     return this.quest_cache[thorny_user.thorny_id]
                 }
 
