@@ -6675,7 +6675,7 @@ var utils_default = utils;
 // behaviour_pack/scripts-dev/components/glitch.ts
 function load_glitch_component() {
   function glitch(event) {
-    if (Math.random() < 0.07) {
+    if (Math.random() < 0.07 && event.block.isValid()) {
       const location = event.block.location;
       const radius = 20;
       const glitches_type = [
@@ -6691,14 +6691,16 @@ function load_glitch_component() {
     }
   }
   function glitch_particles(event) {
-    const location = event.block.location;
-    const radius = 20;
-    let random_location = {
-      x: location.x + Math.floor(Math.random() * radius) * (Math.random() < 0.5 ? -1 : 1),
-      y: location.y + Math.floor(Math.random() * 4),
-      z: location.z + Math.floor(Math.random() * radius) * (Math.random() < 0.5 ? -1 : 1)
-    };
-    event.dimension.spawnParticle("minecraft:eyeofender_death_explode_particle", random_location);
+    if (event.block.isValid()) {
+      const location = event.block.location;
+      const radius = 20;
+      let random_location = {
+        x: location.x + Math.floor(Math.random() * radius) * (Math.random() < 0.5 ? -1 : 1),
+        y: location.y + Math.floor(Math.random() * 4),
+        z: location.z + Math.floor(Math.random() * radius) * (Math.random() < 0.5 ? -1 : 1)
+      };
+      event.dimension.spawnParticle("minecraft:eyeofender_death_explode_particle", random_location);
+    }
   }
   world4.beforeEvents.worldInitialize.subscribe((initEvent) => {
     initEvent.blockComponentRegistry.registerCustomComponent(
@@ -7204,7 +7206,7 @@ var ObjectiveWithProgress = class extends Objective {
         this.status = "completed";
         this.end = /* @__PURE__ */ new Date();
         const index = quest.objectives.indexOf(this);
-        if (index < quest.objectives.length) {
+        if (index < quest.objectives.length - 1) {
           await this.complete_objective(interaction, quest);
         }
         await this.give_rewards(interaction, this.thorny_user);
@@ -7240,7 +7242,7 @@ var QuestWithProgress = class _QuestWithProgress extends Quest {
       if (active_quest.status === 200) {
         const active_quest_data = JSON.parse(active_quest.body);
         const quest_id = active_quest_data["quest_id"];
-        if (this.quest_cache[thorny_user.thorny_id].quest_id === quest_id) {
+        if (this.quest_cache[thorny_user.thorny_id] && this.quest_cache[thorny_user.thorny_id].quest_id === quest_id) {
           return this.quest_cache[thorny_user.thorny_id];
         }
         const quest_response = await http5.get(`http://nexuscore:8000/api/v0.1/quests/${quest_id}`);
@@ -7433,13 +7435,15 @@ function togetherness(player) {
   const offhand = equippable?.getEquipment(EquipmentSlot2.Offhand);
   const mainhand = equippable?.getEquipment(EquipmentSlot2.Mainhand);
   if (offhand?.hasTag("amethyst:togetherness") || mainhand?.hasTag("amethyst:togetherness")) {
-    const uniqueplayerslist = player.dimension.getEntities({
+    const uniqueplayerslist = player.dimension.getPlayers({
       location: position,
       maxDistance: 16,
       excludeNames: [player.name]
     });
     const effect_level = Math.min(5, Math.ceil(uniqueplayerslist.length / 2));
-    player.addEffect(healthboost, 40, { amplifier: effect_level - 1, showParticles: false });
+    if (effect_level - 1 > 0) {
+      player.addEffect(healthboost, 40, { amplifier: effect_level - 1, showParticles: false });
+    }
   }
   if (offhand?.typeId === "amethyst:totem_of_togetherness" && offhand.getLore().length === 0) {
     offhand.setLore(["\n\xA7r\xA7qEverthorn Christmas 2024"]);
@@ -7456,7 +7460,7 @@ function load_totem_o_togetherness() {
       togetherness(player);
     });
   }, 20);
-  console.log("[Loops] Loaded Bottle Of Togetheness Loop");
+  console.log("[Loops] Loaded Totem Of Togetherness Loop");
 }
 
 // behaviour_pack/scripts-dev/loops/index.ts
@@ -7733,7 +7737,7 @@ function load_world_event_handlers(guild_id2) {
 }
 
 // behaviour_pack/scripts-dev/main.ts
-var guild_id = "1213827104945471538";
+var guild_id = "611008530077712395";
 load_loops();
 load_custom_components();
 load_world_event_handlers(guild_id);

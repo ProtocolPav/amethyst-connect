@@ -94,7 +94,7 @@ class ObjectiveWithProgress extends Objective {
 
                 const index = quest.objectives.indexOf(this)
 
-                if (index < quest.objectives.length) {
+                if (index < quest.objectives.length-1) {
                     await this.complete_objective(interaction, quest)
                 }
 
