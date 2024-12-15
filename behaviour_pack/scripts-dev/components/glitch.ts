@@ -4,7 +4,7 @@ import utils from "../utils";
 
 export default function load_glitch_component() {
     function glitch(event : BlockComponentTickEvent) {
-        if (Math.random() < 0.07) {
+        if (Math.random() < 0.07 && event.block.isValid()) {
             const location = event.block.location;
             const radius = 20;
 
@@ -25,16 +25,18 @@ export default function load_glitch_component() {
     }
 
     function glitch_particles(event : BlockComponentTickEvent) {
-        const location = event.block.location;
-        const radius = 20;
+        if (event.block.isValid()) {
+            const location = event.block.location;
+            const radius = 20;
 
-        let random_location = {
-            x: location.x + (Math.floor(Math.random() * radius) * (Math.random() < 0.5 ? -1 : 1)),
-            y: location.y + Math.floor(Math.random() * 4),
-            z: location.z + (Math.floor(Math.random() * radius) * (Math.random() < 0.5 ? -1 : 1))
-        };
+            let random_location = {
+                x: location.x + (Math.floor(Math.random() * radius) * (Math.random() < 0.5 ? -1 : 1)),
+                y: location.y + Math.floor(Math.random() * 4),
+                z: location.z + (Math.floor(Math.random() * radius) * (Math.random() < 0.5 ? -1 : 1))
+            };
 
-        event.dimension.spawnParticle("minecraft:eyeofender_death_explode_particle", random_location)
+            event.dimension.spawnParticle("minecraft:eyeofender_death_explode_particle", random_location)
+        }
     }
 
     world.beforeEvents.worldInitialize.subscribe(initEvent => {
