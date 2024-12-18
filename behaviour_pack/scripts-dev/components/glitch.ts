@@ -35,7 +35,9 @@ export default function load_glitch_component() {
                 z: location.z + (Math.floor(Math.random() * radius) * (Math.random() < 0.5 ? -1 : 1))
             };
 
-            event.dimension.spawnParticle("minecraft:eyeofender_death_explode_particle", random_location)
+            if (event.block.dimension.getBlock(random_location)) {
+                event.dimension.spawnParticle("minecraft:eyeofender_death_explode_particle", random_location)
+            }
         }
     }
 
