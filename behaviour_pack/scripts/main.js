@@ -6699,7 +6699,9 @@ function load_glitch_component() {
         y: location.y + Math.floor(Math.random() * 4),
         z: location.z + Math.floor(Math.random() * radius) * (Math.random() < 0.5 ? -1 : 1)
       };
-      event.dimension.spawnParticle("minecraft:eyeofender_death_explode_particle", random_location);
+      if (event.block.dimension.getBlock(random_location)) {
+        event.dimension.spawnParticle("minecraft:eyeofender_death_explode_particle", random_location);
+      }
     }
   }
   world4.beforeEvents.worldInitialize.subscribe((initEvent) => {
@@ -7441,7 +7443,7 @@ function togetherness(player) {
       excludeNames: [player.name]
     });
     const effect_level = Math.min(5, Math.ceil(uniqueplayerslist.length / 2));
-    if (effect_level - 1 > 0) {
+    if (effect_level - 1 >= 0) {
       player.addEffect(healthboost, 40, { amplifier: effect_level - 1, showParticles: false });
     }
   }
