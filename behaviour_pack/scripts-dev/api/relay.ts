@@ -37,4 +37,20 @@ export default class Relay {
     
         http.request(request);
     }
+
+    public static location(locations: {gamertag: string, location: number[], hidden: boolean}[]) {
+        const request = new HttpRequest('http://nexuscore:8000/api/v0.1/server/players');
+        request.method = HttpRequestMethod.Post;
+        request.body = JSON.stringify(locations.map(location => ({
+            'gamertag': location.gamertag,
+            'location': location.location,
+            'hidden': location.hidden,
+        })))
+        request.headers = [
+            new HttpHeader("Content-Type", "application/json"),
+            new HttpHeader("auth", "my-auth-token"),
+        ];
+
+        http.request(request);
+    }
 }
