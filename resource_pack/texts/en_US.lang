@@ -6,4 +6,6 @@ entity.amethyst:padovan_monk.name=Padovan Monk
 item.spawn_egg.entity.amethyst:padovan_monk.name=Spawn Padovan Monk
 entity.amethyst:ceran_detective.name=Ceran Detective
 item.spawn_egg.entity.amethyst:ceran_detective.name=Spawn Ceran Detective
+item.spawn_egg.entity.amethyst:everthorn_npc_1.name=Everthorn NPC 1
+item.spawn_egg.entity.amethyst:everthorn_npc_2.name=Everthorn NPC 2
 tile.amethyst:fungus_block.name=Unstable Fungus

@@ -1,0 +1,40 @@
+{
+    "format_version": "1.10.0",
+    "minecraft:client_entity": {
+      "description": {
+        "identifier": "amethyst:everthorn_npc_1",
+        "materials": {
+          "default": "npc"
+        },
+        "textures": {
+          "shroomland_scientist": "textures/entity/shroomland_scientist",
+          "ceran_detective": "textures/entity/ceran_detective",
+          "padovan_monk": "textures/entity/padovan_monk"
+      
+        },
+        "geometry": {
+          "default": "geometry.npc.steve"
+        },
+        "scripts": {
+          "animate": [
+            "general",
+            { "move": "query.modified_move_speed" },
+            "look_at_target",
+            { "baby_transform": "query.is_baby" }
+          ]
+        },
+        "animations": {
+          "general": "animation.npc.general",
+          "look_at_target": "animation.common.look_at_target",
+          "move": "animation.npc.move",
+          "baby_transform": "animation.npc.baby_transform"
+        },
+        "render_controllers": [ "controller.render.everthorn_npc" ],
+        "spawn_egg": {
+          "texture": "spawn_egg",
+          "texture_index": 35
+        }
+      }
+    }
+  }
+  
