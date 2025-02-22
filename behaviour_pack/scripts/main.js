@@ -7480,7 +7480,7 @@ function load_totem_o_togetherness() {
 }
 
 // behaviour_pack/scripts-dev/loops/location.ts
-import { EntityComponentTypes as EntityComponentTypes5, EquipmentSlot as EquipmentSlot3, system as system8, world as world9 } from "@minecraft/server";
+import { EntityComponentTypes as EntityComponentTypes5, EquipmentSlot as EquipmentSlot3, system as system8, world as world9, TicksPerSecond as TicksPerSecond4 } from "@minecraft/server";
 function location_log(player) {
   const head_gear = player.getComponent(EntityComponentTypes5.Equippable)?.getEquipment(EquipmentSlot3.Head);
   const check_list = ["minecraft:skeleton_skull", "minecraft:wither_skeleton_skull", "minecraft:carved_pumpkin"];
@@ -7497,7 +7497,7 @@ function load_location_logger() {
       log.push(location_log(player));
     });
     api_default.Relay.location(log);
-  }, 20);
+  }, TicksPerSecond4 * 5);
   console.log("[Loops] Loaded Location Loop");
 }
 

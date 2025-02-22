@@ -79,7 +79,7 @@ class ObjectiveWithProgress extends Objective {
         if (requirement_check.check) {
             this.completion++
 
-            await utils.commands.play_quest_progress_sound(this.thorny_user.gamertag)
+            utils.commands.play_quest_progress_sound(this.thorny_user.gamertag)
 
             utils.commands.send_title(
                 interaction.dimension, 
@@ -108,6 +108,7 @@ class ObjectiveWithProgress extends Objective {
             this.end = new Date()
 
             await quest.fail_quest(interaction.thorny_id)
+            utils.commands.play_quest_fail_sound(this.thorny_user.gamertag)
 
             return false
         }

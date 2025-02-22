@@ -1,4 +1,4 @@
-import {EntityComponentTypes, EquipmentSlot, Player, system, world} from "@minecraft/server";
+import {EntityComponentTypes, EquipmentSlot, Player, system, world, TicksPerSecond} from "@minecraft/server";
 import {MinecraftItemTypes} from "@minecraft/vanilla-data";
 import api from "../api";
 
@@ -24,7 +24,7 @@ export default function load_location_logger() {
         });
 
         api.Relay.location(log)
-    }, 20)
+    }, TicksPerSecond*5)
 
     console.log('[Loops] Loaded Location Loop')
 }
