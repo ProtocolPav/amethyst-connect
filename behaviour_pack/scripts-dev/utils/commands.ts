@@ -4,39 +4,27 @@ import {MinecraftBlockTypes, MinecraftEffectTypes, MinecraftEntityTypes} from "@
 
 function send_message(dimension: string, target: string, message: string) {
     const msg = {'rawtext': [{'text': message}]}
-    world.getDimension(dimension).runCommand(`tellraw "${target}" ${JSON.stringify(msg)}`)
+    if (!target.startsWith('@')) {
+        target = `"${target}"`;
+    }
+    world.getDimension(dimension).runCommand(`tellraw ${target} ${JSON.stringify(msg)}`)
 }
 
-async function play_quest_progress_sound(gamertag: string) {
+function play_quest_progress_sound(gamertag: string) {
     let player = world.getPlayers({name: gamertag})[0]
 
     player.playSound(
-        'note.pling',
-        {pitch: 1.5, volume: 100, location: player.location}
+        'quest.objective.progress',
+        {volume: 100, location: player.location}
     )
-
-    system.runTimeout(() => {
-        player.playSound(
-            'note.pling',
-            {pitch: 2, volume: 100, location: player.location}
-        )
-    }, 2)
 }
 
 function play_quest_complete_sound(gamertag: string) {
     let player = world.getPlayers({name: gamertag})[0]
 
     player.playSound(
-        'mace.heavy_smash_ground',
+        'quest.complete',
         {volume: 100, location: player.location}
-    )
-    player.playSound(
-        'random.totem',
-        {volume: 100, location: player.location}
-    )
-    player.playSound(
-        'random.levelup',
-        {volume: 100, pitch: 1.5, location: player.location}
     )
 
     for (let i = 0; i < 5; i++) {
@@ -48,8 +36,17 @@ function play_objective_complete_sound(gamertag: string) {
     let player = world.getPlayers({name: gamertag})[0]
 
     player.playSound(
-        'random.levelup',
-        {volume: 100, pitch: 0.8, location: player.location}
+        'quest.objective.complete',
+        {volume: 100, location: player.location}
+    )
+}
+
+function play_quest_fail_sound(gamertag: string) {
+    let player = world.getPlayers({name: gamertag})[0]
+
+    player.playSound(
+        'quest.fail',
+        {volume: 100, location: player.location}
     )
 }
 
@@ -186,6 +183,7 @@ const commands = {
     play_quest_progress_sound,
     send_title,
     play_objective_complete_sound,
+    play_quest_fail_sound,
     give_item,
     noise_glitch,
     vision_block_glitch,
