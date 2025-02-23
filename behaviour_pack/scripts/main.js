@@ -7328,7 +7328,7 @@ var QuestWithProgress = class _QuestWithProgress extends Quest {
       }
       const incremented = await active_objective.increment_completion(interaction, this);
       const next_objective = this.get_active_objective();
-      if (!next_objective) {
+      if (!next_objective && active_objective.status === "completed") {
         this.status = "completed";
         this.end_time = /* @__PURE__ */ new Date();
         utils_default.commands.play_quest_complete_sound(this.thorny_user.gamertag);
@@ -7345,7 +7345,7 @@ var QuestWithProgress = class _QuestWithProgress extends Quest {
 ${this.thorny_user.gamertag} has just completed \xA7l\xA7n${this.title}\xA7r!
 Run \xA75/quests view\xA7r on Discord to start it!`
         );
-      } else if (next_objective.objective_id !== active_objective.objective_id) {
+      } else if (next_objective && next_objective.objective_id !== active_objective.objective_id) {
         next_objective.start = /* @__PURE__ */ new Date();
       } else if (active_objective.status === "failed") {
         this.status = "failed";
@@ -7481,7 +7481,16 @@ function load_totem_o_togetherness() {
 import { EntityComponentTypes as EntityComponentTypes5, EquipmentSlot as EquipmentSlot3, system as system8, world as world9, TicksPerSecond as TicksPerSecond4 } from "@minecraft/server";
 function location_log(player) {
   const head_gear = player.getComponent(EntityComponentTypes5.Equippable)?.getEquipment(EquipmentSlot3.Head);
-  const check_list = ["minecraft:skeleton_skull", "minecraft:wither_skeleton_skull", "minecraft:carved_pumpkin"];
+  const check_list = [
+    MinecraftItemTypes.SkeletonSkull,
+    MinecraftItemTypes.WitherSkeletonSkull,
+    MinecraftItemTypes.CarvedPumpkin,
+    MinecraftItemTypes.PlayerHead,
+    MinecraftItemTypes.PiglinHead,
+    MinecraftItemTypes.CreeperHead,
+    MinecraftItemTypes.ZombieHead,
+    MinecraftItemTypes.DragonHead
+  ];
   let hidden = false;
   hidden = head_gear?.typeId ? check_list.includes(head_gear.typeId) : false;
   const location = [Math.round(player.location.x), Math.round(player.location.y), Math.round(player.location.z)];
