@@ -6475,34 +6475,23 @@ function send_motd(player) {
 import { EntityComponentTypes, ItemStack, system as system2, TicksPerSecond as TicksPerSecond2, world as world3 } from "@minecraft/server";
 function send_message(dimension, target, message2) {
   const msg = { "rawtext": [{ "text": message2 }] };
-  world3.getDimension(dimension).runCommand(`tellraw "${target}" ${JSON.stringify(msg)}`);
+  if (!target.startsWith("@")) {
+    target = `"${target}"`;
+  }
+  world3.getDimension(dimension).runCommand(`tellraw ${target} ${JSON.stringify(msg)}`);
 }
-async function play_quest_progress_sound(gamertag) {
+function play_quest_progress_sound(gamertag) {
   let player = world3.getPlayers({ name: gamertag })[0];
   player.playSound(
-    "note.pling",
-    { pitch: 1.5, volume: 100, location: player.location }
+    "quest.objective.progress",
+    { volume: 100, location: player.location }
   );
-  system2.runTimeout(() => {
-    player.playSound(
-      "note.pling",
-      { pitch: 2, volume: 100, location: player.location }
-    );
-  }, 2);
 }
 function play_quest_complete_sound(gamertag) {
   let player = world3.getPlayers({ name: gamertag })[0];
   player.playSound(
-    "mace.heavy_smash_ground",
+    "quest.complete",
     { volume: 100, location: player.location }
-  );
-  player.playSound(
-    "random.totem",
-    { volume: 100, location: player.location }
-  );
-  player.playSound(
-    "random.levelup",
-    { volume: 100, pitch: 1.5, location: player.location }
   );
   for (let i = 0; i < 5; i++) {
     system2.runTimeout(() => {
@@ -6513,8 +6502,15 @@ function play_quest_complete_sound(gamertag) {
 function play_objective_complete_sound(gamertag) {
   let player = world3.getPlayers({ name: gamertag })[0];
   player.playSound(
-    "random.levelup",
-    { volume: 100, pitch: 0.8, location: player.location }
+    "quest.objective.complete",
+    { volume: 100, location: player.location }
+  );
+}
+function play_quest_fail_sound(gamertag) {
+  let player = world3.getPlayers({ name: gamertag })[0];
+  player.playSound(
+    "quest.fail",
+    { volume: 100, location: player.location }
   );
 }
 function send_title(dimension, target, type, message2) {
@@ -6630,6 +6626,7 @@ var commands = {
   play_quest_progress_sound,
   send_title,
   play_objective_complete_sound,
+  play_quest_fail_sound,
   give_item,
   noise_glitch,
   vision_block_glitch,
@@ -7211,7 +7208,7 @@ var ObjectiveWithProgress = class extends Objective {
     const requirement_check = await this.check_requirements(interaction, this.start ?? /* @__PURE__ */ new Date());
     if (requirement_check.check) {
       this.completion++;
-      await utils_default.commands.play_quest_progress_sound(this.thorny_user.gamertag);
+      utils_default.commands.play_quest_progress_sound(this.thorny_user.gamertag);
       utils_default.commands.send_title(
         interaction.dimension,
         this.thorny_user.gamertag,
@@ -7232,6 +7229,7 @@ var ObjectiveWithProgress = class extends Objective {
       this.status = "failed";
       this.end = /* @__PURE__ */ new Date();
       await quest.fail_quest(interaction.thorny_id);
+      utils_default.commands.play_quest_fail_sound(this.thorny_user.gamertag);
       return false;
     }
     return false;
@@ -7330,7 +7328,7 @@ var QuestWithProgress = class _QuestWithProgress extends Quest {
       }
       const incremented = await active_objective.increment_completion(interaction, this);
       const next_objective = this.get_active_objective();
-      if (!next_objective) {
+      if (!next_objective && active_objective.status === "completed") {
         this.status = "completed";
         this.end_time = /* @__PURE__ */ new Date();
         utils_default.commands.play_quest_complete_sound(this.thorny_user.gamertag);
@@ -7347,7 +7345,7 @@ var QuestWithProgress = class _QuestWithProgress extends Quest {
 ${this.thorny_user.gamertag} has just completed \xA7l\xA7n${this.title}\xA7r!
 Run \xA75/quests view\xA7r on Discord to start it!`
         );
-      } else if (next_objective.objective_id !== active_objective.objective_id) {
+      } else if (next_objective && next_objective.objective_id !== active_objective.objective_id) {
         next_objective.start = /* @__PURE__ */ new Date();
       } else if (active_objective.status === "failed") {
         this.status = "failed";
@@ -7483,7 +7481,16 @@ function load_totem_o_togetherness() {
 import { EntityComponentTypes as EntityComponentTypes5, EquipmentSlot as EquipmentSlot3, system as system8, world as world9, TicksPerSecond as TicksPerSecond4 } from "@minecraft/server";
 function location_log(player) {
   const head_gear = player.getComponent(EntityComponentTypes5.Equippable)?.getEquipment(EquipmentSlot3.Head);
-  const check_list = ["minecraft:skeleton_skull", "minecraft:wither_skeleton_skull", "minecraft:carved_pumpkin"];
+  const check_list = [
+    MinecraftItemTypes.SkeletonSkull,
+    MinecraftItemTypes.WitherSkeletonSkull,
+    MinecraftItemTypes.CarvedPumpkin,
+    MinecraftItemTypes.PlayerHead,
+    MinecraftItemTypes.PiglinHead,
+    MinecraftItemTypes.CreeperHead,
+    MinecraftItemTypes.ZombieHead,
+    MinecraftItemTypes.DragonHead
+  ];
   let hidden = false;
   hidden = head_gear?.typeId ? check_list.includes(head_gear.typeId) : false;
   const location = [Math.round(player.location.x), Math.round(player.location.y), Math.round(player.location.z)];

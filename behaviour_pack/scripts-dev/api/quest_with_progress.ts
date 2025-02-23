@@ -244,7 +244,7 @@ export default class QuestWithProgress extends Quest {
 
             const next_objective = this.get_active_objective()
 
-            if (!next_objective) {
+            if (!next_objective && active_objective.status === 'completed') {
                 this.status = 'completed'
                 this.end_time = new Date()
 
@@ -265,7 +265,7 @@ export default class QuestWithProgress extends Quest {
                     `Run §5/quests view§r on Discord to start it!`
                 )
             }
-            else if (next_objective.objective_id !== active_objective.objective_id) {
+            else if (next_objective && next_objective.objective_id !== active_objective.objective_id) {
                 next_objective.start = new Date()
             }
             else if (active_objective.status === 'failed') {
