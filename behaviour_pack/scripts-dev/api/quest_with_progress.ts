@@ -79,7 +79,7 @@ class ObjectiveWithProgress extends Objective {
         if (requirement_check.check) {
             this.completion++
 
-            await utils.commands.play_quest_progress_sound(this.thorny_user.gamertag)
+            utils.commands.play_quest_progress_sound(this.thorny_user.gamertag)
 
             utils.commands.send_title(
                 interaction.dimension, 
@@ -108,6 +108,7 @@ class ObjectiveWithProgress extends Objective {
             this.end = new Date()
 
             await quest.fail_quest(interaction.thorny_id)
+            utils.commands.play_quest_fail_sound(this.thorny_user.gamertag)
 
             return false
         }
@@ -243,7 +244,7 @@ export default class QuestWithProgress extends Quest {
 
             const next_objective = this.get_active_objective()
 
-            if (!next_objective) {
+            if (!next_objective && active_objective.status === 'completed') {
                 this.status = 'completed'
                 this.end_time = new Date()
 
@@ -264,7 +265,7 @@ export default class QuestWithProgress extends Quest {
                     `Run §5/quests view§r on Discord to start it!`
                 )
             }
-            else if (next_objective.objective_id !== active_objective.objective_id) {
+            else if (next_objective && next_objective.objective_id !== active_objective.objective_id) {
                 next_objective.start = new Date()
             }
             else if (active_objective.status === 'failed') {
