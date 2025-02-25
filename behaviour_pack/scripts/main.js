@@ -6472,7 +6472,13 @@ function send_motd(player) {
 }
 
 // behaviour_pack/scripts-dev/utils/commands.ts
-import { EntityComponentTypes, ItemStack, system as system2, TicksPerSecond as TicksPerSecond2, world as world3 } from "@minecraft/server";
+import {
+  EntityComponentTypes,
+  ItemStack,
+  system as system2,
+  TicksPerSecond as TicksPerSecond2,
+  world as world3
+} from "@minecraft/server";
 function send_message(dimension, target, message2) {
   const msg = { "rawtext": [{ "text": message2 }] };
   if (!target.startsWith("@")) {
@@ -6516,10 +6522,30 @@ function play_quest_fail_sound(gamertag) {
 function send_title(dimension, target, type, message2) {
   world3.getDimension(dimension).runCommand(`title "${target}" ${type} ${message2}`);
 }
+function add_or_spawn_item(player, item) {
+  const player_container = player.getComponent(EntityComponentTypes.Inventory)?.container;
+  if (!player_container) {
+    throw new Error(`Could not get inventory container for "${player.name}"`);
+  }
+  if (player_container.emptySlotsCount >= 1) {
+    player_container.addItem(item);
+  } else {
+    player.dimension.spawnItem(item, player.location);
+  }
+}
 function give_item(gamertag, item, amount) {
-  world3.getPlayers({ name: gamertag })[0].getComponent(EntityComponentTypes.Inventory)?.container?.addItem(
-    new ItemStack(item, amount)
-  );
+  const item_stack = new ItemStack(item, 1);
+  let stack_amount = Math.trunc(amount / item_stack.maxAmount);
+  const player = world3.getPlayers({ name: gamertag })[0];
+  if (stack_amount >= 1) {
+    item_stack.amount = item_stack.maxAmount;
+    for (let i = 1; i <= stack_amount; i++) {
+      add_or_spawn_item(player, item_stack);
+    }
+    amount -= stack_amount * item_stack.maxAmount;
+  }
+  item_stack.amount = amount;
+  add_or_spawn_item(player, item_stack);
 }
 function noise_glitch(player) {
   const noises = [
@@ -7008,19 +7034,17 @@ var Reward = class {
   async give_reward(interaction, thorny_user) {
     if (this.balance) {
       thorny_user.balance += this.balance;
-      utils_default.commands.send_title(
+      utils_default.commands.send_message(
         interaction.dimension,
         thorny_user.gamertag,
-        "actionbar",
-        `You have received ${this.balance} Nugs!`
+        `\xA7l[\xA7aQuests\xA7f]\xA7r You have received ${this.balance} Nugs!`
       );
     } else if (this.item) {
       utils_default.commands.give_item(thorny_user.gamertag, this.item, this.count);
-      utils_default.commands.send_title(
+      utils_default.commands.send_message(
         interaction.dimension,
         thorny_user.gamertag,
-        "actionbar",
-        `You have received ${this.count} ${utils_default.clean_id(this.item)}!`
+        `\xA7l[\xA7aQuests\xA7f]\xA7r You have received ${this.count} ${utils_default.clean_id(this.item)}!`
       );
     }
   }
@@ -7783,7 +7807,7 @@ function load_world_event_handlers(guild_id2) {
 }
 
 // behaviour_pack/scripts-dev/main.ts
-var guild_id = "611008530077712395";
+var guild_id = "1213827104945471538";
 load_loops();
 load_custom_components();
 load_world_event_handlers(guild_id);
