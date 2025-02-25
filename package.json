@@ -2,7 +2,7 @@
   "dependencies": {
     "@minecraft/server": "beta",
     "@minecraft/server-net": "beta",
-    "@minecraft/vanilla-data": "latest",
+    "@minecraft/vanilla-data": "^1.21.61",
     "cross-env": "^7.0.3"
   },
   "devDependencies": {
