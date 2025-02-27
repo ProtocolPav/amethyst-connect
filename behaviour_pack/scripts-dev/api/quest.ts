@@ -56,20 +56,18 @@ export class Reward {
         if (this.balance) {
             thorny_user.balance += this.balance
 
-            utils.commands.send_title(
+            utils.commands.send_message(
                 interaction.dimension,
                 thorny_user.gamertag,
-                'actionbar',
-                `You have received ${this.balance} Nugs!`
+                `§l[§aQuests§f]§r You have received ${this.balance} Nugs!`
             )
         } else if (this.item) {
-             utils.commands.give_item(thorny_user.gamertag, this.item, this.count)
+            utils.commands.give_item(thorny_user.gamertag, this.item, this.count)
 
-             utils.commands.send_title(
+            utils.commands.send_message(
                 interaction.dimension,
                 thorny_user.gamertag,
-                'actionbar',
-                `You have received ${this.count} ${utils.clean_id(this.item)}!`
+                `§l[§aQuests§f]§r You have received ${this.count} ${utils.clean_id(this.item)}!`
             )
         }
     }
