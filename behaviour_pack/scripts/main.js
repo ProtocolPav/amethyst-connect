@@ -7782,22 +7782,8 @@ function load_block_event_handler() {
           items.push([i, item?.typeId, item?.nameTag, item?.amount]);
         }
       }
-      console.log("after");
       console.log(JSON.stringify(items));
     }
-  });
-  world10.beforeEvents.playerInteractWithBlock.subscribe((event) => {
-    const block_id = event.block.typeId;
-    const block_location = [event.block.x, event.block.y, event.block.z];
-    const items = [];
-    const container = event.block.getComponent("minecraft:inventory")?.container;
-    if (container) {
-      for (let i = 0; i < container.size; i++) {
-        let item = container.getItem(i);
-        items.push([i, item?.typeId, item?.nameTag, item?.amount]);
-      }
-    }
-    console.log(JSON.stringify(items));
   });
 }
 
@@ -7853,10 +7839,10 @@ function load_connections_handler(guild_id2) {
   });
 }
 
-// behaviour_pack/scripts-dev/events/kills.ts
-import { world as world13 } from "@minecraft/server";
+// behaviour_pack/scripts-dev/events/entities.ts
+import { system as system11, world as world13 } from "@minecraft/server";
 import { EntityComponentTypes as EntityComponentTypes7, EquipmentSlot as EquipmentSlot5, Player as Player9 } from "@minecraft/server";
-function load_kill_event_handler() {
+function load_entity_event_handler() {
   world13.afterEvents.entityDie.subscribe((event) => {
     if (event.damageSource.damagingEntity instanceof Player9) {
       const player = event.damageSource.damagingEntity;
@@ -7937,12 +7923,42 @@ function load_kill_event_handler() {
       api_default.Relay.event(utils_default.DeathMessage.random_suicide(player.name, event.damageSource.cause), "", "other");
     }
   });
+  world13.afterEvents.playerInteractWithEntity.subscribe((event) => {
+    const entity_id = event.target.typeId;
+    const entity_location = [event.target.location.x, event.target.location.y, event.target.location.z];
+    const dimension = event.player.dimension;
+    const mainhand = event.player.getComponent(EntityComponentTypes7.Equippable)?.getEquipment(EquipmentSlot5.Mainhand);
+    console.log(entity_id, event.target.nameTag);
+    const all_entities = [
+      // Villagers
+      MinecraftEntityTypes.Villager,
+      MinecraftEntityTypes.VillagerV2,
+      MinecraftEntityTypes.WanderingTrader
+    ];
+    if (all_entities.includes(entity_id)) {
+      system11.run(() => {
+        const interaction = new api_default.Interaction(
+          {
+            thorny_id: api_default.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
+            type: "use",
+            position_x: entity_location[0],
+            position_y: entity_location[1],
+            position_z: entity_location[2],
+            reference: entity_id,
+            mainhand: mainhand?.typeId ?? null,
+            dimension: dimension.id
+          }
+        );
+        interaction.post_interaction();
+      });
+    }
+  });
 }
 
 // behaviour_pack/scripts-dev/events/script_events.ts
-import { system as system11 } from "@minecraft/server";
+import { system as system12 } from "@minecraft/server";
 function load_script_event_handler() {
-  system11.afterEvents.scriptEventReceive.subscribe((script_event) => {
+  system12.afterEvents.scriptEventReceive.subscribe((script_event) => {
     const thorny_user = api_default.ThornyUser.fetch_user(script_event.message);
     if (thorny_user) {
       const interaction = new api_default.Interaction(
@@ -7968,7 +7984,7 @@ function load_world_event_handlers(guild_id2) {
   load_block_event_handler();
   load_chat_handler();
   load_connections_handler(guild_id2);
-  load_kill_event_handler();
+  load_entity_event_handler();
   load_script_event_handler();
 }
 
