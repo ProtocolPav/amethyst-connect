@@ -17,7 +17,7 @@ function togetherness(player: Player): void {
             maxDistance: 16,
             excludeNames: [player.name]
         })
-        const effect_level = Math.min(5, Math.ceil(uniqueplayerslist.length / 2))
+        const effect_level = Math.min(5, uniqueplayerslist.length)
         if (effect_level-1 >= 0) {
             player.addEffect(healthboost, 40, {amplifier: effect_level-1, showParticles: false})
         }
