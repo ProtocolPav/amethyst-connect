@@ -1,11 +1,11 @@
-import { world } from "@minecraft/server"
+import {system, world} from "@minecraft/server"
 import api from "../api"
 import utils from "../utils"
 import { EntityComponentTypes, EquipmentSlot, Player } from "@minecraft/server"
-import { MinecraftEntityTypes } from "@minecraft/vanilla-data"
+import {MinecraftEntityTypes} from "@minecraft/vanilla-data"
 
-export default function load_kill_event_handler() {
-
+export default function load_entity_event_handler() {
+    // Handle Entity Die/Kill event
     world.afterEvents.entityDie.subscribe((event) => {
 
         // Player kills Something
@@ -129,4 +129,39 @@ export default function load_kill_event_handler() {
         }
     })
 
+    // Handle Entity Interact event
+    world.afterEvents.playerInteractWithEntity.subscribe((event) => {
+        const entity_id = event.target.typeId
+        const entity_location = [event.target.location.x, event.target.location.y, event.target.location.z]
+        const dimension = event.player.dimension
+        const mainhand = event.player.getComponent(EntityComponentTypes.Equippable)?.getEquipment(EquipmentSlot.Mainhand)
+
+        // List of all block IDs that the system will log.
+        // Anything that isn't these will not be logged.
+        const all_entities: string[] = [
+            // Villagers
+            MinecraftEntityTypes.Villager, MinecraftEntityTypes.VillagerV2, MinecraftEntityTypes.WanderingTrader
+        ]
+
+        if (
+            all_entities.includes(entity_id)
+        ) {
+            system.run(() => {
+                const interaction = new api.Interaction(
+                    {
+                        thorny_id: api.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
+                        type: 'use',
+                        position_x: entity_location[0],
+                        position_y: entity_location[1],
+                        position_z: entity_location[2],
+                        reference: entity_id,
+                        mainhand: mainhand?.typeId ?? null,
+                        dimension: dimension.id
+                    }
+                )
+
+                interaction.post_interaction()
+            })
+        }
+    })
 }
