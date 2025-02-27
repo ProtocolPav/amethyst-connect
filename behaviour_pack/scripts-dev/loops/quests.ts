@@ -1,5 +1,6 @@
 import api from "../api";
-import { system } from "@minecraft/server";
+import utils from "../utils";
+import {system, world} from "@minecraft/server";
 
 async function check_quests() {
     if (!api.Interaction.is_processing()) {
@@ -38,7 +39,31 @@ async function check_quests() {
     }
 }
 
+async function display_timer() {
+    for (let questCacheKey in api.QuestWithProgress.quest_cache) {
+        let active_objective = api.QuestWithProgress.quest_cache[questCacheKey].get_active_objective()
+
+        if (active_objective && active_objective.start && active_objective.objective_timer) {
+            let elapsed_seconds = Math.floor((new Date().getTime() - active_objective.start.getTime()) / 1000);
+
+            let remaining_seconds = Math.max(0, active_objective.objective_timer - elapsed_seconds);
+
+            let minutes = Math.floor(remaining_seconds / 60);
+            let seconds = remaining_seconds % 60;
+
+            let player = world.getPlayers({name: active_objective.thorny_user.gamertag})[0]
+            utils.commands.send_title(
+                player.dimension.id,
+                player.name,
+                "actionbar",
+                `§l§sObjective ${active_objective.order+1}§r | ${minutes.toString().padStart(2, '0')}m${seconds.toString().padStart(2, '0')}s`
+                )
+        }
+    }
+}
+
 export default function load_quest_loop() {
     system.runInterval(async () => {await check_quests()}, 1)
+    system.runInterval(async () => {await display_timer()}, 10)
     console.log('[Loops] Loaded Quests Loop') 
 }
