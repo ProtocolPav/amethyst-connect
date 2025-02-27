@@ -7555,7 +7555,7 @@ function togetherness(player) {
       maxDistance: 16,
       excludeNames: [player.name]
     });
-    const effect_level = Math.min(5, Math.ceil(uniqueplayerslist.length / 2));
+    const effect_level = Math.min(5, uniqueplayerslist.length);
     if (effect_level - 1 >= 0) {
       player.addEffect(healthboost, 40, { amplifier: effect_level - 1, showParticles: false });
     }
@@ -8009,7 +8009,7 @@ function load_world_event_handlers(guild_id2) {
 }
 
 // behaviour_pack/scripts-dev/main.ts
-var guild_id = "1213827104945471538";
+var guild_id = "611008530077712395";
 load_loops();
 load_custom_components();
 load_world_event_handlers(guild_id);
