@@ -65,20 +65,72 @@ export default function load_block_event_handler() {
         const block_location = [event.block.x, event.block.y, event.block.z]
         const dimension = event.player.dimension
         const mainhand = event.player.getComponent(EntityComponentTypes.Equippable)?.getEquipment(EquipmentSlot.Mainhand)
-        
+
         // List of all block IDs that the system will log.
         // Anything that isn't these will not be logged.
         const all_blocks: string[] = [
-            MinecraftBlockTypes.Chest, MinecraftBlockTypes.Barrel, MinecraftBlockTypes.RedShulkerBox,
+            // Containers
+            MinecraftBlockTypes.Chest, MinecraftBlockTypes.Barrel, MinecraftBlockTypes.EnderChest,
+            MinecraftBlockTypes.TrappedChest,
+
+            // Shulkers
+            MinecraftBlockTypes.RedShulkerBox, MinecraftBlockTypes.LightGrayShulkerBox, MinecraftBlockTypes.LightBlueShulkerBox,
             MinecraftBlockTypes.BlueShulkerBox, MinecraftBlockTypes.CyanShulkerBox, MinecraftBlockTypes.GrayShulkerBox,
             MinecraftBlockTypes.LimeShulkerBox, MinecraftBlockTypes.PinkShulkerBox, MinecraftBlockTypes.BlackShulkerBox,
             MinecraftBlockTypes.BrownShulkerBox, MinecraftBlockTypes.GreenShulkerBox, MinecraftBlockTypes.WhiteShulkerBox,
             MinecraftBlockTypes.OrangeShulkerBox, MinecraftBlockTypes.PurpleShulkerBox, MinecraftBlockTypes.UndyedShulkerBox,
-            MinecraftBlockTypes.YellowShulkerBox, MinecraftBlockTypes.MagentaShulkerBox, MinecraftBlockTypes.LightBlueShulkerBox,
-            MinecraftBlockTypes.LightGrayShulkerBox
+            MinecraftBlockTypes.YellowShulkerBox, MinecraftBlockTypes.MagentaShulkerBox,
+
+            // Other Blocks
+            MinecraftBlockTypes.Crafter, MinecraftBlockTypes.CraftingTable, MinecraftBlockTypes.Furnace,
+            MinecraftBlockTypes.BlastFurnace, MinecraftBlockTypes.LitFurnace, MinecraftBlockTypes.LitBlastFurnace,
+            MinecraftBlockTypes.LitSmoker, MinecraftBlockTypes.Smoker, MinecraftBlockTypes.Hopper,
+            MinecraftBlockTypes.EnchantingTable, MinecraftBlockTypes.Anvil, MinecraftBlockTypes.ChippedAnvil,
+            MinecraftBlockTypes.DamagedAnvil, MinecraftBlockTypes.BrewingStand,
+            MinecraftBlockTypes.Beacon, MinecraftBlockTypes.CartographyTable, MinecraftBlockTypes.Grindstone,
+            MinecraftBlockTypes.Lectern, MinecraftBlockTypes.Loom, MinecraftBlockTypes.SmithingTable,
+            MinecraftBlockTypes.StonecutterBlock, MinecraftBlockTypes.ChiseledBookshelf,
+
+            // Buttons
+            MinecraftBlockTypes.Lever,
+            MinecraftBlockTypes.WoodenButton, MinecraftBlockTypes.SpruceButton, MinecraftBlockTypes.BirchButton,
+            MinecraftBlockTypes.JungleButton, MinecraftBlockTypes.AcaciaButton, MinecraftBlockTypes.DarkOakButton,
+            MinecraftBlockTypes.MangroveButton, MinecraftBlockTypes.CherryButton, MinecraftBlockTypes.PaleOakButton,
+            MinecraftBlockTypes.BambooButton, MinecraftBlockTypes.CrimsonButton, MinecraftBlockTypes.WarpedButton,
+            MinecraftBlockTypes.PolishedBlackstoneButton, MinecraftBlockTypes.StoneButton,
+
+            // Doors
+            MinecraftBlockTypes.WoodenDoor, MinecraftBlockTypes.SpruceDoor, MinecraftBlockTypes.BirchDoor,
+            MinecraftBlockTypes.JungleDoor, MinecraftBlockTypes.AcaciaDoor, MinecraftBlockTypes.DarkOakDoor,
+            MinecraftBlockTypes.MangroveDoor, MinecraftBlockTypes.CherryDoor, MinecraftBlockTypes.PaleOakDoor,
+            MinecraftBlockTypes.BambooDoor, MinecraftBlockTypes.CrimsonDoor, MinecraftBlockTypes.WarpedDoor,
+            MinecraftBlockTypes.IronDoor,
+            MinecraftBlockTypes.CopperDoor, MinecraftBlockTypes.ExposedCopperDoor, MinecraftBlockTypes.WeatheredCopperDoor,
+            MinecraftBlockTypes.OxidizedCopperDoor,
+            MinecraftBlockTypes.WaxedCopperDoor, MinecraftBlockTypes.WaxedExposedCopperDoor,
+            MinecraftBlockTypes.WaxedOxidizedCopperDoor, MinecraftBlockTypes.WaxedWeatheredCopperDoor,
+
+            // Trapdoors
+            MinecraftBlockTypes.Trapdoor, MinecraftBlockTypes.SpruceTrapdoor, MinecraftBlockTypes.BirchTrapdoor,
+            MinecraftBlockTypes.JungleTrapdoor, MinecraftBlockTypes.AcaciaTrapdoor, MinecraftBlockTypes.DarkOakTrapdoor,
+            MinecraftBlockTypes.MangroveTrapdoor, MinecraftBlockTypes.CherryTrapdoor, MinecraftBlockTypes.PaleOakTrapdoor,
+            MinecraftBlockTypes.BambooTrapdoor, MinecraftBlockTypes.CrimsonTrapdoor, MinecraftBlockTypes.WarpedTrapdoor,
+            MinecraftBlockTypes.IronTrapdoor,
+            MinecraftBlockTypes.CopperTrapdoor, MinecraftBlockTypes.ExposedCopperTrapdoor,
+            MinecraftBlockTypes.WeatheredCopperTrapdoor, MinecraftBlockTypes.OxidizedCopperTrapdoor,
+            MinecraftBlockTypes.WaxedCopperTrapdoor, MinecraftBlockTypes.WaxedExposedCopperTrapdoor,
+            MinecraftBlockTypes.WaxedOxidizedCopperTrapdoor, MinecraftBlockTypes.WaxedWeatheredCopperTrapdoor
         ]
-    
-        if (all_blocks.includes(block_id)) {
+
+        // If the block is being held, and the Before and after is different, don't log
+        // This is so we don't get double logs with the Place event
+        if (
+            all_blocks.includes(block_id)
+            && !(
+                event.beforeItemStack?.typeId === block_id
+                && event.itemStack?.amount !== event.beforeItemStack?.amount
+            )
+        ) {
             system.run(() => {
                 const interaction = new api.Interaction(
                     {
@@ -96,6 +148,20 @@ export default function load_block_event_handler() {
                 
                 interaction.post_interaction()
             })
+
+            // TImeout after to check for the new chest contents? this may not work though as the player may still be interacting
+
+            const items = []
+            const container = event.block.getComponent('minecraft:inventory')?.container
+
+            if (container) {
+                for (let i = 0; i < container.size; i++) {
+                    let item = container.getItem(i)
+                    items.push([i, item?.typeId, item?.nameTag, item?.amount,])
+                }
+            }
+
+            console.log(JSON.stringify(items))
         }
     })
 }

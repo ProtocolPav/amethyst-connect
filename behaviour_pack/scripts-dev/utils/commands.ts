@@ -1,4 +1,13 @@
-import {EntityComponentTypes, ItemStack, Player, PlayerSoundOptions, system, TicksPerSecond, world} from '@minecraft/server';
+import {
+    Container,
+    EntityComponentTypes,
+    ItemStack,
+    Player,
+    PlayerSoundOptions,
+    system,
+    TicksPerSecond,
+    world
+} from '@minecraft/server';
 import {MinecraftBlockTypes, MinecraftEffectTypes, MinecraftEntityTypes} from "@minecraft/vanilla-data";
 
 
@@ -54,13 +63,43 @@ function send_title(dimension: string, target: string, type: 'title' | 'actionba
     world.getDimension(dimension).runCommand(`title "${target}" ${type} ${message}`)
 }
 
+function add_or_spawn_item(player: Player, item: ItemStack) {
+    const player_container = player
+        .getComponent(EntityComponentTypes.Inventory)
+        ?.container
+
+    if (!player_container) {
+        throw new Error(`Could not get inventory container for "${player.name}"`)
+    }
+
+    if (player_container.emptySlotsCount >= 1) {
+        player_container.addItem(item)
+    }
+    else {
+        player.dimension.spawnItem(item, player.location)
+    }
+}
+
 function give_item(gamertag: string, item: string, amount: number) {
-    world.getPlayers({name: gamertag})[0]
-         .getComponent(EntityComponentTypes.Inventory)
-         ?.container
-         ?.addItem(
-            new ItemStack(item, amount)
-         )
+    const item_stack = new ItemStack(item, 1)
+    let stack_amount = Math.trunc(amount/item_stack.maxAmount)
+
+    const player = world.getPlayers({name: gamertag})[0]
+
+    // If there are multiple stacks to give, do so
+    if (stack_amount >= 1) {
+        item_stack.amount = item_stack.maxAmount
+
+        for (let i = 1; i <= stack_amount; i++) {
+            add_or_spawn_item(player, item_stack)
+        }
+
+        amount -= (stack_amount*item_stack.maxAmount)
+    }
+
+    // Give the remaining non-stack items
+    item_stack.amount = amount
+    add_or_spawn_item(player, item_stack)
 }
 
 function noise_glitch(player: Player) {

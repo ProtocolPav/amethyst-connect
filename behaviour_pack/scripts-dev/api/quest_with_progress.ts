@@ -189,7 +189,7 @@ export default class QuestWithProgress extends Quest {
         }
     }
 
-    private get_active_objective(): ObjectiveWithProgress | null {
+    get_active_objective(): ObjectiveWithProgress | null {
         return this.objectives.find(objective => objective.status === 'in_progress') ?? null
     }
 
