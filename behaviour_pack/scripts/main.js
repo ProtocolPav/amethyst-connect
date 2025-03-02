@@ -6600,8 +6600,10 @@ function give_item(gamertag, item, amount) {
     }
     amount -= stack_amount * item_stack.maxAmount;
   }
-  item_stack.amount = amount;
-  add_or_spawn_item(player, item_stack);
+  if (amount > 0) {
+    item_stack.amount = amount;
+    add_or_spawn_item(player, item_stack);
+  }
 }
 function noise_glitch(player) {
   const noises = [
@@ -7795,15 +7797,6 @@ function load_block_event_handler() {
         );
         interaction.post_interaction();
       });
-      const items = [];
-      const container = event.block.getComponent("minecraft:inventory")?.container;
-      if (container) {
-        for (let i = 0; i < container.size; i++) {
-          let item = container.getItem(i);
-          items.push([i, item?.typeId, item?.nameTag, item?.amount]);
-        }
-      }
-      console.log(JSON.stringify(items));
     }
   });
 }
