@@ -1,23 +1,23 @@
 {
 	"format_version": 2,
 	"metadata": {
-		"authors": [
-			"ProtocolPav",
-			"Ezio"
-		]
+		"authors": ["ProtocolPav", "Ezio"],
+		"generated_with": {
+			"blockbench_entity_wizard": ["1.7.0"]
+		}
 	},
 	"header": {
 		"name": "Amethyst Connect Resource Pack",
 		"description": "Resources that Amethyst Connect is dependent on",
-		"min_engine_version": [ 1, 21, 40 ],
+		"min_engine_version": [1, 21, 40],
 		"uuid": "1ced0423-4bcf-4970-9749-b047e89d365c",
-		"version": [ 2, 3, 2 ]
+		"version": [2, 3, 2]
 	},
 	"modules": [
 		{
 			"type": "resources",
 			"uuid": "b95159c2-001d-4e26-bf8e-b60390e1f7cd",
-			"version": [ 1, 0, 0 ]
+			"version": [1, 0, 0]
 		}
 	]
 }
