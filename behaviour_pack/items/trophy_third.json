@@ -1,0 +1,32 @@
+{
+	"format_version": "1.20.50",
+	"minecraft:item": {
+		"description": {
+			"identifier": "amethyst:trophy_third",
+			"menu_category": {
+				"category": "equipment"
+			}
+		},
+		"components": {
+			"minecraft:max_stack_size": 1,
+			"minecraft:icon": {
+				"texture": "trophy_third"
+			},
+			"minecraft:display_name": {
+				"value": "UHC Trophy"
+			},
+			"minecraft:can_destroy_in_creative": {
+				"value": false
+			}, 
+			
+			"minecraft:should_despawn": {
+				"value": false
+			},
+			 "minecraft:allow_off_hand": { 
+				"value": true
+			},
+			 "minecraft:rarity": "uncommon"
+			
+		}
+	}
+}
