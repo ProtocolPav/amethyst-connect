@@ -4,8 +4,22 @@
 	"texture_data": {
 		"nexus_mysterious_shard": {
 			"textures": "textures/items/mysterious_shard.png"
-		},"totem_of_togetherness": {
-			"textures": "textures/items/totem_of_togetherness.png"}
+		},
+		"totem_of_togetherness": {
+			"textures": "textures/items/totem_of_togetherness.png"
+		},
+		"champions_crown": {
+			"textures": "textures/items/champions_crown.png"
+		},
+		"champions_chestplate": {
+			"textures": "textures/items/champions_chestplate.png"
+		},
+		"champions_leggings": {
+			"textures": "textures/items/champions_leggings.png"
+		},
+		"champions_boots": {
+			"textures": "textures/items/champions_boots.png"
+		}
 		
 	}
 }
