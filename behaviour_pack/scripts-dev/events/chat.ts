@@ -16,7 +16,7 @@ export default function load_chat_handler() {
                     case 'add':
                         if (mainhand) {
                             const lore = mainhand.getLore()
-                            lore.push(chat_event.message.split(' ')[2])
+                            lore.push(chat_event.message.split('!lore add ')[1])
                             mainhand.setLore(lore)
                             equippable?.setEquipment(EquipmentSlot.Mainhand, mainhand)
                         }
