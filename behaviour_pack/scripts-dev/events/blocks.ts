@@ -148,20 +148,6 @@ export default function load_block_event_handler() {
                 
                 interaction.post_interaction()
             })
-
-            // TImeout after to check for the new chest contents? this may not work though as the player may still be interacting
-
-            const items = []
-            const container = event.block.getComponent('minecraft:inventory')?.container
-
-            if (container) {
-                for (let i = 0; i < container.size; i++) {
-                    let item = container.getItem(i)
-                    items.push([i, item?.typeId, item?.nameTag, item?.amount,])
-                }
-            }
-
-            console.log(JSON.stringify(items))
         }
     })
 }

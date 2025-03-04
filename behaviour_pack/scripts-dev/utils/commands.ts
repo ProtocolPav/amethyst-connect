@@ -97,9 +97,11 @@ function give_item(gamertag: string, item: string, amount: number) {
         amount -= (stack_amount*item_stack.maxAmount)
     }
 
-    // Give the remaining non-stack items
-    item_stack.amount = amount
-    add_or_spawn_item(player, item_stack)
+    // Give any remaining non-stack items
+    if (amount > 0) {
+        item_stack.amount = amount
+        add_or_spawn_item(player, item_stack)
+    }
 }
 
 function noise_glitch(player: Player) {
