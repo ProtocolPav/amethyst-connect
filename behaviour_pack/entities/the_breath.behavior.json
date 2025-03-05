@@ -19,23 +19,30 @@
 			"minecraft:nameable": {},
 			"minecraft:health": {
 				"value": 30,
-				"max": 10
+				"max": 30
 			},
 			"minecraft:collision_box": {
 				"width": 0.5,
 				"height": 1.8
 			},
 			"minecraft:movement": {
-				"value": 0.03
+				"value": 0.016
 			},
 			"minecraft:navigation.float": {
 				"can_path_over_water": true
 			},
 			"minecraft:behavior.float_wander": {
-				"float_duration": [3, 10],
+				"float_duration": [0.3, 0.85],
 				"y_offset": -2,
+				"y_dist": 3,
+				"xz_dist": 3,
 				"priority": 2,
 				"must_reach": true
+			},
+			"minecraft:teleport": {
+				"max_random_teleport_time": 70,
+				"min_random_teleport_time": 50,
+				"target_teleport_chance": 0.2
 			},
 			"minecraft:can_fly": {},
 			"minecraft:loot": {
@@ -48,26 +55,32 @@
 				"family": ["blaze", "monster", "mob"]
 			},
 			"minecraft:damage_sensor": {
-				"triggers": {
-					"cause": "fall",
-					"deals_damage": false
-				}
+				"triggers": [
+					{
+						"cause": "fall",
+						"deals_damage": false
+					},
+					{
+						"cause": "magic",
+						"deals_damage": false
+					}
+				]
 			},
 			"minecraft:jump.static": {},
 			"minecraft:despawn": {
 				"despawn_from_distance": {}
 			},
 			"minecraft:behavior.float": {
-				"priority": 2
+				"priority": 0
 			},
 			"minecraft:behavior.ranged_attack": {
 				"priority": 1,
-				"burst_shots": 3,
-				"burst_interval": 0.3,
-				"charge_charged_trigger": 0,
-				"charge_shoot_trigger": 4,
-				"attack_interval_min": 3,
-				"attack_interval_max": 5,
+				"burst_shots": 2,
+				"burst_interval": 1.2,
+				"charge_charged_trigger": 2,
+				"charge_shoot_trigger": 5,
+				"attack_interval_min": 10,
+				"attack_interval_max": 18,
 				"attack_radius": 28
 			},
 			"minecraft:follow_range": {
