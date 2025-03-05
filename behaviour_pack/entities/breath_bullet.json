@@ -13,6 +13,21 @@
         "width": 0.625,
         "height": 0.625
       },
+      "minecraft:target_nearby_sensor": {
+        "inside_range": 25,
+        "outside_range": 35,
+        "must_see": true
+      },
+      "minecraft:behavior.projectile_attack": {
+        "priority": 1
+      },
+      "minecraft:timer": {
+        "time": 0.1,
+        "looping": true,
+        "time_down_event": {
+          "event": "minecraft:target_nearby"
+        }
+      },
       "minecraft:projectile": {
         "on_hit": {
           "impact_damage": {
@@ -37,12 +52,12 @@
         "hit_sound": "bullet.hit",
         "destroyOnHurt": true,
         "crit_particle_on_hurt": true,
-        "power": 1.2,
+        "power": 2.6,
         "gravity": 0.05,
         "uncertainty_base": 16,
-        "uncertainty_multiplier": 4,
+        "uncertainty_multiplier": 0.5,
         "anchor": 1,
-        "offset": [ 0, -0.1, 0 ],
+        "offset": [ 0, -2, 0 ],
         "homing": true,
         "filter": ["amethyst:the_breath", "minecraft:enderman", "minecraft:ender_dragon"]
       },
