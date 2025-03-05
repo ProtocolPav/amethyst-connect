@@ -89,6 +89,12 @@
 						"math.sin(query.life_time * -180.0 + 117.0) * 5.0"
 					]
 				}
+			},
+			"particle_effects": {
+				"0.0": {
+					"effect": "flames",
+					"locator": "body"
+				}
 			}
 		}
 	}

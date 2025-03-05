@@ -19,7 +19,7 @@
 				"move": "animation.the_breath.move"
 			},
 			"particle_effects": {
-				"charged_flames": "minecraft:endrod"
+				"flames": "minecraft:endrod"
 			},
 			"animation_controllers": [
 				{
