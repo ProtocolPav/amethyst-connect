@@ -1,5 +1,5 @@
 {
-	"format_version": "1.16.0",
+	"format_version": "1.21.60",
 	"minecraft:entity": {
 		"description": {
 			"identifier": "amethyst:the_breath",
@@ -26,15 +26,15 @@
 				"height": 1.8
 			},
 			"minecraft:movement": {
-				"value": 0.016
+				"value": 0.02
 			},
 			"minecraft:navigation.float": {
 				"can_path_over_water": true
 			},
 			"minecraft:behavior.float_wander": {
-				"float_duration": [0.3, 0.85],
+				"float_duration": [5, 10],
 				"y_offset": -2,
-				"y_dist": 3,
+				"y_dist": 6,
 				"xz_dist": 3,
 				"priority": 2,
 				"must_reach": true
@@ -42,7 +42,7 @@
 			"minecraft:teleport": {
 				"max_random_teleport_time": 70,
 				"min_random_teleport_time": 50,
-				"target_teleport_chance": 0.2
+				"target_teleport_chance": 0.08
 			},
 			"minecraft:can_fly": {},
 			"minecraft:loot": {
@@ -58,11 +58,11 @@
 				"triggers": [
 					{
 						"cause": "fall",
-						"deals_damage": false
+						"deals_damage": "no"
 					},
 					{
 						"cause": "magic",
-						"deals_damage": false
+						"deals_damage": "no"
 					}
 				]
 			},
@@ -76,16 +76,16 @@
 			"minecraft:behavior.ranged_attack": {
 				"priority": 1,
 				"burst_shots": 2,
-				"burst_interval": 1.2,
+				"burst_interval": 5,
 				"charge_charged_trigger": 2,
 				"charge_shoot_trigger": 5,
-				"attack_interval_min": 10,
-				"attack_interval_max": 18,
+				"attack_interval_min": 18,
+				"attack_interval_max": 20,
 				"attack_radius": 28
 			},
 			"minecraft:follow_range": {
-				"value": 64,
-				"max": 64
+				"value": 28,
+				"max": 28
 			},
 			"minecraft:behavior.hurt_by_target": {
 				"priority": 1
