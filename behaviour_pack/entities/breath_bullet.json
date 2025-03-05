@@ -3,6 +3,7 @@
   "minecraft:entity": {
     "description": {
       "identifier": "amethyst:breath_bullet",
+      "runtime_identifier": "minecraft:shulker_bullet",
       "is_spawnable": false,
       "is_summonable": false,
       "is_experimental": false
@@ -13,34 +14,27 @@
         "width": 0.625,
         "height": 0.625
       },
-      "minecraft:target_nearby_sensor": {
-        "inside_range": 25,
-        "outside_range": 35,
-        "must_see": true
-      },
-      "minecraft:behavior.projectile_attack": {
-        "priority": 1
-      },
-      "minecraft:timer": {
-        "time": 0.1,
-        "looping": true,
-        "time_down_event": {
-          "event": "minecraft:target_nearby"
+      "minecraft:mob_effect": {
+        "effect_range": 0.65,
+        "effect_time": 10,
+        "cooldown_time": 0,
+        "mob_effect": "darkness",
+        "entity_filter": {
+          "all_of": [
+            {
+              "test": "is_family",
+              "subject": "other",
+              "value": "player"
+            }
+          ]
         }
       },
       "minecraft:projectile": {
         "on_hit": {
           "impact_damage": {
-            "damage": 4,
+            "damage": 2,
             "knockback": true,
             "should_bounce": true
-          },
-          "mob_effect": {
-            "effect": "weakness",
-            "durationeasy": 60,
-            "durationnormal": 60,
-            "durationhard": 60,
-            "amplifier": 2
           },
           "remove_on_hit": {
           },
@@ -49,27 +43,22 @@
             "on_other_hit": true
           }
         },
-        "hit_sound": "bullet.hit",
+        "hit_sound": "explode",
         "destroyOnHurt": true,
         "crit_particle_on_hurt": true,
-        "power": 2.6,
+        "power": 1.6,
         "gravity": 0.05,
-        "uncertainty_base": 16,
+        "uncertainty_base": 4,
         "uncertainty_multiplier": 0.5,
         "anchor": 1,
-        "offset": [ 0, -2, 0 ],
+        "offset": [ 0, -0.5, 0 ],
         "homing": true,
-        "filter": ["amethyst:the_breath", "minecraft:enderman", "minecraft:ender_dragon"]
+        "ignored_entities": ["amethyst:the_breath", "minecraft:enderman", "minecraft:ender_dragon", "minecraft:ender_crystal"]
       },
       "minecraft:physics": {
         "has_collision": false
       },
       "minecraft:conditional_bandwidth_optimization": {
-        "default_values": {
-          "max_optimized_distance": 80.0,
-          "max_dropped_ticks": 7,
-          "use_motion_prediction_hints": true
-        }
       }
     }
   }

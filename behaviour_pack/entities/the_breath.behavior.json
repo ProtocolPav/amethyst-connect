@@ -1,5 +1,5 @@
 {
-	"format_version": "1.21.0",
+	"format_version": "1.21.60",
 	"minecraft:entity": {
 		"description": {
 			"identifier": "amethyst:the_breath",
@@ -32,17 +32,18 @@
 				"can_path_over_water": true
 			},
 			"minecraft:behavior.float_wander": {
-				"float_duration": [5, 10],
-				"y_offset": -2,
-				"y_dist": 6,
-				"xz_dist": 3,
+				"float_duration": [8, 16],
+				"y_offset": 0,
+				"y_dist": 4.5,
+				"xz_dist": 9,
 				"priority": 2,
 				"must_reach": true
 			},
 			"minecraft:teleport": {
-				"max_random_teleport_time": 70,
-				"min_random_teleport_time": 50,
-				"target_teleport_chance": 0.01
+				"max_random_teleport_time": 200,
+				"min_random_teleport_time": 80,
+				"random_teleport_cube": [16, 16, 16],
+				"target_teleport_chance": 0.001
 			},
 			"minecraft:can_fly": {},
 			"minecraft:loot": {
