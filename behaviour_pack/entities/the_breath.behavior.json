@@ -18,15 +18,15 @@
 			"minecraft:fire_immune": {},
 			"minecraft:nameable": {},
 			"minecraft:health": {
-				"value": 30,
-				"max": 30
+				"value": 120,
+				"max": 120
 			},
 			"minecraft:collision_box": {
 				"width": 0.5,
 				"height": 1.8
 			},
 			"minecraft:movement": {
-				"value": 0.02
+				"value": 0.032
 			},
 			"minecraft:navigation.float": {
 				"can_path_over_water": true
@@ -49,7 +49,7 @@
 				"table": "loot_tables/entities/the_breath.json"
 			},
 			"minecraft:shooter": {
-				"def": "minecraft:dragon_fireball"
+				"def": "amethyst:breath_bullet"
 			},
 			"minecraft:type_family": {
 				"family": ["blaze", "monster", "mob"]
@@ -77,10 +77,10 @@
 				"priority": 1,
 				"burst_shots": 2,
 				"burst_interval": 5,
-				"charge_charged_trigger": 2,
+				"charge_charged_trigger": 0.3,
 				"charge_shoot_trigger": 5,
-				"attack_interval_min": 18,
-				"attack_interval_max": 20,
+				"attack_interval_min": 3,
+				"attack_interval_max": 5,
 				"attack_radius": 28
 			},
 			"minecraft:follow_range": {
