@@ -49,7 +49,9 @@
 				"table": "loot_tables/entities/the_breath.json"
 			},
 			"minecraft:shooter": {
-				"def": "amethyst:breath_bullet"
+				"def": "minecraft:lingering_potion",
+				"sound": "shoot",
+				"aux_val": 42
 			},
 			"minecraft:type_family": {
 				"family": ["blaze", "monster", "mob"]
