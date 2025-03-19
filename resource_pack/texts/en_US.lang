@@ -6,4 +6,7 @@ entity.amethyst:padovan_monk.name=Padovan Monk
 item.spawn_egg.entity.amethyst:padovan_monk.name=Spawn Padovan Monk
 entity.amethyst:ceran_detective.name=Ceran Detective
 item.spawn_egg.entity.amethyst:ceran_detective.name=Spawn Ceran Detective
+item.amethyst:soul_sword=Soul Sword
+item.amethyst:soul=Soul
+item.amethyst:soul_upgrade_smithing_template=Soul Sword Template
 tile.amethyst:fungus_block.name=Unstable Fungus

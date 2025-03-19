@@ -5,7 +5,10 @@
 		"nexus_mysterious_shard": {
 			"textures": "textures/items/mysterious_shard.png"
 		},"totem_of_togetherness": {
-			"textures": "textures/items/totem_of_togetherness.png"}
+			"textures": "textures/items/totem_of_togetherness.png"},
+			"soul_sword": {
+			"textures": "textures/items/soul_sword.png"
+		}
 		
 	}
 }
