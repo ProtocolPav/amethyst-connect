@@ -7,5 +7,9 @@
 	"amethyst:glitch_block": {
 		"textures": "glitch_block",
 		"sound": "obsidian"
+	},
+	"amethyst:altar": {
+		"textures": "altar",
+		"sound": "tuff"
 	}
 }

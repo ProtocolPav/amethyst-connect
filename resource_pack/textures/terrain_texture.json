@@ -9,6 +9,9 @@
 		},
 		"glitch_block": {
 			"textures": "textures/blocks/glitch_block.png"
+		},
+		"altar": {
+			"textures": "textures/blocks/altar.png"
 		}
 	}
 }
