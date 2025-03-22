@@ -8,8 +8,14 @@
 			}
 		},
 		"components": {
-			"minecraft:collision_box": true,
-			"minecraft:selection_box": true,
+			"minecraft:collision_box": {
+				"origin": [-7, 0, -7],
+				"size": [14, 12, 14]
+			},
+			"minecraft:selection_box": {
+				"origin": [-7, 0, -7],
+				"size": [14, 13, 14]
+			},
 			"minecraft:destructible_by_mining": false,
 			"minecraft:destructible_by_explosion": false,
 			"minecraft:geometry": "geometry.altar",
