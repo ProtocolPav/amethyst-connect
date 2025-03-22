@@ -8,6 +8,7 @@
 			}
 		},
 		"components": {
+			"minecraft:display_name": "Altar",
 			"minecraft:collision_box": {
 				"origin": [-7, 0, -7],
 				"size": [14, 12, 14]
@@ -25,8 +26,11 @@
 					"render_method": "alpha_test"
 				}
 			},
-			"minecraft:light_emission": 4,
-			"minecraft:map_color": "#525252"
+			"minecraft:light_emission": 9,
+			"minecraft:map_color": "#525252",
+			"minecraft:custom_components": [
+				"amethyst:sacrifice"
+			]
 		}
 	}
 }
