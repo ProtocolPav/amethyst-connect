@@ -16,6 +16,14 @@
 		"quest.fail": {
 			"category": "ui",
 			"sounds": ["sounds/quests/quest_fail"]
+		},
+		"altar.ambient": {
+			"category": "sound",
+			"sounds": ["sounds/altar/ambient"]
+		},
+		"altar.sacrifice": {
+			"category": "sound",
+			"sounds": ["sounds/altar/sacrifice_1"]
 		}
 	}
 }

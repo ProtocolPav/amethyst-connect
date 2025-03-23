@@ -14,6 +14,7 @@ export default function load_altar_component() {
     function sacrifice(event : BlockComponentPlayerInteractEvent) {
         if (Math.random() < 0.7 && event.player) {
             utils.commands.send_message(event.dimension.id, event.player?.name, 'You have Sacrificed')
+            world.playSound("altar.sacrifice", event.block.location, {volume: 100})
         }
     }
 
@@ -30,6 +31,7 @@ export default function load_altar_component() {
 
             if (event.block.dimension.getBlock(random_location)) {
                 event.dimension.spawnParticle("minecraft:colored_flame_particle", random_location, molang)
+                world.playSound("altar.ambient", event.block.location, {volume: 100})
             }
         }
     }

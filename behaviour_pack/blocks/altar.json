@@ -24,6 +24,10 @@
 				"*": {
 					"texture": "altar",
 					"render_method": "alpha_test"
+				},
+				"down": {
+					"texture": "tuff_bricks",
+					"render_method": "alpha_test"
 				}
 			},
 			"minecraft:light_emission": 9,
