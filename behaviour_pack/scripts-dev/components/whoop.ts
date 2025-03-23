@@ -3,13 +3,13 @@ import {
     BlockComponentTickEvent,
     Dimension,
     Vector3,
-    BlockEvent
+    BlockEvent, BlockPermutation
 } from "@minecraft/server";
 
 
 export default function load_whoop_component() {
     function play_fart(dimension: Dimension, location: Vector3) {
-        dimension.playSound('fart', location, {volume: 100, pitch: Math.random() * 1.5})
+        dimension.playSound('fart', location, {volume: 20, pitch: Math.max(0.45, Math.random() * 1.5)})
     }
 
     function on_interact(event : BlockEvent) {
@@ -17,8 +17,15 @@ export default function load_whoop_component() {
     }
 
     function on_redstone(event : BlockComponentTickEvent) {
-        if (event.block.isValid() && event.block.getRedstonePower()) {
+        // @ts-ignore
+        const powered = event.block.permutation.getState('amethyst:powered_bit')
+
+        if (event.block.isValid() && event.block.getRedstonePower() && !powered) {
+            event.block.setPermutation(BlockPermutation.resolve('amethyst:whoopee_cushion', {'amethyst:powered_bit': true}))
             play_fart(event.dimension, event.block.location)
+        }
+        else if (event.block.isValid() && !event.block.getRedstonePower() && powered) {
+            event.block.setPermutation(BlockPermutation.resolve('amethyst:whoopee_cushion', {'amethyst:powered_bit': false}))
         }
     }
 
