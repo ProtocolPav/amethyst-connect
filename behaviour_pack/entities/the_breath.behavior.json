@@ -1,0 +1,121 @@
+{
+	"format_version": "1.21.60",
+	"minecraft:entity": {
+		"description": {
+			"identifier": "amethyst:the_breath",
+			"is_spawnable": true,
+			"is_summonable": true,
+			"is_experimental": false
+		},
+		"components": {
+			"minecraft:experience_reward": {
+				"on_death": "query.last_hit_by_player ? 5 + (query.equipment_count * Math.Random(1,3)) : 0"
+			},
+			"minecraft:breathable": {
+				"total_supply": 15,
+				"suffocate_time": 0
+			},
+			"minecraft:fire_immune": {},
+			"minecraft:nameable": {},
+			"minecraft:health": {
+				"value": 30,
+				"max": 30
+			},
+			"minecraft:collision_box": {
+				"width": 0.5,
+				"height": 1.8
+			},
+			"minecraft:movement": {
+				"value": 0.032
+			},
+			"minecraft:navigation.float": {
+				"can_path_over_water": true
+			},
+			"minecraft:behavior.float_wander": {
+				"float_duration": [8, 16],
+				"y_offset": 0,
+				"y_dist": 4.5,
+				"xz_dist": 9,
+				"priority": 2,
+				"must_reach": true
+			},
+			"minecraft:teleport": {
+				"max_random_teleport_time": 200,
+				"min_random_teleport_time": 80,
+				"random_teleport_cube": [16, 16, 16],
+				"target_teleport_chance": 0.001
+			},
+			"minecraft:can_fly": {},
+			"minecraft:loot": {
+				"table": "loot_tables/entities/the_breath.json"
+			},
+			"minecraft:shooter": {
+				"def": "amethyst:breath_bullet",
+				"sound": "shoot"
+			},
+			"minecraft:behavior.look_at_player": {
+				"priority": 1,
+				"look_distance": 6.0,
+				"probability": 0.02
+			},
+			"minecraft:type_family": {
+				"family": ["blaze", "monster", "mob"]
+			},
+			"minecraft:damage_sensor": {
+				"triggers": [
+					{
+						"cause": "fall",
+						"deals_damage": "no"
+					},
+					{
+						"cause": "magic",
+						"deals_damage": "no"
+					}
+				]
+			},
+			"minecraft:jump.static": {},
+			"minecraft:despawn": {
+				"despawn_from_distance": {}
+			},
+			"minecraft:behavior.float": {
+				"priority": 0
+			},
+			"minecraft:behavior.ranged_attack": {
+				"burst_shots": 4,
+				"burst_interval": 0.4,
+				"charge_charged_trigger": 0.3,
+				"charge_shoot_trigger": 5,
+				"attack_interval_min": 3,
+				"attack_interval_max": 5,
+				"attack_radius": 28
+			},
+			"minecraft:follow_range": {
+				"value": 28,
+				"max": 28
+			},
+			"minecraft:behavior.hurt_by_target": {
+				"priority": 2
+			},
+			"minecraft:behavior.nearest_attackable_target": {
+				"priority": 3,
+				"entity_types": [
+					{
+						"filters": {
+							"test": "is_family",
+							"subject": "other",
+							"value": "player"
+						},
+						"max_dist": 28
+					}
+				],
+				"must_see": true
+			},
+			"minecraft:physics": {},
+			"minecraft:pushable": {
+				"is_pushable": true,
+				"is_pushable_by_piston": true
+			},
+			"minecraft:conditional_bandwidth_optimization": {}
+		}
+	}
+}

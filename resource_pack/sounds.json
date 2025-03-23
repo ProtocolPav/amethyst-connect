@@ -1,6 +1,17 @@
 {
 	"entity_sounds": {
-		"entities": { "amethyst:endstone_golem": {
+		"entities": {
+			"amethyst:the_breath": {
+				"events": {
+					"ambient": "mob.blaze.breathe",
+					"death": "mob.blaze.death",
+					"hurt": "mob.blaze.hit",
+					"shoot": "mob.blaze.shoot"
+				},
+				"pitch": [0.8, 1.2],
+				"volume": 1
+			},
+            "amethyst:endstone_golem": {
 				"events": {
 					"ambient": "mob.irongolem.say",
 					"death": "mob.irongolem.death",
