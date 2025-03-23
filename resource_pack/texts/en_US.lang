@@ -7,3 +7,5 @@ item.spawn_egg.entity.amethyst:padovan_monk.name=Spawn Padovan Monk
 entity.amethyst:ceran_detective.name=Ceran Detective
 item.spawn_egg.entity.amethyst:ceran_detective.name=Spawn Ceran Detective
 tile.amethyst:fungus_block.name=Unstable Fungus
+entity.amethyst:endstone_golem.name=Endstone Golem
+item.spawn_egg.entity.amethyst:endstone_golem.name=Spawn Endstone Golem
