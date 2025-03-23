@@ -6809,21 +6809,24 @@ function load_altar_component() {
   function sacrifice(event) {
     if (Math.random() < 0.7 && event.player) {
       utils_default.commands.send_message(event.dimension.id, event.player?.name, "You have Sacrificed");
-      world5.playSound("altar.sacrifice", event.block.location, { volume: 100 });
+      world5.playSound("altar.sacrifice", event.block.center(), { volume: 8 });
+      particles(event);
     }
   }
   function particles(event) {
     if (event.block.isValid()) {
-      const location = event.block.location;
+      const location = event.block.center();
       const radius = 3;
-      let random_location = {
-        x: location.x + Math.floor(Math.random() * radius) * (Math.random() < 0.5 ? -1 : 1),
-        y: location.y + Math.floor(Math.random() * 4),
-        z: location.z + Math.floor(Math.random() * radius) * (Math.random() < 0.5 ? -1 : 1)
-      };
-      if (event.block.dimension.getBlock(random_location)) {
-        event.dimension.spawnParticle("minecraft:colored_flame_particle", random_location, molang);
-        world5.playSound("altar.ambient", event.block.location, { volume: 100 });
+      world5.playSound("altar.ambient", location, { volume: 3 });
+      for (let i = 0; i < 5; i++) {
+        let random_location = {
+          x: location.x + Math.floor(Math.random() * radius) * (Math.random() < 0.5 ? -1 : 1),
+          y: location.y + 2,
+          z: location.z + Math.floor(Math.random() * radius) * (Math.random() < 0.5 ? -1 : 1)
+        };
+        if (event.block.dimension.getBlock(random_location)) {
+          event.dimension.spawnParticle("minecraft:colored_flame_particle", random_location, molang);
+        }
       }
     }
   }
