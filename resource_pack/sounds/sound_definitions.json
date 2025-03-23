@@ -19,6 +19,7 @@
 		},
 		"fart": {
 			"category": "record",
+			"max_distance": 48.0,
 			"sounds": ["sounds/farts/fart_1", "sounds/farts/fart_2", "sounds/farts/fart_3", "sounds/farts/fart_4"]
 		}
 	}
