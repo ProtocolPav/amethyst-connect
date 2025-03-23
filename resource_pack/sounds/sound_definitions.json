@@ -16,6 +16,10 @@
 		"quest.fail": {
 			"category": "ui",
 			"sounds": ["sounds/quests/quest_fail"]
+		},
+		"fart": {
+			"category": "record",
+			"sounds": ["sounds/farts/fart_1", "sounds/farts/fart_2", "sounds/farts/fart_3", "sounds/farts/fart_4"]
 		}
 	}
 }
