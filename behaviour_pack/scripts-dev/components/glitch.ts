@@ -1,10 +1,10 @@
-import {BlockComponentRandomTickEvent, Player, world, BlockComponentTickEvent} from "@minecraft/server";
+import {BlockComponentRandomTickEvent, Player, world, BlockComponentTickEvent, system} from "@minecraft/server";
 import utils from "../utils";
 
 
 export default function load_glitch_component() {
     function glitch(event : BlockComponentTickEvent) {
-        if (Math.random() < 0.07 && event.block.isValid()) {
+        if (Math.random() < 0.07 && event.block.isValid) {
             const location = event.block.location;
             const radius = 20;
 
@@ -25,7 +25,7 @@ export default function load_glitch_component() {
     }
 
     function glitch_particles(event : BlockComponentTickEvent) {
-        if (event.block.isValid()) {
+        if (event.block.isValid) {
             const location = event.block.location;
             const radius = 20;
 
@@ -41,7 +41,7 @@ export default function load_glitch_component() {
         }
     }
 
-    world.beforeEvents.worldInitialize.subscribe(initEvent => {
+    system.beforeEvents.startup.subscribe(initEvent => {
         initEvent.blockComponentRegistry.registerCustomComponent('amethyst:glitch',
             {
                 onTick(event) {
