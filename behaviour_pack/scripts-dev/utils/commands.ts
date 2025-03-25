@@ -156,7 +156,7 @@ function vision_entity_glitch(player: Player) {
     let current_entity = player.dimension.spawnEntity(entity, location)
 
     let sysid = system.runInterval(() => {
-        if (current_entity.isValid()) {
+        if (current_entity.isValid) {
             current_entity.teleport(location);
             current_entity.getComponent(EntityComponentTypes.Health)?.resetToMaxValue()
         } else {
