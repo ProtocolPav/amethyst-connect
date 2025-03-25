@@ -3,7 +3,7 @@ import {
     BlockComponentTickEvent,
     Dimension,
     Vector3,
-    BlockEvent, BlockPermutation
+    BlockEvent, BlockPermutation, system
 } from "@minecraft/server";
 
 export default function load_whoop_component() {
@@ -21,16 +21,16 @@ export default function load_whoop_component() {
         // @ts-ignore
         const powered = event.block.permutation.getState('amethyst:powered_bit')
 
-        if (event.block.isValid() && event.block.getRedstonePower() && !powered) {
+        if (event.block.isValid && event.block.getRedstonePower() && !powered) {
             event.block.setPermutation(BlockPermutation.resolve('amethyst:whoopee_cushion', {'amethyst:powered_bit': true}))
             play_fart(event.dimension, event.block.center())
         }
-        else if (event.block.isValid() && !event.block.getRedstonePower() && powered) {
+        else if (event.block.isValid && !event.block.getRedstonePower() && powered) {
             event.block.setPermutation(BlockPermutation.resolve('amethyst:whoopee_cushion', {'amethyst:powered_bit': false}))
         }
     }
 
-    world.beforeEvents.worldInitialize.subscribe(initEvent => {
+    system.beforeEvents.startup.subscribe(initEvent => {
         initEvent.blockComponentRegistry.registerCustomComponent('amethyst:whoop',
             {
                 onTick(event) {
