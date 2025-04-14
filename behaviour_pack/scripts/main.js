@@ -7289,12 +7289,20 @@ var Quest = class _Quest {
 
 // behaviour_pack/scripts-dev/api/quest_with_progress.ts
 import { http as http5, HttpHeader as HttpHeader4, HttpRequest as HttpRequest4, HttpRequestMethod as HttpRequestMethod4 } from "@minecraft/server-net";
+function normalizeDateString(datetime) {
+  if (!datetime.includes(".")) {
+    return `${datetime}.000000`;
+  }
+  return datetime.replace(/\.(\d{1,6})\d*/, (_, digits) => {
+    return `.${digits.padEnd(6, "0")}`;
+  });
+}
 var ObjectiveWithProgress = class extends Objective {
   constructor(data, rewards, thorny_user) {
     super(data, rewards);
     this.thorny_user = thorny_user;
-    this.start = data.start ? parse(data.start, "yyyy-MM-dd HH:mm:ss.SSSSSS", /* @__PURE__ */ new Date()) : null;
-    this.end = data.end ? parse(data.end, "yyyy-MM-dd HH:mm:ss.SSSSSS", /* @__PURE__ */ new Date()) : null;
+    this.start = data.start ? parse(normalizeDateString(data.start), "yyyy-MM-dd HH:mm:ss.SSSSSS", /* @__PURE__ */ new Date()) : null;
+    this.end = data.end ? parse(normalizeDateString(data.end), "yyyy-MM-dd HH:mm:ss.SSSSSS", /* @__PURE__ */ new Date()) : null;
     this.completion = data.completion;
     this.status = data.status;
   }
@@ -7369,8 +7377,8 @@ var QuestWithProgress = class _QuestWithProgress extends Quest {
   constructor(data, objectives, thorny_user) {
     super(data, objectives);
     this.thorny_user = thorny_user;
-    this.accepted_on = parse(data.accepted_on, "yyyy-MM-dd HH:mm:ss.SSSSSSS", /* @__PURE__ */ new Date());
-    this.started_on = data.started_on ? parse(data.started_on, "yyyy-MM-dd HH:mm:ss.SSSSSS", /* @__PURE__ */ new Date()) : null;
+    this.accepted_on = parse(normalizeDateString(data.accepted_on), "yyyy-MM-dd HH:mm:ss.SSSSSSS", /* @__PURE__ */ new Date());
+    this.started_on = data.started_on ? parse(normalizeDateString(data.started_on), "yyyy-MM-dd HH:mm:ss.SSSSSS", /* @__PURE__ */ new Date()) : null;
     this.status = data.status;
     this.objectives = objectives;
   }
