@@ -1,10 +1,10 @@
 import {EntityComponentTypes, EquipmentSlot, MolangVariableMap, Player, system, world} from "@minecraft/server";
 
-const molang = new MolangVariableMap();
-molang.setColorRGB("variable.color", { red: 1, green: 0.913, blue: 0.576 });
-
 
 function champion(player: Player): void {
+    const molang = new MolangVariableMap();
+    molang.setColorRGB("variable.color", { red: 1, green: 0.913, blue: 0.576 });
+
     const position = player.location;
     const equippable = player.getComponent(EntityComponentTypes.Equippable)
     let equipped = 0

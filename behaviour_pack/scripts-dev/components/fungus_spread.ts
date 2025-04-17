@@ -49,7 +49,7 @@ export default function load_fungus_spreading_component() {
             )
 
             system.runTimeout(() => {
-                if (entity.isValid()) {
+                if (entity.isValid) {
                     entity.kill()
                 }
             }, TicksPerSecond * 120)
@@ -63,7 +63,7 @@ export default function load_fungus_spreading_component() {
         }
     }
     
-    world.beforeEvents.worldInitialize.subscribe(initEvent => {
+    system.beforeEvents.startup.subscribe(initEvent => {
         initEvent.blockComponentRegistry.registerCustomComponent('amethyst:fungus_spread', 
             {
                 onRandomTick(event) {

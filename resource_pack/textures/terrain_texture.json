@@ -12,6 +12,9 @@
 		},
 		"altar": {
 			"textures": "textures/blocks/altar.png"
+		},
+		"whoopee_cushion": {
+			"textures": "textures/blocks/whoopee_cushion.png"
 		}
 	}
 }

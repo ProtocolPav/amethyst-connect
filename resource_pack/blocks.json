@@ -11,5 +11,9 @@
 	"amethyst:altar": {
 		"textures": "altar",
 		"sound": "tuff"
+	},
+	"amethyst:whoopee_cushion": {
+		"textures": "whoopee_cushion",
+		"sound": "wool"
 	}
 }
