@@ -8,8 +8,14 @@
 			"crafting_table"
 		],
 		"ingredients": [
-			"amethyst:glitch_shard",
-			"minecraft:gold_ingot"
+			{
+				"item": "amethyst:glitch_shard",
+				"count": 4
+			},
+			{
+				"item": "minecraft:gold_ingot",
+				"count": 4
+			}
 		],
 		"result": {
 			"item": "amethyst:glitch_core"
@@ -17,7 +23,7 @@
 		"unlock": [
 			{
 				"item": "amethyst:glitch_shard",
-				"data": 4
+				"count": 4
 			}
 		]
 	}
