@@ -2,7 +2,7 @@ import {
     BlockComponentRandomTickEvent,
     Player,
     world,
-    BlockComponentPlayerInteractEvent, MolangVariableMap
+    BlockComponentPlayerInteractEvent, MolangVariableMap, system
 } from "@minecraft/server";
 import utils from "../utils";
 
@@ -20,7 +20,7 @@ export default function load_altar_component() {
     }
 
     function particles(event : BlockComponentRandomTickEvent) {
-        if (event.block.isValid()) {
+        if (event.block.isValid) {
             const location = event.block.center();
             const radius = 3;
 
@@ -40,7 +40,7 @@ export default function load_altar_component() {
         }
     }
 
-    world.beforeEvents.worldInitialize.subscribe(initEvent => {
+    system.beforeEvents.startup.subscribe(initEvent => {
         initEvent.blockComponentRegistry.registerCustomComponent('amethyst:sacrifice',
             {
                 onRandomTick(event) {
