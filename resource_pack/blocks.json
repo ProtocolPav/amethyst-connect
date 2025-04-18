@@ -1,5 +1,5 @@
 {
-	"format_version": "1.21.40",
+	"format_version": "1.21.70",
 	"amethyst:fungus_block": {
 		"textures": "fungus_block",
 		"sound": "glass"
@@ -9,7 +9,7 @@
 		"sound": "obsidian"
 	},
 	"amethyst:reactor": {
-		"textures": "glitch_block",
+		"textures": "reactor_inactive",
 		"sound": "obsidian"
 	},
 	"amethyst:whoopee_cushion": {

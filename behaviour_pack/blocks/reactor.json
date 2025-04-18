@@ -1,5 +1,5 @@
 {
-  "format_version": "1.21.40",
+  "format_version": "1.21.70",
   "minecraft:block": {
     "description": {
       "identifier": "amethyst:reactor",
@@ -7,7 +7,7 @@
         "category": "construction"
       },
       "states": {
-        "reactor:active_state": [false, true]
+        "amethyst:reactor_active_state": [false, true]
       }
     },
     "components": {
@@ -15,17 +15,41 @@
         "seconds_to_destroy": 2
       },
       "minecraft:display_name": "Monolithic Reactor",
-      "minecraft:custom_components": [
-        "amethyst:activate_reactor"
-      ],
+      "minecraft:geometry": "minecraft:geometry.full_block",
+      "minecraft:light_emission": 0,
       "minecraft:material_instances": {
         "*": {
-          "texture": "reactor_inactive"
-        },
-        "reactor:active_state=true": {
-          "texture": "reactor_active"
+          "texture": "reactor_inactive",
+          "render_method": "opaque"
         }
       }
-    }
+    },
+    "permutations": [
+      {
+        "condition": "query.block_state('amethyst:reactor_active_state') == false",
+        "components": {
+          "minecraft:light_emission": 0,
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "reactor_inactive",
+              "render_method": "opaque"
+            }
+          }
+        }
+      },
+      {
+        "condition": "query.block_state('amethyst:reactor_active_state') == true",
+        "components": {
+          "minecraft:light_emission": 12,
+          "minecraft:material_instances": {
+            "*": {
+              "texture": "reactor_active",
+              "render_method": "opaque"
+            }
+          }
+        }
+      }
+    ]
   }
 }
+
