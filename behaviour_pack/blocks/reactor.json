@@ -16,6 +16,9 @@
       },
       "minecraft:display_name": "Monolithic Reactor",
       "minecraft:geometry": "minecraft:geometry.full_block",
+      "minecraft:custom_components": [
+        "amethyst:reactor_activate"
+      ],
       "minecraft:light_emission": 0,
       "minecraft:material_instances": {
         "*": {
