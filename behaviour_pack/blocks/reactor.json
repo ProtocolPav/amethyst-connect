@@ -1,0 +1,31 @@
+{
+  "format_version": "1.21.40",
+  "minecraft:block": {
+    "description": {
+      "identifier": "amethyst:reactor",
+      "menu_category": {
+        "category": "construction"
+      },
+      "states": {
+        "reactor:active_state": [false, true]
+      }
+    },
+    "components": {
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 2
+      },
+      "minecraft:display_name": "Monolithic Reactor",
+      "minecraft:custom_components": [
+        "amethyst:activate_reactor"
+      ],
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "reactor_inactive"
+        },
+        "reactor:active_state=true": {
+          "texture": "reactor_active"
+        }
+      }
+    }
+  }
+}

@@ -8,6 +8,10 @@
 		"textures": "glitch_block",
 		"sound": "obsidian"
 	},
+	"amethyst:reactor": {
+		"textures": "glitch_block",
+		"sound": "obsidian"
+	},
 	"amethyst:whoopee_cushion": {
 		"textures": "whoopee_cushion",
 		"sound": "wool"

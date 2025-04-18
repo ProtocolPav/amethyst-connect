@@ -2,31 +2,31 @@
 	"format_version": "1.20.30",
 	"minecraft:recipe_shaped": {
 		"description": {
-			"identifier": "minecraft:end_portal_frame"
+			"identifier": "amethyst:reactor"
 		},
 		"tags": [
 			"crafting_table"
 		],
 		"key": {
-			"S": {
-				"item": "nexus:mysterious_shard"
-			},
 			"N": {
+				"item": "minecraft:netherite_block"
+			},
+			"S": {
 				"item": "minecraft:nether_star"
 			}
 		},
 		"pattern": [
-			"SSS",
-			"SNS",
-			"SSS"
+			"NNN",
+			"NSN",
+			"NNN"
 		],
 		"result": {
-			"item": "minecraft:end_portal_frame"
+			"item": "amethyst:reactor"
 		},
 		"unlock": [
 			{
-				"item": "nexus:mysterious_shard",
-				"data": 8
+				"item": "minecraft:netherite_block",
+				"data": 1
 			}
 		]
 	}

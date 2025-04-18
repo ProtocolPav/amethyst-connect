@@ -1,0 +1,24 @@
+{
+	"format_version": "1.20.30",
+	"minecraft:recipe_shapeless": {
+		"description": {
+			"identifier": "amethyst:glitch_core"
+		},
+		"tags": [
+			"crafting_table"
+		],
+		"ingredients": [
+			"amethyst:glitch_shard",
+			"minecraft:gold_ingot"
+		],
+		"result": {
+			"item": "amethyst:glitch_core"
+		},
+		"unlock": [
+			{
+				"item": "amethyst:glitch_shard",
+				"data": 4
+			}
+		]
+	}
+}

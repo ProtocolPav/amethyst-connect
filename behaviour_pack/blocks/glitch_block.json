@@ -9,7 +9,9 @@
       }
     },
     "components": {
-      "minecraft:destructible_by_mining": false,
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 4
+      },
       "minecraft:destructible_by_explosion": false,
       "minecraft:display_name": "Glitch Block",
       "minecraft:custom_components": [
@@ -18,7 +20,8 @@
       "minecraft:tick": {
         "interval_range": [5, 20],
         "looping": true
-      }
+      },
+      "minecraft:loot": "loot_tables/shard.json"
     }
   }
 }
