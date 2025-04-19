@@ -6858,6 +6858,20 @@ function load_reactor_activate_component() {
         event.block.setPermutation(BlockPermutation2.resolve("amethyst:reactor", { "amethyst:reactor_active_state": true }));
         event.player?.getComponent(EntityComponentTypes2.Equippable)?.setEquipment(EquipmentSlot.Mainhand);
         event.dimension.playSound("beacon.activate", event.block.center());
+        const glitches_type = [
+          utils_default.commands.noise_glitch,
+          utils_default.commands.vision_block_glitch,
+          utils_default.commands.vision_entity_glitch,
+          utils_default.commands.effect_glitch,
+          utils_default.commands.noise_glitch,
+          utils_default.commands.noise_glitch,
+          utils_default.commands.noise_glitch
+        ];
+        event.block.dimension.getPlayers().forEach((player) => {
+          glitches_type.forEach((glitch) => {
+            glitch(player);
+          });
+        });
       }
     }
   }
@@ -7994,10 +8008,10 @@ function load_connections_handler(guild_id2) {
 
 // behaviour_pack/scripts-dev/events/entities.ts
 import { system as system15, world as world16 } from "@minecraft/server";
-import { EntityComponentTypes as EntityComponentTypes10, EquipmentSlot as EquipmentSlot8, Player as Player10 } from "@minecraft/server";
+import { EntityComponentTypes as EntityComponentTypes10, EquipmentSlot as EquipmentSlot8, Player as Player11 } from "@minecraft/server";
 function load_entity_event_handler() {
   world16.afterEvents.entityDie.subscribe((event) => {
-    if (event.damageSource.damagingEntity instanceof Player10) {
+    if (event.damageSource.damagingEntity instanceof Player11) {
       const player = event.damageSource.damagingEntity;
       const dimension = player.dimension;
       const mainhand = player.getComponent(EntityComponentTypes10.Equippable)?.getEquipment(EquipmentSlot8.Mainhand);
@@ -8013,7 +8027,7 @@ function load_entity_event_handler() {
           dimension: dimension.id
         }
       );
-      if (event.deadEntity instanceof Player10) {
+      if (event.deadEntity instanceof Player11) {
         const dead_player = event.deadEntity;
         const dead_mainhand = dead_player.getComponent(EntityComponentTypes10.Equippable)?.getEquipment(EquipmentSlot8.Mainhand);
         interaction.reference = dead_player.name;
@@ -8037,7 +8051,7 @@ function load_entity_event_handler() {
         interaction.post_interaction();
       }
       api_default.Interaction.enqueue(interaction);
-    } else if (event.deadEntity instanceof Player10 && event.damageSource.damagingEntity) {
+    } else if (event.deadEntity instanceof Player11 && event.damageSource.damagingEntity) {
       const killer = event.damageSource.damagingEntity;
       const player = event.deadEntity;
       const dimension = player.dimension;
@@ -8056,7 +8070,7 @@ function load_entity_event_handler() {
       );
       death_interaction.post_interaction();
       api_default.Relay.event(utils_default.DeathMessage.random_pve(player.name, killer.typeId), "", "other");
-    } else if (event.deadEntity instanceof Player10 && !event.damageSource.damagingEntity) {
+    } else if (event.deadEntity instanceof Player11 && !event.damageSource.damagingEntity) {
       const player = event.deadEntity;
       const dimension = player.dimension;
       const mainhand = player.getComponent(EntityComponentTypes10.Equippable)?.getEquipment(EquipmentSlot8.Mainhand);
