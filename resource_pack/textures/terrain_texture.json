@@ -12,6 +12,15 @@
 		},
 		"whoopee_cushion": {
 			"textures": "textures/blocks/whoopee_cushion.png"
+		},
+		"reactor_inactive": {
+			"textures": "textures/blocks/reactor_2.png"
+		},
+		"reactor_active": {
+			"textures": "textures/blocks/reactor_active.png"
+		},
+		"everthorn_e": {
+			"textures": "textures/blocks/everthorn_e.png"
 		}
 	}
 }
