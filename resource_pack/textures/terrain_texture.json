@@ -18,6 +18,9 @@
 		},
 		"reactor_active": {
 			"textures": "textures/blocks/reactor_active.png"
+		},
+		"everthorn_e": {
+			"textures": "textures/blocks/everthorn_e.png"
 		}
 	}
 }

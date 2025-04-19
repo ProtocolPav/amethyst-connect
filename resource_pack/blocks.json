@@ -15,5 +15,9 @@
 	"amethyst:whoopee_cushion": {
 		"textures": "whoopee_cushion",
 		"sound": "wool"
+	},
+	"amethyst:everthorn_e": {
+		"textures": "everthorn_e",
+		"sound": "amethyst"
 	}
 }
