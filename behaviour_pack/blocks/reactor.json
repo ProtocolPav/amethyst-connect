@@ -43,6 +43,8 @@
       {
         "condition": "query.block_state('amethyst:reactor_active_state') == true",
         "components": {
+          "minecraft:destructible_by_mining": false,
+          "minecraft:destructible_by_explosion": false,
           "minecraft:light_emission": 12,
           "minecraft:material_instances": {
             "*": {
