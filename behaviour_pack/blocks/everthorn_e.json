@@ -1,0 +1,42 @@
+{
+	"format_version": "1.21.50",
+	"minecraft:block": {
+		"description": {
+			"identifier": "amethyst:everthorn_e",
+			"menu_category": {
+				"category": "construction"
+			},
+			"traits": {
+				"minecraft:placement_position": {
+					"enabled_states": [
+						"minecraft:block_face"
+					]
+				},
+				"minecraft:placement_direction": {
+					"enabled_states": ["minecraft:cardinal_direction"],
+					"y_rotation_offset": 180
+				}
+			}
+		},
+		"components": {
+			"minecraft:display_name": "Everthorn E",
+			"minecraft:collision_box": {
+				"origin": [-7, 0, -7],
+				"size": [14, 12, 14]
+			},
+			"minecraft:selection_box": {
+				"origin": [-7, 0, -7],
+				"size": [14, 13, 14]
+			},
+			"minecraft:destructible_by_mining": true,
+			"minecraft:destructible_by_explosion": true,
+			"minecraft:geometry": "geometry.everthorn_e",
+			"minecraft:material_instances": {
+				"*": {
+					"texture": "everthorn_e",
+					"render_method": "opaque"
+				}
+			}
+		}
+	}
+}

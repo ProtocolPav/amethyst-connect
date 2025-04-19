@@ -12,6 +12,9 @@
 		},
 		"whoopee_cushion": {
 			"textures": "textures/blocks/whoopee_cushion.png"
+		},
+		"everthorn_e": {
+			"textures": "textures/blocks/everthorn_e.png"
 		}
 	}
 }
