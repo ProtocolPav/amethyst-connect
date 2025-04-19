@@ -5,6 +5,9 @@
 		"nexus_mysterious_shard": {
 			"textures": "textures/items/mysterious_shard.png"
 		},
+		"glitch_core": {
+			"textures": "textures/items/glitch_core.png"
+		},
 		"totem_of_togetherness": {
 			"textures": "textures/items/totem_of_togetherness.png"
 		},
