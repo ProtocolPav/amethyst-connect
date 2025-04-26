@@ -12,32 +12,12 @@ export interface IItem {
     current_uses: number
 }
 
-export interface IObjective {
-    objective_id: number
-    objective: string
-    order: number
-    description: string
-    display: string | null
-    objective_count: number
-    objective_type: 'kill' | 'mine' | 'encounter'
-    natural_block: boolean
-    objective_timer: number | null
-    required_mainhand: string | null
-    required_location: [number, number] | null
-    location_radius: number
-}
-
-export interface IQuest {
+export interface IWorld {
     quest_id: number
     start_time: string
     end_time: string
     title: string
     description: string
-}
-
-interface RequirementCheck {
-    check: boolean
-    fail_objective: boolean
 }
 
 export class Item {
