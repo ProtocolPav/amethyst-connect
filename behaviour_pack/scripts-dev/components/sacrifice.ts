@@ -12,8 +12,9 @@ molang.setColorRGB("variable.color", { red: 0, green: 0.619, blue: 0.376 });
 
 export default function load_altar_component() {
     function sacrifice(event : BlockComponentPlayerInteractEvent) {
-        if (Math.random() < 0.7 && event.player) {
-            utils.commands.send_message(event.dimension.id, event.player?.name, 'You have Sacrificed')
+        if (event.player) {
+            
+            utils.commands.send_message(event.dimension.id, event.player.name, 'You have Sacrificed')
             event.dimension.playSound("altar.sacrifice", event.block.center(), {volume: 8})
             particles(event)
         }
