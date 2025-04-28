@@ -27,7 +27,7 @@ export default function load_entity_event_handler() {
 
                 }
             )
-    
+
             // Player kills Player
             // Log dead player's death
             if (event.deadEntity instanceof Player) {
@@ -47,7 +47,7 @@ export default function load_entity_event_handler() {
                         reference: player.name,
                         mainhand: dead_mainhand?.typeId ?? null,
                         dimension: dimension.id
-    
+
                     }
                 )
 
@@ -57,7 +57,7 @@ export default function load_entity_event_handler() {
 
                 // Log kill interaction
                 interaction.post_interaction()
-                
+
                 // Log death interaction
                 death_interaction.post_interaction()
 
@@ -92,7 +92,7 @@ export default function load_entity_event_handler() {
 
                 }
             )
-            
+
             // Log death interaction
             death_interaction.post_interaction()
 
@@ -120,7 +120,7 @@ export default function load_entity_event_handler() {
 
                 }
             )
-            
+
             // Log death interaction
             death_interaction.post_interaction()
 

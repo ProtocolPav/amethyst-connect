@@ -1,6 +1,6 @@
 import {
     BlockComponentRandomTickEvent,
-    BlockComponentPlayerInteractEvent, system, EntityComponentTypes, EquipmentSlot, TicksPerSecond
+    BlockComponentPlayerInteractEvent, system, EntityComponentTypes, EquipmentSlot, TicksPerSecond, ItemComponentTypes
 } from "@minecraft/server";
 import utils from "../utils";
 import api from "../api";
@@ -17,6 +17,19 @@ export default function load_altar_component() {
             if (mainhand) {
                 try {
                     const sacrificial_item = await api.Item.get_item(mainhand.typeId);
+                    mainhand.amount -= 1
+                    if (mainhand.amount <= 0) {
+                        event.player.getComponent(EntityComponentTypes.Equippable)?.setEquipment(EquipmentSlot.Mainhand);
+                    } else {
+                        event.player.getComponent(EntityComponentTypes.Equippable)?.setEquipment(EquipmentSlot.Mainhand, mainhand);
+                    }
+
+                    let enchantments = 0
+                    mainhand.getComponent(ItemComponentTypes.Enchantable)?.getEnchantments().forEach(enchantment => {
+                        enchantments += enchantment.level
+                    })
+
+                    console.log(enchantments, mainhand.nameTag, mainhand.getComponent(ItemComponentTypes.Durability)?.damage)
                     utils.commands.send_message(event.dimension.id, playerName, `This item is sacrificial. +${sacrificial_item.value} blocks`);
                     event.dimension.playSound("random.pop", event.player.location, {volume: 0.5})
 

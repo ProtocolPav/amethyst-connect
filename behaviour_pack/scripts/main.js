@@ -6803,7 +6803,8 @@ import {
   system as system4,
   EntityComponentTypes as EntityComponentTypes2,
   EquipmentSlot,
-  TicksPerSecond as TicksPerSecond3
+  TicksPerSecond as TicksPerSecond3,
+  ItemComponentTypes
 } from "@minecraft/server";
 
 // behaviour_pack/scripts-dev/api/user.ts
@@ -7435,6 +7436,11 @@ function load_altar_component() {
       if (mainhand) {
         try {
           const sacrificial_item = await api_default.Item.get_item(mainhand.typeId);
+          let enchantments = 0;
+          mainhand.getComponent(ItemComponentTypes.Enchantable)?.getEnchantments().forEach((enchantment) => {
+            enchantments += enchantment.level;
+          });
+          console.log(enchantments, mainhand.nameTag, mainhand.getComponent(ItemComponentTypes.Durability)?.damage);
           utils_default.commands.send_message(event.dimension.id, playerName, `This item is sacrificial. +${sacrificial_item.value} blocks`);
           event.dimension.playSound("random.pop", event.player.location, { volume: 0.5 });
           if (sacrificeTimers.has(playerName)) {
@@ -7527,12 +7533,12 @@ function load_custom_components() {
 }
 
 // behaviour_pack/scripts-dev/loops/elytra_no_mending.ts
-import { EquipmentSlot as EquipmentSlot2, world as world6, system as system6, EntityComponentTypes as EntityComponentTypes3, ItemComponentTypes, EnchantmentType } from "@minecraft/server";
+import { EquipmentSlot as EquipmentSlot2, world as world6, system as system6, EntityComponentTypes as EntityComponentTypes3, ItemComponentTypes as ItemComponentTypes2, EnchantmentType } from "@minecraft/server";
 function elytraCheck(player) {
   const player_equipment = player.getComponent(EntityComponentTypes3.Equippable);
   const item = player_equipment?.getEquipment(EquipmentSlot2.Chest);
   if (item) {
-    const enchantments = item?.getComponent(ItemComponentTypes.Enchantable);
+    const enchantments = item?.getComponent(ItemComponentTypes2.Enchantable);
     const has_mending = enchantments?.hasEnchantment(MinecraftEnchantmentTypes.Mending);
     if (has_mending && item?.typeId == MinecraftItemTypes.Elytra) {
       if (!enchantments?.hasEnchantment(MinecraftEnchantmentTypes.Vanishing)) {
@@ -7544,7 +7550,7 @@ function elytraCheck(player) {
         );
       }
       enchantments?.removeEnchantment(MinecraftEnchantmentTypes.Mending);
-      const durability_component = item.getComponent(ItemComponentTypes.Durability);
+      const durability_component = item.getComponent(ItemComponentTypes2.Durability);
       if (durability_component) {
         durability_component.damage = durability_component.maxDurability;
       }
