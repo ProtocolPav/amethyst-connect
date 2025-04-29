@@ -47,7 +47,7 @@ export class Item {
         }
     }
 
-    async update_item() {
+    public async update_item() {
         const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/server/items/${this.item_id}`);
         request.method = HttpRequestMethod.Put;
         request.headers = [
@@ -80,6 +80,7 @@ export class World {
         try {
             const world_response = await http.get(`http://nexuscore:8000/api/v0.1/server/world/${guild_id}`);
             const world_data = JSON.parse(world_response.body) as IWorld;
+            world_data.guild_id = guild_id;
 
             return new World(world_data);
 
@@ -89,7 +90,7 @@ export class World {
         }
     }
 
-    async update_world() {
+    public async update_world() {
         const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/server/world/${this.guild_id}`);
         request.method = HttpRequestMethod.Put;
         request.headers = [

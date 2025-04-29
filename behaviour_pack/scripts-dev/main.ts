@@ -10,7 +10,7 @@ load_loops()
 
 // Loading Custom Component Scripts
 // These are scripts which get executed by blocks/items
-load_custom_components()
+load_custom_components(guild_id)
 
 // Load Event Handlers
 // These are handlers for game events such as join, leave, break blocks, etc.
