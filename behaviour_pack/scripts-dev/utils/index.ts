@@ -5,9 +5,11 @@ import commands from './commands'
 import convert_seconds_to_hms from './time_string'
 import clean_id from './clean_minecraft_ids'
 import combine from './combine_two_lists'
+import AltarMessage from "./altar_messages";
 
 const utils = {
     DeathMessage,
+    AltarMessage,
     send_motd,
     checks,
     commands,

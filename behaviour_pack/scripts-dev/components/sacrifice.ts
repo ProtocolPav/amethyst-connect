@@ -20,10 +20,11 @@ export default function load_altar_component(guild_id: string) {
             const playerName = event.player.name;
             const mainhand = event.player.getComponent(EntityComponentTypes.Equippable)?.getEquipment(EquipmentSlot.Mainhand);
 
+            const border = await api.World.get_world(guild_id)
+
             if (mainhand) {
                 try {
                     const sacrificial_item = await api.Item.get_item(mainhand.typeId)
-                    const border = await api.World.get_world(guild_id)
                     sacrificial_item.current_uses += 1
                     let modifier = 0
 
@@ -44,14 +45,14 @@ export default function load_altar_component(guild_id: string) {
                     }
 
                     // Compute New Block Value
-                    let block_value = sacrificial_item.value * (1 + modifier)
+                    const original_block_value = sacrificial_item.value * (1 + modifier)
 
                     // Depreciate Block Value
                     const log = Math.exp(-sacrificial_item.depreciation * 0.5 * Math.log(sacrificial_item.current_uses))
                     const weight = sacrificial_item.current_uses / sacrificial_item.max_uses
                     const linear = 1 - weight
 
-                    block_value = block_value * ((1 - weight) * log + weight * linear)
+                    const block_value = original_block_value * ((1 - weight) * log + weight * linear)
 
                     // Update APIs
                     await sacrificial_item.update_item()
@@ -59,14 +60,24 @@ export default function load_altar_component(guild_id: string) {
                     await border.update_world()
                     // Call function to re-fetch border sizes into cache
 
-                    mainhand.amount -= 1
-                    if (mainhand.amount == 0) {
+                    if (mainhand.amount == 1) {
                         event.player.getComponent(EntityComponentTypes.Equippable)?.setEquipment(EquipmentSlot.Mainhand);
                     } else {
+                        mainhand.amount -= 1
                         event.player.getComponent(EntityComponentTypes.Equippable)?.setEquipment(EquipmentSlot.Mainhand, mainhand);
                     }
 
-                    utils.commands.send_message(event.dimension.id, playerName, `This item is sacrificial. +${block_value} blocks`);
+                    const valueRemaining = block_value / original_block_value
+
+                    if (valueRemaining < 0.3) {
+                        // Do an evil act to punish the player
+                    }
+
+                    utils.commands.send_message(
+                        event.dimension.id,
+                        playerName,
+                        utils.AltarMessage.random_sacrifice(Math.round(block_value), Math.round(original_block_value))
+                    );
                     event.dimension.playSound("random.pop", event.player.location, {volume: 0.5})
 
                     // Cancel any existing timeout
@@ -75,16 +86,29 @@ export default function load_altar_component(guild_id: string) {
                     }
 
                     const timeoutId = system.runTimeout(() => {
-                        event.dimension.playSound("altar.sacrifice", event.block.center(), { volume: 8 });
                         ambient(event);
+                        event.dimension.playSound("altar.sacrifice", event.block.center(), { volume: 8 });
                         sacrificeTimers.delete(playerName); // Clean up after playing sound
                     }, TicksPerSecond*0.5);
 
                     sacrificeTimers.set(playerName, timeoutId);
                 } catch (e) {
-                    utils.commands.send_message(event.dimension.id, playerName, 'This item is not sacrificial.');
+                    ambient(event);
+
+                    utils.commands.send_message(
+                        event.dimension.id,
+                        playerName,
+                        utils.AltarMessage.random_not_sacrificial())
                     return;
                 }
+            }
+            else {
+                ambient(event);
+                utils.commands.send_message(
+                    event.dimension.id,
+                    playerName,
+                    utils.AltarMessage.random_info(Math.round(border.end_border))
+                );
             }
         }
     }
