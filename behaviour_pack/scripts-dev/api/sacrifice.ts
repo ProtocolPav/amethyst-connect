@@ -1,4 +1,4 @@
-import { http } from "@minecraft/server-net"
+import {http, HttpHeader, HttpRequest, HttpRequestMethod} from "@minecraft/server-net"
 import { parse } from "date-fns"
 import utils from "../utils"
 import ThornyUser from "./user"
@@ -13,11 +13,10 @@ export interface IItem {
 }
 
 export interface IWorld {
-    quest_id: number
-    start_time: string
-    end_time: string
-    title: string
-    description: string
+    guild_id: string
+    overworld_border: number
+    nether_border: number
+    end_border: number
 }
 
 export class Item {
@@ -47,55 +46,63 @@ export class Item {
             throw error;
         }
     }
+
+    async update_item() {
+        const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/server/items/${this.item_id}`);
+        request.method = HttpRequestMethod.Put;
+        request.headers = [
+            new HttpHeader("Content-Type", "application/json"),
+            new HttpHeader("auth", "my-auth-token"),
+        ];
+
+        request.body = JSON.stringify({
+            current_uses: this.current_uses
+        });
+
+        await http.request(request);
+    }
 }
 
 export class World {
-    quest_id: number
-    start_time: Date
-    end_time: Date
-    title: string
-    description: string
-    objectives: Objective[]
+    guild_id: string
+    overworld_border: number
+    nether_border: number
+    end_border: number
 
-    constructor(data: IQuest, objectives: Objective[]) {
-        this.quest_id = data.quest_id
-        this.start_time = parse(data.start_time, 'yyyy-MM-dd HH:mm:ss.SSSSSS', new Date())
-        this.end_time = parse(data.end_time, 'yyyy-MM-dd HH:mm:ss.SSSSSS', new Date())
-        this.title = data.title
-        this.description = data.description
-
-        this.objectives = objectives
+    constructor(data: IWorld) {
+        this.guild_id = data.guild_id
+        this.overworld_border = data.overworld_border
+        this.nether_border = data.nether_border
+        this.end_border = data.end_border
     }
 
-    public static async get_quest(quest_id: number): Promise<Quest> {
+    public static async get_world(guild_id: string) {
         try {
-            // Fetch the main quest data.
-            const quest_response = await http.get(`http://nexuscore:8000/api/v0.1/quests/${quest_id}`);
-            const quest_data = JSON.parse(quest_response.body) as IQuest;
+            const world_response = await http.get(`http://nexuscore:8000/api/v0.1/server/world/${guild_id}`);
+            const world_data = JSON.parse(world_response.body) as IWorld;
 
-            // Fetch the objectives for the quest.
-            const objectives_response = await http.get(`http://nexuscore:8000/api/v0.1/quests/${quest_id}/objectives`);
-            const objectives_data = JSON.parse(objectives_response.body) as IObjective[];
-            const objectives: Objective[] = []
-
-            // For each objective, fetch its rewards.
-            for (let objective of objectives_data) {
-                const rewards_response = await http.get(`http://nexuscore:8000/api/v0.1/quests/${quest_id}/objectives/${objective.order}/rewards`);
-                const rewards_data = JSON.parse(rewards_response.body) as IReward[];
-                let rewards: Reward[] = []
-
-                for (let reward of rewards_data) {
-                    rewards.push(new Reward(reward))
-                }
-
-                objectives.push(new Objective(objective, rewards))
-            }
-
-            return new Quest(quest_data, objectives);
+            return new World(world_data);
 
         } catch (error) {
-            console.error("Error fetching quest:", error);
+            console.error("Error fetching world:", error);
             throw error;
         }
+    }
+
+    async update_world() {
+        const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/server/world/${this.guild_id}`);
+        request.method = HttpRequestMethod.Put;
+        request.headers = [
+            new HttpHeader("Content-Type", "application/json"),
+            new HttpHeader("auth", "my-auth-token"),
+        ];
+
+        request.body = JSON.stringify({
+            overworld_border: this.overworld_border,
+            nether_border: this.nether_border,
+            end_border: this.end_border
+        });
+
+        await http.request(request);
     }
 }
