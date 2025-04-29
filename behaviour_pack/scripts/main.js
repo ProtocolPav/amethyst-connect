@@ -6745,15 +6745,15 @@ function combine(list1, list2, id) {
 var AltarMessage = class {
   static random_sacrifice(blockValue, originalBlockValue) {
     const noValueMessages = [
-      `The Anomaly cracks audibly... your empty gesture rejected. ${blockValue} blocks`,
+      `The Anomaly cracks audibly... your empty gesture rejected. \xA7l${blockValue} blocks\xA7r`,
       `The void ignores your hollow tribute. Not even dust remains`,
-      `Your hands burn with static... the crystal knows you lied. ${blockValue} blocks`,
-      `A chorus of enderman laughter... your mockery exposed. ${blockValue} blocks`,
-      `The Altar bleeds black ichor... your insult quantified. ${blockValue} blocks`,
+      `Your hands burn with static... the crystal knows you lied. \xA7l${blockValue} blocks\xA7r`,
+      `A chorus of enderman laughter... your mockery exposed. \xA7l${blockValue} blocks\xA7r`,
+      `The Altar bleeds black ichor... your insult quantified. \xA7l${blockValue} blocks\xA7r`,
       `Reality itself flinches from your apathy. Contribution: Null`,
-      `The Anomaly shows you visions of your own indifference. ${blockValue} blocks`,
+      `The Anomaly shows you visions of your own indifference. \xA7l${blockValue} blocks\xA7r`,
       `Your 'offering' shatters into anti-matter. Debt unpaid`,
-      `The void between stars whispers: \xA7oWorthless\xA7r. ${blockValue} blocks`,
+      `The void between stars whispers: \xA7oWorthless\xA7r. \xA7l${blockValue} blocks\xA7r`,
       `The crystal's core turns obsidian... a permanent record of your deceit`
     ];
     if (blockValue <= 0) {
@@ -6762,69 +6762,69 @@ var AltarMessage = class {
     const valueTierMessages = {
       extreme: [
         // 200+
-        `The sky hemorrhages violet lightning... +${blockValue} blocks tear through reality`,
-        `Stone screams as it liquefies. Sacrifice consumed: +${blockValue} blocks`,
-        `Time fractures into overlapping echoes. Debt paid: +${blockValue} blocks`,
-        `The End's bedrock cracks like eggshells. +${blockValue} border blocks claimed`,
-        `Oceans of shadow boil over. +${blockValue} blocks absorbed`
+        `The sky hemorrhages violet lightning... \xA7l+${blockValue} blocks\xA7r tear through reality`,
+        `Stone screams as it liquefies. Sacrifice consumed: \xA7l+${blockValue} blocks\xA7r`,
+        `Time fractures into overlapping echoes. Debt paid: \xA7l+${blockValue} blocks\xA7r`,
+        `The End's bedrock cracks like eggshells. \xA7l+${blockValue} border blocks\xA7r claimed`,
+        `Oceans of shadow boil over. \xA7l+${blockValue} blocks\xA7r absorbed`
       ],
       very: [
         // 60+
-        `Trees age centuries in seconds. +${blockValue} blocks logged`,
-        `Water flows upward to the crystal. +${blockValue} blocks fed`,
-        `Animals flee in geometric patterns. +${blockValue} blocks cataloged`,
-        `A chorus root network petrifies instantly. +${blockValue} blocks`,
-        `Your voice echoes from tomorrow. +${blockValue} blocks owed`
+        `Trees age centuries in seconds. \xA7l+${blockValue} blocks\xA7r logged`,
+        `Water flows upward to the crystal. \xA7l+${blockValue} blocks\xA7r fed`,
+        `Animals flee in geometric patterns. \xA7l+${blockValue} blocks\xA7r cataloged`,
+        `A chorus root network petrifies instantly. \xA7l+${blockValue} blocks\xA7r`,
+        `Your voice echoes from tomorrow. \xA7l+${blockValue} blocks\xA7r owed`
       ],
       valuable: [
         // 25+
-        `Flames burn cold and blue. +${blockValue} blocks recorded`,
-        `Ender motes orbit your head like flies. +${blockValue} blocks`,
-        `Metal objects vibrate mournfully. +${blockValue} blocks`,
-        `Your breath frosts black. +${blockValue} blocks accepted`,
-        `All coins in your pocket invert. +${blockValue} blocks`
+        `Flames burn cold and blue. \xA7l+${blockValue} blocks\xA7r recorded`,
+        `Ender motes orbit your head like flies. \xA7l+${blockValue} blocks\xA7r`,
+        `Metal objects vibrate mournfully. \xA7l+${blockValue} blocks\xA7r`,
+        `Your breath frosts black. \xA7l+${blockValue} blocks\xA7r accepted`,
+        `All coins in your pocket invert. \xA7l+${blockValue} blocks\xA7r`
       ],
       not: [
         // <25
-        `Dust settles in perfect circles. +${blockValue} blocks`,
-        `A faint enderman groan echoes... then silence. +${blockValue} blocks`,
-        `Leaves curl unnaturally. +${blockValue} blocks`,
-        `Puddles reflect red for 1 heartbeat. +${blockValue} blocks`,
-        `The Anomaly exhales static. +${blockValue} blocks`
+        `Dust settles in perfect circles. \xA7l+${blockValue} blocks\xA7r`,
+        `A faint enderman groan echoes... then silence. \xA7l+${blockValue} blocks\xA7r`,
+        `Leaves curl unnaturally. \xA7l+${blockValue} blocks\xA7r`,
+        `Puddles reflect red for 1 heartbeat. \xA7l+${blockValue} blocks\xA7r`,
+        `The Anomaly exhales static. \xA7l+${blockValue} blocks\xA7r`
       ]
     };
     const depreciationMessages = {
       high: [
-        // 75-60%
-        `The Anomaly pauses... did you ever truly care? +${blockValue} blocks`,
-        `Your hesitation taints the offering. +${blockValue} grudgingly absorbed`,
-        `The crystal vibrates suspiciously. "Again?" +${blockValue} blocks`,
-        `Once-prized, now routine. The void notices. +${blockValue} blocks`,
-        `The Altar accepts your mechanical tribute. +${blockValue} blocks`
+        // 80-65%
+        `The Anomaly pauses... did you ever truly care? \xA7l+${blockValue} blocks\xA7r`,
+        `Your hesitation taints the offering. \xA7l+${blockValue} grudgingly absorbed\xA7r`,
+        `The crystal vibrates suspiciously. "Again?" \xA7l+${blockValue} blocks\xA7r`,
+        `Once-prized, now routine. The void notices. \xA7l+${blockValue} blocks\xA7r`,
+        `The Altar accepts your mechanical tribute. \xA7l+${blockValue} blocks\xA7r`
       ],
       mid: [
-        // 60-40%
-        `The Anomaly mocks your hollow repetition. +${blockValue} blocks`,
-        `"This meant something once," the void accuses. +${blockValue} blocks`,
-        `Your growing apathy poisons the ritual. +${blockValue} blocks`,
-        `The crystal's light dims in disappointment. +${blockValue} blocks`,
-        `The Altar accepts stale tribute... for now. +${blockValue} blocks`
+        // 65-50%
+        `The Anomaly mocks your hollow repetition. \xA7l+${blockValue} blocks\xA7r`,
+        `"This meant something once," the void accuses. \xA7l+${blockValue} blocks\xA7r`,
+        `Your growing apathy poisons the ritual. \xA7l+${blockValue} blocks\xA7r`,
+        `The crystal's light dims in disappointment. \xA7l+${blockValue} blocks\xA7r`,
+        `The Altar accepts stale tribute... for now. \xA7l+${blockValue} blocks\xA7r`
       ],
       low: [
-        // 40-20%
-        `The Anomaly snarls at your rotten deception. +${blockValue} blocks`,
-        `"You think I don't see?" Static shreds air. +${blockValue} blocks`,
-        `Your contempt for the ritual becomes mutual. +${blockValue} blocks`,
-        `The void regurgitates part of your insult. +${blockValue} blocks`,
-        `The crystal burns your hands in contempt. +${blockValue} blocks`
+        // 50-30%
+        `The Anomaly snarls at your rotten deception. \xA7l+${blockValue} blocks\xA7r`,
+        `"You think I don't see?" Static shreds air. \xA7l+${blockValue} blocks\xA7r`,
+        `Your contempt for the ritual becomes mutual. \xA7l+${blockValue} blocks\xA7r`,
+        `The void regurgitates part of your insult. \xA7l+${blockValue} blocks\xA7r`,
+        `The crystal burns your hands in contempt. \xA7l+${blockValue} blocks\xA7r`
       ],
       negligible: [
-        // <20%
-        `The Anomaly's fury cracks nearby stone. "ENOUGH." +${blockValue} blocks`,
-        `Your betrayal hangs in the air. +${blockValue} pity blocks`,
-        `The void rejects all but cosmic spite. +${blockValue} blocks`,
-        `The Altar bleeds black ichor from your insult. +${blockValue} blocks`,
-        `Reality itself recoils at your mockery. +${blockValue} blocks`
+        // <30%
+        `The Anomaly's fury cracks nearby stone. "ENOUGH." \xA7l+${blockValue} blocks\xA7r`,
+        `Your betrayal hangs in the air. \xA7l+${blockValue} pity blocks\xA7r`,
+        `The void rejects all but cosmic spite. \xA7l+${blockValue} blocks\xA7r`,
+        `The Altar bleeds black ichor from your insult. \xA7l+${blockValue} blocks\xA7r`,
+        `Reality itself recoils at your mockery. \xA7l+${blockValue} blocks\xA7r`
       ]
     };
     const getValueTier = () => {
@@ -6867,16 +6867,16 @@ var AltarMessage = class {
   }
   static random_info(currentBorderSize) {
     const infoMessages = [
-      `The Anomaly hums quietly... current border: ${currentBorderSize} blocks`,
-      `The void's edge shimmers at ${currentBorderSize} blocks from center`,
-      `Crystal energies oscillate... border diameter: ${currentBorderSize} blocks`,
-      `A map etches itself in your mind: ${currentBorderSize} blocks claimed`,
-      `The Anomaly whispers dimensions into your thoughts: ${currentBorderSize} blocks`,
-      `Ender particles outline a circle of ${currentBorderSize} blocks diameter`,
-      `The crystal projects the border's reach: ${currentBorderSize} blocks`,
-      `Your shadow stretches to the void's edge: ${currentBorderSize} blocks`,
-      `Reality's membrane currently extends ${currentBorderSize} blocks outward`,
-      `The Altar displays ethereal runes: ${currentBorderSize} blocks of safety`
+      `The Anomaly hums quietly... current border: \xA7l${currentBorderSize} blocks\xA7r`,
+      `The void's edge shimmers at \xA7l${currentBorderSize} blocks\xA7r from center`,
+      `Crystal energies oscillate... border diameter: \xA7l${currentBorderSize} blocks\xA7r`,
+      `A map etches itself in your mind: \xA7l${currentBorderSize} blocks\xA7r claimed`,
+      `The Anomaly whispers dimensions into your thoughts: \xA7l${currentBorderSize} blocks\xA7r`,
+      `Ender particles outline a circle of \xA7l${currentBorderSize} blocks\xA7r diameter`,
+      `The crystal projects the border's reach: \xA7l${currentBorderSize} blocks\xA7r`,
+      `Your shadow stretches to the void's edge: \xA7l${currentBorderSize} blocks\xA7r`,
+      `Reality's membrane currently extends \xA7l${currentBorderSize} blocks\xA7r outward`,
+      `The Altar displays ethereal runes: \xA7l${currentBorderSize} blocks\xA7r of safety`
     ];
     return infoMessages[Math.floor(Math.random() * infoMessages.length)];
   }
@@ -7584,12 +7584,19 @@ var api_default = api;
 // behaviour_pack/scripts-dev/components/sacrifice.ts
 function load_altar_component(guild_id2) {
   const sacrificeTimers = /* @__PURE__ */ new Map();
+  const sacrificeTotals = /* @__PURE__ */ new Map();
   async function sacrifice(event) {
     if (event.player) {
       const playerName = event.player.name;
       const mainhand = event.player.getComponent(EntityComponentTypes2.Equippable)?.getEquipment(EquipmentSlot.Mainhand);
       const border = await api_default.World.get_world(guild_id2);
       if (mainhand) {
+        if (mainhand.amount == 1) {
+          event.player.getComponent(EntityComponentTypes2.Equippable)?.setEquipment(EquipmentSlot.Mainhand);
+        } else {
+          mainhand.amount -= 1;
+          event.player.getComponent(EntityComponentTypes2.Equippable)?.setEquipment(EquipmentSlot.Mainhand, mainhand);
+        }
         try {
           const sacrificial_item = await api_default.Item.get_item(mainhand.typeId);
           sacrificial_item.current_uses += 1;
@@ -7613,20 +7620,16 @@ function load_altar_component(guild_id2) {
           await sacrificial_item.update_item();
           border.end_border += block_value;
           await border.update_world();
-          if (mainhand.amount == 1) {
-            event.player.getComponent(EntityComponentTypes2.Equippable)?.setEquipment(EquipmentSlot.Mainhand);
-          } else {
-            mainhand.amount -= 1;
-            event.player.getComponent(EntityComponentTypes2.Equippable)?.setEquipment(EquipmentSlot.Mainhand, mainhand);
-          }
           const valueRemaining = block_value / original_block_value;
           if (valueRemaining < 0.3) {
           }
-          utils_default.commands.send_message(
-            event.dimension.id,
-            playerName,
-            utils_default.AltarMessage.random_sacrifice(Math.round(block_value), Math.round(original_block_value))
-          );
+          const total_value = sacrificeTotals.get(playerName)?.val;
+          const total_original_value = sacrificeTotals.get(playerName)?.orig;
+          if (total_value && total_original_value) {
+            sacrificeTotals.set(playerName, { val: block_value + total_value, orig: original_block_value + total_original_value });
+          } else {
+            sacrificeTotals.set(playerName, { val: block_value, orig: original_block_value });
+          }
           event.dimension.playSound("random.pop", event.player.location, { volume: 0.5 });
           if (sacrificeTimers.has(playerName)) {
             system4.clearRun(sacrificeTimers.get(playerName));
@@ -7634,24 +7637,37 @@ function load_altar_component(guild_id2) {
           const timeoutId = system4.runTimeout(() => {
             ambient(event);
             event.dimension.playSound("altar.sacrifice", event.block.center(), { volume: 8 });
+            const message2 = utils_default.AltarMessage.random_sacrifice(Math.round(sacrificeTotals.get(playerName)?.val), Math.round(sacrificeTotals.get(playerName)?.orig));
+            utils_default.commands.send_message(
+              event.dimension.id,
+              playerName,
+              `[\xA7l\xA7aAltar\xA7r] ${message2}`
+            );
             sacrificeTimers.delete(playerName);
+            sacrificeTotals.delete(playerName);
           }, TicksPerSecond3 * 0.5);
           sacrificeTimers.set(playerName, timeoutId);
         } catch (e) {
           ambient(event);
+          const spawned_item = mainhand.clone();
+          spawned_item.amount = 1;
+          const spawned_location = event.block.center();
+          spawned_location.y += 0.7;
+          event.dimension.spawnItem(spawned_item, spawned_location);
+          const message2 = utils_default.AltarMessage.random_not_sacrificial();
           utils_default.commands.send_message(
             event.dimension.id,
             playerName,
-            utils_default.AltarMessage.random_not_sacrificial()
+            `[\xA7l\xA7aAltar\xA7r] ${message2}`
           );
-          return;
         }
       } else {
         ambient(event);
+        const message2 = utils_default.AltarMessage.random_info(Math.round(border.end_border));
         utils_default.commands.send_message(
           event.dimension.id,
           playerName,
-          utils_default.AltarMessage.random_info(Math.round(border.end_border))
+          `[\xA7l\xA7aAltar\xA7r] ${message2}`
         );
       }
     }
