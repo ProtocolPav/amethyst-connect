@@ -28,13 +28,13 @@ export default function load_altar_component(guild_id: string) {
     ]
 
     async function sacrifice(event: BlockComponentPlayerInteractEvent) {
-        if (event.player && !(event.player.name in banned_gamertags)) {
+        if (event.player) {
             const playerName = event.player.name;
             const mainhand = event.player.getComponent(EntityComponentTypes.Equippable)?.getEquipment(EquipmentSlot.Mainhand);
 
             const border = await api.World.get_world(guild_id)
 
-            if (mainhand) {
+            if (mainhand && !banned_gamertags.includes(playerName)) {
                 if (mainhand.amount == 1) {
                     event.player.getComponent(EntityComponentTypes.Equippable)?.setEquipment(EquipmentSlot.Mainhand);
                 } else {

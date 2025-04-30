@@ -7585,12 +7585,20 @@ var api_default = api;
 function load_altar_component(guild_id2) {
   const sacrificeTimers = /* @__PURE__ */ new Map();
   const sacrificeTotals = /* @__PURE__ */ new Map();
+  const banned_gamertags = [
+    "MarsOfSoa",
+    "lumilime",
+    "bellissensei",
+    "Gamingwarrior65",
+    "Eziofilm65"
+    // 'ProtocolPav',
+  ];
   async function sacrifice(event) {
     if (event.player) {
       const playerName = event.player.name;
       const mainhand = event.player.getComponent(EntityComponentTypes2.Equippable)?.getEquipment(EquipmentSlot.Mainhand);
       const border = await api_default.World.get_world(guild_id2);
-      if (mainhand) {
+      if (mainhand && !banned_gamertags.includes(playerName)) {
         if (mainhand.amount == 1) {
           event.player.getComponent(EntityComponentTypes2.Equippable)?.setEquipment(EquipmentSlot.Mainhand);
         } else {
