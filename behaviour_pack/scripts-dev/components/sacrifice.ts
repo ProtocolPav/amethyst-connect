@@ -18,8 +18,17 @@ export default function load_altar_component(guild_id: string) {
     const sacrificeTimers: Map<playerName, timeoutID> = new Map();
     const sacrificeTotals: Map<playerName, {val: number, orig: number}> = new Map();
 
+    const banned_gamertags = [
+        'MarsOfSoa',
+        'lumilime',
+        'bellissensei',
+        'Gamingwarrior65',
+        'Eziofilm65',
+        // 'ProtocolPav',
+    ]
+
     async function sacrifice(event: BlockComponentPlayerInteractEvent) {
-        if (event.player) {
+        if (event.player && !(event.player.name in banned_gamertags)) {
             const playerName = event.player.name;
             const mainhand = event.player.getComponent(EntityComponentTypes.Equippable)?.getEquipment(EquipmentSlot.Mainhand);
 
