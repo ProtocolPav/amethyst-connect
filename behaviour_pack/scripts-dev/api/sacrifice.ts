@@ -64,6 +64,8 @@ export class Item {
 }
 
 export class World {
+    public static cache: World
+
     guild_id: string
     overworld_border: number
     nether_border: number

@@ -79,12 +79,6 @@ export default function load_altar_component(guild_id: string) {
                     await border.update_world()
                     // Call function to re-fetch border sizes into cache
 
-                    const valueRemaining = block_value / original_block_value
-
-                    if (valueRemaining < 0.3) {
-                        // Do an evil act to punish the player
-                    }
-
                     const total_value = sacrificeTotals.get(playerName)?.val
                     const total_original_value = sacrificeTotals.get(playerName)?.orig
 
@@ -104,12 +98,20 @@ export default function load_altar_component(guild_id: string) {
                         ambient(event);
                         event.dimension.playSound("altar.sacrifice", event.block.center(), { volume: 8 });
 
-                        const message = utils.AltarMessage.random_sacrifice(Math.round(sacrificeTotals.get(playerName)?.val!), Math.round(sacrificeTotals.get(playerName)?.orig!))
+                        const total_value = Math.round(sacrificeTotals.get(playerName)?.val!)
+                        const total_original = Math.round(sacrificeTotals.get(playerName)?.orig!)
+                        const message = utils.AltarMessage.random_sacrifice(total_value, total_original)
                         utils.commands.send_message(
                             event.dimension.id,
                             playerName,
                             `[§l§aAltar§r] ${message}`
                         );
+
+                        const valueRemaining = total_value / total_original
+
+                        if (valueRemaining < 0.3) {
+                            // Do an evil act to punish the player
+                        }
 
                         sacrificeTimers.delete(playerName) // Clean up timers
                         sacrificeTotals.delete(playerName)
