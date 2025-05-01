@@ -1,5 +1,6 @@
 import { Player, world, system, EntityDamageCause } from '@minecraft/server';
 import { MinecraftDimensionTypes } from "@minecraft/vanilla-data";
+import {WorldCache} from "../api/sacrifice";
 
 function borderCheck(player: Player, dimensionID: MinecraftDimensionTypes, border_size: number, warning_range: string[], outside: string[]) {
     const position = player.location
@@ -29,7 +30,7 @@ function borderCheck(player: Player, dimensionID: MinecraftDimensionTypes, borde
     }
 }
 
-export default function load_world_border() {   
+export default function load_world_border(guild_id: string) {
     let players_100_blocks_away  = {overworld: [], nether: [], end: []}
     let players_outside_border  = {overworld: [], nether: [], end: []}
     
@@ -41,15 +42,15 @@ export default function load_world_border() {
         }
     
         players.overworld.forEach((player) => {
-            borderCheck(player, MinecraftDimensionTypes.Overworld, 2050, players_100_blocks_away.overworld, players_outside_border.overworld)
+            borderCheck(player, MinecraftDimensionTypes.Overworld, WorldCache.world.overworld_border, players_100_blocks_away.overworld, players_outside_border.overworld)
         });
         
         players.nether.forEach((player) => {
-            borderCheck(player, MinecraftDimensionTypes.Nether, 1500, players_100_blocks_away.nether, players_outside_border.nether)
+            borderCheck(player, MinecraftDimensionTypes.Nether, WorldCache.world.nether_border, players_100_blocks_away.nether, players_outside_border.nether)
         });
         
         players.end.forEach((player) => {
-            borderCheck(player, MinecraftDimensionTypes.TheEnd, 500, players_100_blocks_away.end, players_outside_border.end)
+            borderCheck(player, MinecraftDimensionTypes.TheEnd, WorldCache.world.end_border, players_100_blocks_away.end, players_outside_border.end)
         });
     }, 20)
 

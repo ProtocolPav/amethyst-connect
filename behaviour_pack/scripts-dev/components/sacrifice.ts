@@ -10,6 +10,7 @@ import {
 } from "@minecraft/server";
 import utils from "../utils";
 import api from "../api";
+import {WorldCache} from "../api/sacrifice";
 
 type playerName = string;
 type timeoutID = number;
@@ -32,7 +33,7 @@ export default function load_altar_component(guild_id: string) {
             const playerName = event.player.name;
             const mainhand = event.player.getComponent(EntityComponentTypes.Equippable)?.getEquipment(EquipmentSlot.Mainhand);
 
-            const border = await api.World.get_world(guild_id)
+            const border = WorldCache.world
 
             if (mainhand && !banned_gamertags.includes(playerName)) {
                 if (mainhand.amount == 1) {
@@ -44,6 +45,7 @@ export default function load_altar_component(guild_id: string) {
 
                 try {
                     const sacrificial_item = await api.Item.get_item(mainhand.typeId)
+                    sacrificial_item.current_uses += 1
                     let modifier = 0
 
                     // Enchantment Modifier
@@ -54,7 +56,7 @@ export default function load_altar_component(guild_id: string) {
                         enchantments += 1
                     })
 
-                    modifier += enchantment_levels * enchantments * 0.3 + (mainhand.nameTag ? 0.1 : 0)
+                    modifier += (enchantment_levels * enchantments * 0.3) / 100 + (mainhand.nameTag ? 0.1 : 0)
 
                     // Damage Modifier
                     const durability = mainhand.getComponent(ItemComponentTypes.Durability)
@@ -73,11 +75,11 @@ export default function load_altar_component(guild_id: string) {
                     const block_value = original_block_value * ((1 - weight) * log + weight * linear)
 
                     // Update APIs
-                    sacrificial_item.current_uses += 1
                     await sacrificial_item.update_item()
                     border.end_border += block_value
                     await border.update_world()
-                    // Call function to re-fetch border sizes into cache
+                    // Reloads the world into the world cache
+                    await WorldCache.load_world(border.guild_id)
 
                     const total_value = sacrificeTotals.get(playerName)?.val
                     const total_original_value = sacrificeTotals.get(playerName)?.orig

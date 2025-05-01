@@ -64,8 +64,6 @@ export class Item {
 }
 
 export class World {
-    public static cache: World
-
     guild_id: string
     overworld_border: number
     nether_border: number
@@ -107,5 +105,13 @@ export class World {
         });
 
         await http.request(request);
+    }
+}
+
+export class WorldCache {
+    static world: World
+
+    public static async load_world(guild_id: string) {
+        WorldCache.world = await World.get_world(guild_id)
     }
 }

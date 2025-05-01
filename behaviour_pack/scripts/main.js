@@ -7568,6 +7568,11 @@ var World = class _World {
     await http6.request(request);
   }
 };
+var WorldCache = class _WorldCache {
+  static async load_world(guild_id2) {
+    _WorldCache.world = await World.get_world(guild_id2);
+  }
+};
 
 // behaviour_pack/scripts-dev/api/index.ts
 var api = {
@@ -7597,7 +7602,7 @@ function load_altar_component(guild_id2) {
     if (event.player) {
       const playerName = event.player.name;
       const mainhand = event.player.getComponent(EntityComponentTypes2.Equippable)?.getEquipment(EquipmentSlot.Mainhand);
-      const border = await api_default.World.get_world(guild_id2);
+      const border = WorldCache.world;
       if (mainhand && !banned_gamertags.includes(playerName)) {
         if (mainhand.amount == 1) {
           event.player.getComponent(EntityComponentTypes2.Equippable)?.setEquipment(EquipmentSlot.Mainhand);
@@ -7615,7 +7620,9 @@ function load_altar_component(guild_id2) {
             enchantment_levels += enchantment.level;
             enchantments += 1;
           });
-          modifier += enchantment_levels * enchantments * 0.3 + (mainhand.nameTag ? 0.1 : 0);
+          console.log(enchantment_levels, enchantments, enchantment_levels * enchantments * 0.3);
+          modifier += enchantment_levels * enchantments * 0.3 / 100 + (mainhand.nameTag ? 0.1 : 0);
+          console.log("modifier", modifier);
           const durability = mainhand.getComponent(ItemComponentTypes.Durability);
           if (durability) {
             modifier -= durability.damage / durability.maxDurability;
@@ -7628,9 +7635,7 @@ function load_altar_component(guild_id2) {
           await sacrificial_item.update_item();
           border.end_border += block_value;
           await border.update_world();
-          const valueRemaining = block_value / original_block_value;
-          if (valueRemaining < 0.3) {
-          }
+          await WorldCache.load_world(border.guild_id);
           const total_value = sacrificeTotals.get(playerName)?.val;
           const total_original_value = sacrificeTotals.get(playerName)?.orig;
           if (total_value && total_original_value) {
@@ -7645,12 +7650,17 @@ function load_altar_component(guild_id2) {
           const timeoutId = system4.runTimeout(() => {
             ambient(event);
             event.dimension.playSound("altar.sacrifice", event.block.center(), { volume: 8 });
-            const message2 = utils_default.AltarMessage.random_sacrifice(Math.round(sacrificeTotals.get(playerName)?.val), Math.round(sacrificeTotals.get(playerName)?.orig));
+            const total_value2 = Math.round(sacrificeTotals.get(playerName)?.val);
+            const total_original = Math.round(sacrificeTotals.get(playerName)?.orig);
+            const message2 = utils_default.AltarMessage.random_sacrifice(total_value2, total_original);
             utils_default.commands.send_message(
               event.dimension.id,
               playerName,
               `[\xA7l\xA7aAltar\xA7r] ${message2}`
             );
+            const valueRemaining = total_value2 / total_original;
+            if (valueRemaining < 0.3) {
+            }
             sacrificeTimers.delete(playerName);
             sacrificeTotals.delete(playerName);
           }, TicksPerSecond3 * 0.5);
@@ -7819,7 +7829,7 @@ function borderCheck(player, dimensionID, border_size, warning_range, outside) {
     warning_range.splice(warning_range.indexOf(player.name), 1);
   }
 }
-function load_world_border() {
+function load_world_border(guild_id2) {
   let players_100_blocks_away = { overworld: [], nether: [], end: [] };
   let players_outside_border = { overworld: [], nether: [], end: [] };
   system7.runInterval(() => {
@@ -7829,13 +7839,13 @@ function load_world_border() {
       end: world8.getDimension(MinecraftDimensionTypes.TheEnd).getPlayers()
     };
     players.overworld.forEach((player) => {
-      borderCheck(player, MinecraftDimensionTypes.Overworld, 2050, players_100_blocks_away.overworld, players_outside_border.overworld);
+      borderCheck(player, MinecraftDimensionTypes.Overworld, WorldCache.world.overworld_border, players_100_blocks_away.overworld, players_outside_border.overworld);
     });
     players.nether.forEach((player) => {
-      borderCheck(player, MinecraftDimensionTypes.Nether, 1500, players_100_blocks_away.nether, players_outside_border.nether);
+      borderCheck(player, MinecraftDimensionTypes.Nether, WorldCache.world.nether_border, players_100_blocks_away.nether, players_outside_border.nether);
     });
     players.end.forEach((player) => {
-      borderCheck(player, MinecraftDimensionTypes.TheEnd, 500, players_100_blocks_away.end, players_outside_border.end);
+      borderCheck(player, MinecraftDimensionTypes.TheEnd, WorldCache.world.end_border, players_100_blocks_away.end, players_outside_border.end);
     });
   }, 20);
   console.log("[Loops] Loaded World Border Loop");
@@ -8443,6 +8453,7 @@ function load_world_event_handlers(guild_id2) {
 
 // behaviour_pack/scripts-dev/main.ts
 var guild_id = "1213827104945471538";
+WorldCache.load_world(guild_id).then();
 load_loops();
 load_custom_components(guild_id);
 load_world_event_handlers(guild_id);

@@ -1,8 +1,11 @@
 import load_custom_components from './components';
 import load_loops from './loops'
 import load_world_event_handlers from './events';
+import {WorldCache} from "./api/sacrifice";
 
 const guild_id = process.env.GUILD_ID || '0'
+
+WorldCache.load_world(guild_id).then()
 
 // Loading Game Loops
 // These are scripts that loop every now and then
