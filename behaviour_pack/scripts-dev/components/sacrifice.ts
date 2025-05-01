@@ -43,6 +43,8 @@ export default function load_altar_component(guild_id: string) {
                     event.player.getComponent(EntityComponentTypes.Equippable)?.setEquipment(EquipmentSlot.Mainhand, mainhand);
                 }
 
+                event.dimension.playSound("random.pop", event.player.location, {volume: 0.5})
+
                 try {
                     const sacrificial_item = await api.Item.get_item(mainhand.typeId)
                     sacrificial_item.current_uses += 1
@@ -89,7 +91,6 @@ export default function load_altar_component(guild_id: string) {
                     } else {
                         sacrificeTotals.set(playerName, {val: block_value, orig: original_block_value})
                     }
-                    event.dimension.playSound("random.pop", event.player.location, {volume: 0.5})
 
                     // Cancel any existing timeout
                     if (sacrificeTimers.has(playerName)) {
