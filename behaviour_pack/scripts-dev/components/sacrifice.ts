@@ -44,7 +44,6 @@ export default function load_altar_component(guild_id: string) {
 
                 try {
                     const sacrificial_item = await api.Item.get_item(mainhand.typeId)
-                    sacrificial_item.current_uses += 1
                     let modifier = 0
 
                     // Enchantment Modifier
@@ -74,6 +73,7 @@ export default function load_altar_component(guild_id: string) {
                     const block_value = original_block_value * ((1 - weight) * log + weight * linear)
 
                     // Update APIs
+                    sacrificial_item.current_uses += 1
                     await sacrificial_item.update_item()
                     border.end_border += block_value
                     await border.update_world()
