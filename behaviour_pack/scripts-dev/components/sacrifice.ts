@@ -18,6 +18,15 @@ export default function load_altar_component(guild_id: string) {
     const sacrificeTimers: Map<playerName, timeoutID> = new Map();
     const sacrificeTotals: Map<playerName, {val: number, orig: number}> = new Map();
 
+    const banned_gamertags = [
+        'MarsOfSoa',
+        'lumilime',
+        'bellissensei',
+        'Gamingwarrior65',
+        'Eziofilm65',
+        // 'ProtocolPav',
+    ]
+
     async function sacrifice(event: BlockComponentPlayerInteractEvent) {
         if (event.player) {
             const playerName = event.player.name;
@@ -25,7 +34,7 @@ export default function load_altar_component(guild_id: string) {
 
             const border = await api.World.get_world(guild_id)
 
-            if (mainhand) {
+            if (mainhand && !banned_gamertags.includes(playerName)) {
                 if (mainhand.amount == 1) {
                     event.player.getComponent(EntityComponentTypes.Equippable)?.setEquipment(EquipmentSlot.Mainhand);
                 } else {
