@@ -7557,35 +7557,40 @@ var api_default = api;
 // behaviour_pack/scripts-dev/loops/quests.ts
 import { system as system8, world as world8 } from "@minecraft/server";
 async function check_quests() {
-  if (!api_default.Interaction.is_processing()) {
-    api_default.Interaction.set_processing(true);
-    let interaction = api_default.Interaction.dequeue();
-    while (interaction) {
-      let thorny_user = api_default.ThornyUser.fetch_user_by_id(interaction.thorny_id);
-      let quest = await api_default.QuestWithProgress.get_active_quest(thorny_user);
-      if (quest && await quest.increment_active_objective(interaction)) {
-        await quest.update_user_quest();
-        await thorny_user.update();
-        if (quest.status == "completed") {
+  try {
+    if (!api_default.Interaction.is_processing()) {
+      api_default.Interaction.set_processing(true);
+      let interaction = api_default.Interaction.dequeue();
+      while (interaction) {
+        let thorny_user = api_default.ThornyUser.fetch_user_by_id(interaction.thorny_id);
+        let quest = await api_default.QuestWithProgress.get_active_quest(thorny_user);
+        if (quest && await quest.increment_active_objective(interaction)) {
+          await quest.update_user_quest();
+          await thorny_user.update();
+          if (quest.status == "completed") {
+            api_default.Relay.event(
+              `${thorny_user.gamertag} has completed *${quest.title}!*`,
+              "Run `/quests view` to start it and reap the rewards!",
+              "other"
+            );
+            api_default.QuestWithProgress.clear_cache(thorny_user);
+          }
+        } else if (quest && quest.status == "failed") {
           api_default.Relay.event(
-            `${thorny_user.gamertag} has completed *${quest.title}!*`,
-            "Run `/quests view` to start it and reap the rewards!",
+            `${thorny_user.gamertag} has failed *${quest.title}!*`,
+            "Better luck next time!",
             "other"
           );
+          await quest.fail_quest(thorny_user.thorny_id);
           api_default.QuestWithProgress.clear_cache(thorny_user);
         }
-      } else if (quest && quest.status == "failed") {
-        api_default.Relay.event(
-          `${thorny_user.gamertag} has failed *${quest.title}!*`,
-          "Better luck next time!",
-          "other"
-        );
-        await quest.fail_quest(thorny_user.thorny_id);
-        api_default.QuestWithProgress.clear_cache(thorny_user);
+        interaction = api_default.Interaction.dequeue();
       }
-      interaction = api_default.Interaction.dequeue();
+      api_default.Interaction.set_processing(false);
     }
+  } catch (e) {
     api_default.Interaction.set_processing(false);
+    throw e;
   }
 }
 async function display_timer() {
