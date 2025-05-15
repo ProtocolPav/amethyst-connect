@@ -53,7 +53,7 @@
         "anchor": 1,
         "offset": [ 0, -0.5, 0 ],
         "homing": true,
-        "ignored_entities": ["amethyst:the_breath", "minecraft:enderman", "minecraft:ender_dragon", "minecraft:ender_crystal"]
+        "ignored_entities": ["amethyst:endstone_golem","amethyst:the_breath", "minecraft:enderman", "minecraft:ender_dragon", "minecraft:ender_crystal"]
       },
       "minecraft:physics": {
         "has_collision": false

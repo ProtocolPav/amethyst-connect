@@ -81,17 +81,17 @@
 				"priority": 0
 			},
 			"minecraft:behavior.ranged_attack": {
-				"burst_shots": 4,
+				"burst_shots": 1,
 				"burst_interval": 0.4,
 				"charge_charged_trigger": 0.3,
 				"charge_shoot_trigger": 5,
 				"attack_interval_min": 3,
 				"attack_interval_max": 5,
-				"attack_radius": 28
+				"attack_radius": 32
 			},
 			"minecraft:follow_range": {
-				"value": 28,
-				"max": 28
+				"value": 32,
+				"max": 32
 			},
 			"minecraft:behavior.hurt_by_target": {
 				"priority": 2

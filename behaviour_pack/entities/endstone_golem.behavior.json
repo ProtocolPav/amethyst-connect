@@ -77,8 +77,8 @@
 			"minecraft:can_climb": {},
 			"minecraft:attack": {
 				"damage": {
-					"range_min": 5,
-					"range_max": 10
+					"range_min": 4,
+					"range_max": 7.5
 				}
 			},
 			"minecraft:damage_sensor": {
@@ -185,25 +185,6 @@
                 "entity_type": "minecraft:evocation_fang",
                 "size": 20,
                 "entity_lifespan": 2
-              }
-            ]
-          },
-          {
-            "weight": 1,
-            "cooldown_time": 20.0,
-            "cast_duration":0.5,
-            "particle_color": "#be00ef",
-            "sequence": [
-              {
-                "shape": "circle",
-                "target": "self",
-                "base_delay": 5.0,
-                "num_entities_spawned": 4,
-                "entity_type": "amethyst:end_slime",
-                "summon_cap": 8,
-                "summon_cap_radius": 16.0,
-                "size": 4,
-                "sound_event": "prepare.summon"
               }
             ]
           }
