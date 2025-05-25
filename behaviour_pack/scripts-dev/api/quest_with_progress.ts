@@ -29,6 +29,7 @@ interface IQuestWithProgress extends IQuest {
     accepted_on: string
     started_on: string | null
     status: 'in_progress' | 'completed' | 'failed'
+    objectives: IObjectiveWithProgress[]
 }
 
 class ObjectiveWithProgress extends Objective {
@@ -38,8 +39,8 @@ class ObjectiveWithProgress extends Objective {
     completion: number
     status: 'in_progress' | 'completed' | 'failed'
 
-    constructor(data: IObjectiveWithProgress, rewards: Reward[], thorny_user: ThornyUser) {
-        super(data, rewards)
+    constructor(data: IObjectiveWithProgress, thorny_user: ThornyUser) {
+        super(data)
         this.thorny_user = thorny_user
         this.start = data.start ? parse(normalizeDateString(data.start), 'yyyy-MM-dd HH:mm:ss.SSSSSS', new Date()) : null
         this.end = data.end ? parse(normalizeDateString(data.end), 'yyyy-MM-dd HH:mm:ss.SSSSSS', new Date()) : null
@@ -67,7 +68,7 @@ class ObjectiveWithProgress extends Objective {
     }
 
     public async update_user_objective(quest: QuestWithProgress) {
-        const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/users/${this.thorny_user.thorny_id}/quest/${quest.quest_id}/${this.objective_id}`);
+        const request = new HttpRequest(`http://nexuscore:8000/api/v0.2/users/${this.thorny_user.thorny_id}/quest/${quest.quest_id}/${this.objective_id}`);
         request.method = HttpRequestMethod.Put;
         request.body = JSON.stringify({
             "start": this.start ? format(this.start, 'yyyy-MM-dd HH:mm:ss.SSSSSS') : null,
@@ -138,14 +139,17 @@ export default class QuestWithProgress extends Quest {
     status: 'in_progress' | 'completed' | 'failed'
     objectives: ObjectiveWithProgress[]
 
-    constructor(data: IQuestWithProgress, objectives: ObjectiveWithProgress[], thorny_user: ThornyUser) {
-        super(data, objectives)
+    constructor(data: IQuestWithProgress, thorny_user: ThornyUser) {
+        super(data)
         this.thorny_user = thorny_user
         this.accepted_on = parse(normalizeDateString(data.accepted_on), 'yyyy-MM-dd HH:mm:ss.SSSSSSS', new Date())
         this.started_on = data.started_on ? parse(normalizeDateString(data.started_on), 'yyyy-MM-dd HH:mm:ss.SSSSSS', new Date()) : null
         this.status = data.status
-        
-        this.objectives = objectives
+
+        this.objectives = []
+        for (let objective of data.objectives) {
+            this.objectives.push(new ObjectiveWithProgress(objective, thorny_user))
+        }
     }
 
     public static clear_cache(thorny_user: ThornyUser) {
@@ -154,41 +158,27 @@ export default class QuestWithProgress extends Quest {
 
     public static async get_active_quest(thorny_user: ThornyUser): Promise<QuestWithProgress | null> {
         try {
-            const active_quest = await http.get(`http://nexuscore:8000/api/v0.1/users/${thorny_user.thorny_id}/quest/active`);
+            const active_quest = await http.get(`http://nexuscore:8000/api/v0.2/users/${thorny_user.thorny_id}/quest/active`);
 
             if (active_quest.status === 200) {
                 const active_quest_data = JSON.parse(active_quest.body)
                 const quest_id = active_quest_data['quest_id']
 
-                // Check if quest exists in cache and return
+                // Check if the quest exists in the cache and return
                 if (this.quest_cache[thorny_user.thorny_id] && this.quest_cache[thorny_user.thorny_id].quest_id === quest_id) {
                     return this.quest_cache[thorny_user.thorny_id]
                 }
 
                 // Merge active quest data
-                const quest_response = await http.get(`http://nexuscore:8000/api/v0.1/quests/${quest_id}`);
-                const quest_data = {...JSON.parse(quest_response.body), ...active_quest_data} as IQuestWithProgress;
-    
-                // Fetch the objectives for the quest.
-                const objectives_response = await http.get(`http://nexuscore:8000/api/v0.1/quests/${quest_id}/objectives`);
-                const objectives_data = utils.combine(JSON.parse(objectives_response.body), active_quest_data['objectives'], 'objective_id') as IObjectiveWithProgress[];
+                const quest_response = await http.get(`http://nexuscore:8000/api/v0.2/quests/${quest_id}`);
+                const quest_json = JSON.parse(quest_response.body)
+                const quest_data = {
+                    ...quest_json,
+                    ...active_quest_data,
+                    objectives: utils.combine(quest_json.objectives, active_quest_data['objectives'], 'objective_id')
+                } as IQuestWithProgress;
 
-                const objectives: ObjectiveWithProgress[] = []
-    
-                // For each objective, fetch its rewards.
-                for (let objective of objectives_data) {
-                    const rewards_response = await http.get(`http://nexuscore:8000/api/v0.1/quests/${quest_id}/objectives/${objective.objective_id}/rewards`);
-                    const rewards_data = JSON.parse(rewards_response.body) as IReward[];
-                    let rewards: Reward[] = []
-                    
-                    for (let reward of rewards_data) {
-                        rewards.push(new Reward(reward))
-                    }
-
-                    objectives.push(new ObjectiveWithProgress(objective, rewards, thorny_user))
-                }
-
-                const quest_object = new QuestWithProgress(quest_data, objectives, thorny_user)
+                const quest_object = new QuestWithProgress(quest_data, thorny_user)
                 this.quest_cache[thorny_user.thorny_id] = quest_object
                 return quest_object
             } else {
@@ -206,7 +196,7 @@ export default class QuestWithProgress extends Quest {
     }
 
     public async update_user_quest() {
-        const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/users/${this.thorny_user.thorny_id}/quest/${this.quest_id}`);
+        const request = new HttpRequest(`http://nexuscore:8000/api/v0.2/users/${this.thorny_user.thorny_id}/quest/${this.quest_id}`);
         request.method = HttpRequestMethod.Put;
         request.body = JSON.stringify({
             "accepted_on": null,
@@ -228,7 +218,7 @@ export default class QuestWithProgress extends Quest {
     public async fail_quest(thorny_id: number): Promise<void> {
         this.status = 'failed'
 
-        const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/users/${thorny_id}/quest/active`);
+        const request = new HttpRequest(`http://nexuscore:8000/api/v0.2/users/${thorny_id}/quest/active`);
         request.method = HttpRequestMethod.Delete;
         request.body = JSON.stringify({})
         request.headers = [

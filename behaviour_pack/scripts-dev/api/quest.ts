@@ -24,6 +24,7 @@ export interface IObjective {
     required_mainhand: string | null
     required_location: [number, number] | null
     location_radius: number
+    rewards: IReward[]
 }
 
 export interface IQuest {
@@ -32,6 +33,7 @@ export interface IQuest {
     end_time: string
     title: string
     description: string
+    objectives: IObjective[]
 }
 
 interface RequirementCheck {
@@ -88,7 +90,7 @@ export class Objective {
     location_radius: number
     rewards: Reward[]
 
-    constructor(data: IObjective, rewards: Reward[]) {
+    constructor(data: IObjective) {
         this.objective_id = data.objective_id
         this.objective = data.objective
         this.order = data.order
@@ -102,7 +104,10 @@ export class Objective {
         this.required_location = data.required_location
         this.location_radius = data.location_radius
 
-        this.rewards = rewards
+        this.rewards = []
+        for (let reward of data.rewards) {
+            this.rewards.push(new Reward(reward))
+        }
     }
 
     protected get_clean_rewards() {
@@ -174,7 +179,7 @@ export class Objective {
             return {check: false, fail_objective: false};
         }
 
-        const interaction_location: [number, number] = [interaction.position_x, interaction.position_z]
+        const interaction_location: [number, number] = [interaction.coordinates[0], interaction.coordinates[2]]
 
         // Check location
         if (this.required_location && !utils.checks.distance_check(interaction_location, this.required_location, this.location_radius)) {
@@ -189,7 +194,7 @@ export class Objective {
         // Check natural block
         if (this.objective_type == 'mine' && this.natural_block) {
             return {
-                check: !(await this.check_if_natural(interaction.position_x, interaction.position_y, interaction.position_z)),
+                check: !(await this.check_if_natural(interaction.coordinates[0], interaction.coordinates[1], interaction.coordinates[2])),
                 fail_objective: false
             }
         }
@@ -198,7 +203,7 @@ export class Objective {
     }
 
     protected async check_if_natural(x: number, y: number, z: number): Promise<Boolean> {
-        const response = await http.get(`http://nexuscore:8000/api/v0.1/events/interaction?x=${x}&y=${y}&z=${z}`)
+        const response = await http.get(`http://nexuscore:8000/api/v0.2/events/interaction?x=${x}&y=${y}&z=${z}`)
         return JSON.parse(response.body).exists
     }
 
@@ -218,41 +223,26 @@ export default class Quest {
     description: string
     objectives: Objective[]
 
-    constructor(data: IQuest, objectives: Objective[]) {
+    constructor(data: IQuest) {
         this.quest_id = data.quest_id
         this.start_time = parse(data.start_time, 'yyyy-MM-dd HH:mm:ss.SSSSSS', new Date())
         this.end_time = parse(data.end_time, 'yyyy-MM-dd HH:mm:ss.SSSSSS', new Date())
         this.title = data.title
         this.description = data.description
-        
-        this.objectives = objectives
+
+        this.objectives = []
+        for (let objective of data.objectives) {
+            this.objectives.push(new Objective(objective))
+        }
     }
 
     public static async get_quest(quest_id: number): Promise<Quest> {
         try {
-            // Fetch the main quest data.
-            const quest_response = await http.get(`http://nexuscore:8000/api/v0.1/quests/${quest_id}`);
+            // Fetch the quest
+            const quest_response = await http.get(`http://nexuscore:8000/api/v0.2/quests/${quest_id}`);
             const quest_data = JSON.parse(quest_response.body) as IQuest;
- 
-            // Fetch the objectives for the quest.
-            const objectives_response = await http.get(`http://nexuscore:8000/api/v0.1/quests/${quest_id}/objectives`);
-            const objectives_data = JSON.parse(objectives_response.body) as IObjective[];
-            const objectives: Objective[] = []
- 
-            // For each objective, fetch its rewards.
-            for (let objective of objectives_data) {
-                const rewards_response = await http.get(`http://nexuscore:8000/api/v0.1/quests/${quest_id}/objectives/${objective.order}/rewards`);
-                const rewards_data = JSON.parse(rewards_response.body) as IReward[];
-                let rewards: Reward[] = []
-                
-                for (let reward of rewards_data) {
-                    rewards.push(new Reward(reward))
-                }
 
-                objectives.push(new Objective(objective, rewards))
-            }
-
-            return new Quest(quest_data, objectives);
+            return new Quest(quest_data);
  
         } catch (error) {
             console.error("Error fetching quest:", error);

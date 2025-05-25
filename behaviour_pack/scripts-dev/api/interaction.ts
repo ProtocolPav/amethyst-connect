@@ -4,9 +4,7 @@ import { HttpRequest, HttpHeader, HttpRequestMethod, http } from '@minecraft/ser
 interface IInteraction {
     thorny_id: number
     type: 'mine' | 'kill' | 'die' | 'place' | 'use' | 'scriptevent'
-    position_x: number
-    position_y: number
-    position_z: number
+    coordinates: number[]
     reference: string
     mainhand: string | null
     dimension: string
@@ -18,9 +16,7 @@ export default class Interaction implements IInteraction {
 
     thorny_id: number
     type: 'mine' | 'kill' | 'die' | 'place' | 'use' | 'scriptevent'
-    position_x: number
-    position_y: number
-    position_z: number
+    coordinates: number[]
     reference: string
     mainhand: string | null
     dimension: string
@@ -29,9 +25,7 @@ export default class Interaction implements IInteraction {
     constructor(data: IInteraction) {
         this.thorny_id = data.thorny_id
         this.type = data.type
-        this.position_x = Math.round(data.position_x)
-        this.position_y = Math.round(data.position_y)
-        this.position_z = Math.round(data.position_z)
+        this.coordinates = [Math.round(data.coordinates[0]), Math.round(data.coordinates[1]), Math.round(data.coordinates[2])]
         this.reference = data.reference
         this.mainhand = data.mainhand
         this.dimension = data.dimension
@@ -42,7 +36,7 @@ export default class Interaction implements IInteraction {
      * Post interaction to NexusCore
      */
     public async post_interaction() {
-        const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/events/interaction`);
+        const request = new HttpRequest(`http://nexuscore:8000/api/v0.2/events/interaction`);
         request.method = HttpRequestMethod.Post;
         request.body = JSON.stringify(this);
         request.headers = [

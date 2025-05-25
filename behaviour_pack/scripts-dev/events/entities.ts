@@ -2,7 +2,7 @@ import {system, world} from "@minecraft/server"
 import api from "../api"
 import utils from "../utils"
 import { EntityComponentTypes, EquipmentSlot, Player } from "@minecraft/server"
-import {MinecraftEntityTypes} from "@minecraft/vanilla-data"
+import {MinecraftBlockTypes, MinecraftEntityTypes} from "@minecraft/vanilla-data"
 
 export default function load_entity_event_handler() {
     // Handle Entity Die/Kill event
@@ -140,7 +140,14 @@ export default function load_entity_event_handler() {
         // Anything that isn't these will not be logged.
         const all_entities: string[] = [
             // Villagers
-            MinecraftEntityTypes.Villager, MinecraftEntityTypes.VillagerV2, MinecraftEntityTypes.WanderingTrader
+            MinecraftEntityTypes.Villager, MinecraftEntityTypes.VillagerV2, MinecraftEntityTypes.WanderingTrader,
+
+            // Rideable Entities
+            MinecraftEntityTypes.Horse, MinecraftEntityTypes.Donkey, MinecraftEntityTypes.Mule, MinecraftEntityTypes.Minecart,
+            MinecraftEntityTypes.Strider, MinecraftEntityTypes.Pig, MinecraftEntityTypes.Boat, MinecraftEntityTypes.Camel,
+
+            // Entity Containers
+            MinecraftEntityTypes.ChestBoat, MinecraftEntityTypes.ChestMinecart, MinecraftEntityTypes.HopperMinecart
         ]
 
         if (
