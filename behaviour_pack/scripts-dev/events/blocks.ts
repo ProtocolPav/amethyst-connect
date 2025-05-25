@@ -17,9 +17,7 @@ export default function load_block_event_handler() {
                 {
                     thorny_id: api.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
                     type: 'mine',
-                    position_x: block_location[0],
-                    position_y: block_location[1],
-                    position_z: block_location[2],
+                    coordinates: block_location,
                     reference: block_id,
                     mainhand: mainhand?.typeId ?? null,
                     dimension: dimension.id
@@ -45,9 +43,7 @@ export default function load_block_event_handler() {
                 {
                     thorny_id: api.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
                     type: 'place',
-                    position_x: block_location[0],
-                    position_y: block_location[1],
-                    position_z: block_location[2],
+                    coordinates: block_location,
                     reference: block_id,
                     mainhand: mainhand?.typeId ?? null,
                     dimension: dimension.id
@@ -136,9 +132,7 @@ export default function load_block_event_handler() {
                     {
                         thorny_id: api.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
                         type: 'use',
-                        position_x: block_location[0],
-                        position_y: block_location[1],
-                        position_z: block_location[2],
+                        coordinates: block_location,
                         reference: block_id,
                         mainhand: mainhand?.typeId ?? null,
                         dimension: dimension.id
