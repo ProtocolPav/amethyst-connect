@@ -7263,7 +7263,10 @@ ${this.get_clean_requirements()}
   }
   async check_if_natural(x, y, z) {
     const response = await http4.get(`http://nexuscore:8000/api/v0.2/events/interaction?x=${x}&y=${y}&z=${z}`);
-    return JSON.parse(response.body).exists;
+    if (response.status !== 200) {
+      return false;
+    }
+    return JSON.parse(response.body).length > 1;
   }
   async give_rewards(interation, thorny_user) {
     for (let reward of this.rewards) {
