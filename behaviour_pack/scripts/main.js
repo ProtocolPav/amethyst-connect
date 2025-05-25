@@ -6741,9 +6741,151 @@ function combine(list1, list2, id) {
   return combined_list;
 }
 
+// behaviour_pack/scripts-dev/utils/altar_messages.ts
+var AltarMessage = class {
+  static random_sacrifice(blockValue, originalBlockValue) {
+    const noValueMessages = [
+      `The Anomaly cracks audibly... your empty gesture rejected. \xA7l${blockValue} blocks\xA7r`,
+      `The void ignores your hollow tribute. Not even dust remains`,
+      `Your hands burn with static... the crystal knows you lied. \xA7l${blockValue} blocks\xA7r`,
+      `A chorus of enderman laughter... your mockery exposed. \xA7l${blockValue} blocks\xA7r`,
+      `The Altar bleeds black ichor... your insult quantified. \xA7l${blockValue} blocks\xA7r`,
+      `Reality itself flinches from your apathy. Contribution: Null`,
+      `The Anomaly shows you visions of your own indifference. \xA7l${blockValue} blocks\xA7r`,
+      `Your 'offering' shatters into anti-matter. Debt unpaid`,
+      `The void between stars whispers: \xA7oWorthless\xA7r. \xA7l${blockValue} blocks\xA7r`,
+      `The crystal's core turns obsidian... a permanent record of your deceit`
+    ];
+    if (blockValue <= 0) {
+      return noValueMessages[Math.floor(Math.random() * noValueMessages.length)];
+    }
+    const valueTierMessages = {
+      extreme: [
+        // 200+
+        `The sky hemorrhages violet lightning... \xA7l+${blockValue} blocks\xA7r tear through reality`,
+        `Stone screams as it liquefies. Sacrifice consumed: \xA7l+${blockValue} blocks\xA7r`,
+        `Time fractures into overlapping echoes. Debt paid: \xA7l+${blockValue} blocks\xA7r`,
+        `The End's bedrock cracks like eggshells. \xA7l+${blockValue} border blocks\xA7r claimed`,
+        `Oceans of shadow boil over. \xA7l+${blockValue} blocks\xA7r absorbed`
+      ],
+      very: [
+        // 60+
+        `Trees age centuries in seconds. \xA7l+${blockValue} blocks\xA7r logged`,
+        `Water flows upward to the crystal. \xA7l+${blockValue} blocks\xA7r fed`,
+        `Animals flee in geometric patterns. \xA7l+${blockValue} blocks\xA7r cataloged`,
+        `A chorus root network petrifies instantly. \xA7l+${blockValue} blocks\xA7r`,
+        `Your voice echoes from tomorrow. \xA7l+${blockValue} blocks\xA7r owed`
+      ],
+      valuable: [
+        // 25+
+        `Flames burn cold and blue. \xA7l+${blockValue} blocks\xA7r recorded`,
+        `Ender motes orbit your head like flies. \xA7l+${blockValue} blocks\xA7r`,
+        `Metal objects vibrate mournfully. \xA7l+${blockValue} blocks\xA7r`,
+        `Your breath frosts black. \xA7l+${blockValue} blocks\xA7r accepted`,
+        `All coins in your pocket invert. \xA7l+${blockValue} blocks\xA7r`
+      ],
+      not: [
+        // <25
+        `Dust settles in perfect circles. \xA7l+${blockValue} blocks\xA7r`,
+        `A faint enderman groan echoes... then silence. \xA7l+${blockValue} blocks\xA7r`,
+        `Leaves curl unnaturally. \xA7l+${blockValue} blocks\xA7r`,
+        `Puddles reflect red for 1 heartbeat. \xA7l+${blockValue} blocks\xA7r`,
+        `The Anomaly exhales static. \xA7l+${blockValue} blocks\xA7r`
+      ]
+    };
+    const depreciationMessages = {
+      high: [
+        // 80-65%
+        `The Anomaly pauses... did you ever truly care? \xA7l+${blockValue} blocks\xA7r`,
+        `Your hesitation taints the offering. \xA7l+${blockValue} grudgingly absorbed\xA7r`,
+        `The crystal vibrates suspiciously. "Again?" \xA7l+${blockValue} blocks\xA7r`,
+        `Once-prized, now routine. The void notices. \xA7l+${blockValue} blocks\xA7r`,
+        `The Altar accepts your mechanical tribute. \xA7l+${blockValue} blocks\xA7r`
+      ],
+      mid: [
+        // 65-50%
+        `The Anomaly mocks your hollow repetition. \xA7l+${blockValue} blocks\xA7r`,
+        `"This meant something once," the void accuses. \xA7l+${blockValue} blocks\xA7r`,
+        `Your growing apathy poisons the ritual. \xA7l+${blockValue} blocks\xA7r`,
+        `The crystal's light dims in disappointment. \xA7l+${blockValue} blocks\xA7r`,
+        `The Altar accepts stale tribute... for now. \xA7l+${blockValue} blocks\xA7r`
+      ],
+      low: [
+        // 50-30%
+        `The Anomaly snarls at your rotten deception. \xA7l+${blockValue} blocks\xA7r`,
+        `"You think I don't see?" Static shreds air. \xA7l+${blockValue} blocks\xA7r`,
+        `Your contempt for the ritual becomes mutual. \xA7l+${blockValue} blocks\xA7r`,
+        `The void regurgitates part of your insult. \xA7l+${blockValue} blocks\xA7r`,
+        `The crystal burns your hands in contempt. \xA7l+${blockValue} blocks\xA7r`
+      ],
+      negligible: [
+        // <30%
+        `The Anomaly's fury cracks nearby stone. "ENOUGH." \xA7l+${blockValue} blocks\xA7r`,
+        `Your betrayal hangs in the air. \xA7l+${blockValue} pity blocks\xA7r`,
+        `The void rejects all but cosmic spite. \xA7l+${blockValue} blocks\xA7r`,
+        `The Altar bleeds black ichor from your insult. \xA7l+${blockValue} blocks\xA7r`,
+        `Reality itself recoils at your mockery. \xA7l+${blockValue} blocks\xA7r`
+      ]
+    };
+    const getValueTier = () => {
+      if (blockValue >= 200) return valueTierMessages.extreme;
+      if (blockValue >= 60) return valueTierMessages.very;
+      if (blockValue >= 25) return valueTierMessages.valuable;
+      return valueTierMessages.not;
+    };
+    let messages = getValueTier();
+    if (blockValue < originalBlockValue) {
+      const valueRemaining = blockValue / originalBlockValue;
+      if (valueRemaining < 0.8) {
+        if (valueRemaining >= 0.65) {
+          messages = depreciationMessages.high;
+        } else if (valueRemaining >= 0.5) {
+          messages = depreciationMessages.mid;
+        } else if (valueRemaining >= 0.3) {
+          messages = depreciationMessages.low;
+        } else {
+          messages = depreciationMessages.negligible;
+        }
+      }
+    }
+    return messages[Math.floor(Math.random() * messages.length)];
+  }
+  static random_not_sacrificial() {
+    const rejectionMessages = [
+      "The Anomaly probes your soul... finds no attachment. Try harder",
+      "The void whispers: 'Sacrifice what you'd mourn to lose'",
+      "Your hands remain unburned. You didn't truly care about this",
+      "The crystal glows faintly: 'Your heartrate never changed'",
+      "The Altar rejects empty gestures. Bring meaning, not objects",
+      "The Anomaly shows you visions of actual valuables... as a hint",
+      "Your reflection shakes its head. 'You know the rules'",
+      "The void hungers for emotional weight, not dead weight",
+      "The crystal seeks sacrifices soaked in your longing",
+      "Your apathy is louder than this offering. Try again"
+    ];
+    return rejectionMessages[Math.floor(Math.random() * rejectionMessages.length)];
+  }
+  static random_info(currentBorderSize) {
+    const infoMessages = [
+      `The Anomaly hums quietly... current border: \xA7l${currentBorderSize} blocks\xA7r`,
+      `The void's edge shimmers at \xA7l${currentBorderSize} blocks\xA7r from center`,
+      `Crystal energies oscillate... border diameter: \xA7l${currentBorderSize} blocks\xA7r`,
+      `A map etches itself in your mind: \xA7l${currentBorderSize} blocks\xA7r claimed`,
+      `The Anomaly whispers dimensions into your thoughts: \xA7l${currentBorderSize} blocks\xA7r`,
+      `Ender particles outline a circle of \xA7l${currentBorderSize} blocks\xA7r diameter`,
+      `The crystal projects the border's reach: \xA7l${currentBorderSize} blocks\xA7r`,
+      `Your shadow stretches to the void's edge: \xA7l${currentBorderSize} blocks\xA7r`,
+      `Reality's membrane currently extends \xA7l${currentBorderSize} blocks\xA7r outward`,
+      `The Altar displays ethereal runes: \xA7l${currentBorderSize} blocks\xA7r of safety`
+    ];
+    return infoMessages[Math.floor(Math.random() * infoMessages.length)];
+  }
+};
+
 // behaviour_pack/scripts-dev/utils/index.ts
 var utils = {
   DeathMessage,
+  AltarMessage,
   send_motd,
   checks: checks_default,
   commands: commands_default,
@@ -6798,190 +6940,14 @@ function load_glitch_component() {
   });
 }
 
-// behaviour_pack/scripts-dev/components/whoop.ts
+// behaviour_pack/scripts-dev/components/sacrifice.ts
 import {
-  BlockPermutation,
-  system as system4
-} from "@minecraft/server";
-function load_whoop_component() {
-  function play_fart(dimension, location) {
-    dimension.playSound("fart", location, { volume: 3, pitch: Math.max(0.45, Math.random() * 1.5) });
-    location.y += 0.65;
-    dimension.spawnParticle("minecraft:explosion_particle", location);
-  }
-  function on_interact(event) {
-    play_fart(event.dimension, event.block.center());
-  }
-  function on_redstone(event) {
-    const powered = event.block.permutation.getState("amethyst:powered_bit");
-    if (event.block.isValid && event.block.getRedstonePower() && !powered) {
-      event.block.setPermutation(BlockPermutation.resolve("amethyst:whoopee_cushion", { "amethyst:powered_bit": true }));
-      play_fart(event.dimension, event.block.center());
-    } else if (event.block.isValid && !event.block.getRedstonePower() && powered) {
-      event.block.setPermutation(BlockPermutation.resolve("amethyst:whoopee_cushion", { "amethyst:powered_bit": false }));
-    }
-  }
-  system4.beforeEvents.startup.subscribe((initEvent) => {
-    initEvent.blockComponentRegistry.registerCustomComponent(
-      "amethyst:whoop",
-      {
-        onTick(event) {
-          on_redstone(event);
-        },
-        onPlayerInteract(event) {
-          on_interact(event);
-        },
-        onStepOn(event) {
-          on_interact(event);
-        },
-        beforeOnPlayerPlace(event) {
-          on_interact(event);
-        }
-      }
-    );
-  });
-}
-
-// behaviour_pack/scripts-dev/components/reactor_activate.ts
-import {
-  BlockPermutation as BlockPermutation2,
+  system as system4,
   EntityComponentTypes as EntityComponentTypes2,
   EquipmentSlot,
-  system as system5
+  TicksPerSecond as TicksPerSecond3,
+  ItemComponentTypes
 } from "@minecraft/server";
-function load_reactor_activate_component() {
-  function on_interact(event) {
-    const mainhand = event.player?.getComponent(EntityComponentTypes2.Equippable)?.getEquipment(EquipmentSlot.Mainhand);
-    if (mainhand?.typeId == "amethyst:glitch_core") {
-      const active = event.block.permutation.getState("amethyst:reactor_active_state");
-      if (event.block.isValid && !active) {
-        event.block.setPermutation(BlockPermutation2.resolve("amethyst:reactor", { "amethyst:reactor_active_state": true }));
-        event.player?.getComponent(EntityComponentTypes2.Equippable)?.setEquipment(EquipmentSlot.Mainhand);
-        event.dimension.playSound("beacon.activate", event.block.center());
-        const glitches_type = [
-          utils_default.commands.noise_glitch,
-          utils_default.commands.vision_block_glitch,
-          utils_default.commands.vision_entity_glitch,
-          utils_default.commands.effect_glitch,
-          utils_default.commands.noise_glitch,
-          utils_default.commands.noise_glitch,
-          utils_default.commands.noise_glitch
-        ];
-        event.block.dimension.getPlayers().forEach((player) => {
-          glitches_type.forEach((glitch) => {
-            glitch(player);
-          });
-        });
-      }
-    }
-  }
-  system5.beforeEvents.startup.subscribe((initEvent) => {
-    initEvent.blockComponentRegistry.registerCustomComponent(
-      "amethyst:reactor_activate",
-      {
-        onPlayerInteract(event) {
-          on_interact(event);
-        }
-      }
-    );
-  });
-}
-
-// behaviour_pack/scripts-dev/components/index.ts
-function load_custom_components() {
-  load_fungus_spreading_component();
-  load_glitch_component();
-  load_whoop_component();
-  load_reactor_activate_component();
-}
-
-// behaviour_pack/scripts-dev/loops/elytra_no_mending.ts
-import { EquipmentSlot as EquipmentSlot2, world as world6, system as system6, EntityComponentTypes as EntityComponentTypes3, ItemComponentTypes, EnchantmentType } from "@minecraft/server";
-function elytraCheck(player) {
-  const player_equipment = player.getComponent(EntityComponentTypes3.Equippable);
-  const item = player_equipment?.getEquipment(EquipmentSlot2.Chest);
-  if (item) {
-    const enchantments = item?.getComponent(ItemComponentTypes.Enchantable);
-    const has_mending = enchantments?.hasEnchantment(MinecraftEnchantmentTypes.Mending);
-    if (has_mending && item?.typeId == MinecraftItemTypes.Elytra) {
-      if (!enchantments?.hasEnchantment(MinecraftEnchantmentTypes.Vanishing)) {
-        enchantments?.addEnchantment(
-          {
-            type: new EnchantmentType(MinecraftEnchantmentTypes.Vanishing),
-            level: 1
-          }
-        );
-      }
-      enchantments?.removeEnchantment(MinecraftEnchantmentTypes.Mending);
-      const durability_component = item.getComponent(ItemComponentTypes.Durability);
-      if (durability_component) {
-        durability_component.damage = durability_component.maxDurability;
-      }
-      item.setLore([`
-\xA7o"My wings are cursed!"`]);
-      world6.getDimension("overworld").runCommand(`title "${player.name}" actionbar \xA7o\xA7iMy Elytra feels different...`);
-      player_equipment?.setEquipment(EquipmentSlot2.Chest, item);
-      console.log(`[ElytraCheck] Player ${player.name} has elytra with mending. Removing Mending.`);
-    }
-  }
-}
-function load_elytra_mending_checker() {
-  system6.runInterval(() => {
-    let playerlist = world6.getPlayers();
-    playerlist.forEach((player) => {
-      elytraCheck(player);
-    });
-  }, 20);
-  console.log("[Loops] Loaded Elytra Checker Loop");
-}
-
-// behaviour_pack/scripts-dev/loops/border.ts
-import { world as world7, system as system7, EntityDamageCause } from "@minecraft/server";
-function borderCheck(player, dimensionID, border_size, warning_range, outside) {
-  const position = player.location;
-  const distance_2d = Math.sqrt(position.x ** 2 + position.z ** 2);
-  if (border_size < distance_2d && outside.indexOf(player.name) == -1) {
-    outside.push(player.name);
-    console.log(`[Plugin] [Border] Player ${player.name} is outside of the ${dimensionID} border.`);
-  } else if (border_size > distance_2d && outside.indexOf(player.name) != -1) {
-    outside.splice(outside.indexOf(player.name), 1);
-    console.log(`[Plugin] [Border] Player ${player.name} has re-entered the ${dimensionID} border.`);
-  }
-  if (border_size < distance_2d) {
-    world7.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iI shouldn't go any further. It's too dangerous here.`);
-    world7.getDimension(dimensionID).runCommand(`effect "${player.name}" blindness 4 2`);
-    player.applyDamage(1.3, { cause: EntityDamageCause.void });
-  } else if (border_size - 20 < distance_2d) {
-    world7.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iThe Monolith's protection is wearing off. I can feel it...`);
-  }
-  if (border_size - 100 < distance_2d && warning_range.indexOf(player.name) == -1) {
-    warning_range.push(player.name);
-    world7.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iMaybe I should start heading back now...`);
-  } else if (border_size - 100 > distance_2d && warning_range.indexOf(player.name) != -1) {
-    warning_range.splice(warning_range.indexOf(player.name), 1);
-  }
-}
-function load_world_border() {
-  let players_100_blocks_away = { overworld: [], nether: [], end: [] };
-  let players_outside_border = { overworld: [], nether: [], end: [] };
-  system7.runInterval(() => {
-    let players = {
-      overworld: world7.getDimension(MinecraftDimensionTypes.Overworld).getPlayers(),
-      nether: world7.getDimension(MinecraftDimensionTypes.Nether).getPlayers(),
-      end: world7.getDimension(MinecraftDimensionTypes.TheEnd).getPlayers()
-    };
-    players.overworld.forEach((player) => {
-      borderCheck(player, MinecraftDimensionTypes.Overworld, 2050, players_100_blocks_away.overworld, players_outside_border.overworld);
-    });
-    players.nether.forEach((player) => {
-      borderCheck(player, MinecraftDimensionTypes.Nether, 1500, players_100_blocks_away.nether, players_outside_border.nether);
-    });
-    players.end.forEach((player) => {
-      borderCheck(player, MinecraftDimensionTypes.TheEnd, 500, players_100_blocks_away.end, players_outside_border.end);
-    });
-  }, 20);
-  console.log("[Loops] Loaded World Border Loop");
-}
 
 // behaviour_pack/scripts-dev/api/user.ts
 import { HttpRequest, HttpHeader, HttpRequestMethod, http } from "@minecraft/server-net";
@@ -7335,20 +7301,12 @@ var Quest = class _Quest {
 
 // behaviour_pack/scripts-dev/api/quest_with_progress.ts
 import { http as http5, HttpHeader as HttpHeader4, HttpRequest as HttpRequest4, HttpRequestMethod as HttpRequestMethod4 } from "@minecraft/server-net";
-function normalizeDateString(datetime) {
-  if (!datetime.includes(".")) {
-    return `${datetime}.000000`;
-  }
-  return datetime.replace(/\.(\d{1,6})\d*/, (_, digits) => {
-    return `.${digits.padEnd(6, "0")}`;
-  });
-}
 var ObjectiveWithProgress = class extends Objective {
   constructor(data, rewards, thorny_user) {
     super(data, rewards);
     this.thorny_user = thorny_user;
-    this.start = data.start ? parse(normalizeDateString(data.start), "yyyy-MM-dd HH:mm:ss.SSSSSS", /* @__PURE__ */ new Date()) : null;
-    this.end = data.end ? parse(normalizeDateString(data.end), "yyyy-MM-dd HH:mm:ss.SSSSSS", /* @__PURE__ */ new Date()) : null;
+    this.start = data.start ? parse(data.start, "yyyy-MM-dd HH:mm:ss.SSSSSS", /* @__PURE__ */ new Date()) : null;
+    this.end = data.end ? parse(data.end, "yyyy-MM-dd HH:mm:ss.SSSSSS", /* @__PURE__ */ new Date()) : null;
     this.completion = data.completion;
     this.status = data.status;
   }
@@ -7423,8 +7381,8 @@ var QuestWithProgress = class _QuestWithProgress extends Quest {
   constructor(data, objectives, thorny_user) {
     super(data, objectives);
     this.thorny_user = thorny_user;
-    this.accepted_on = parse(normalizeDateString(data.accepted_on), "yyyy-MM-dd HH:mm:ss.SSSSSSS", /* @__PURE__ */ new Date());
-    this.started_on = data.started_on ? parse(normalizeDateString(data.started_on), "yyyy-MM-dd HH:mm:ss.SSSSSS", /* @__PURE__ */ new Date()) : null;
+    this.accepted_on = parse(data.accepted_on, "yyyy-MM-dd HH:mm:ss.SSSSSSS", /* @__PURE__ */ new Date());
+    this.started_on = data.started_on ? parse(data.started_on, "yyyy-MM-dd HH:mm:ss.SSSSSS", /* @__PURE__ */ new Date()) : null;
     this.status = data.status;
     this.objectives = objectives;
   }
@@ -7544,53 +7502,387 @@ Run \xA75/quests view\xA7r on Discord to start it!`
   }
 };
 
+// behaviour_pack/scripts-dev/api/sacrifice.ts
+import { http as http6, HttpHeader as HttpHeader5, HttpRequest as HttpRequest5, HttpRequestMethod as HttpRequestMethod5 } from "@minecraft/server-net";
+var Item = class _Item {
+  constructor(data) {
+    this.item_id = data.item_id;
+    this.value = data.value;
+    this.max_uses = data.max_uses;
+    this.depreciation = data.depreciation;
+    this.current_uses = data.current_uses;
+  }
+  static async get_item(item_id) {
+    try {
+      const item_response = await http6.get(`http://nexuscore:8000/api/v0.1/server/items/${item_id}`);
+      const item_data = JSON.parse(item_response.body);
+      return new _Item(item_data);
+    } catch (error) {
+      console.error("Error fetching item:", error);
+      throw error;
+    }
+  }
+  async update_item() {
+    const request = new HttpRequest5(`http://nexuscore:8000/api/v0.1/server/items/${this.item_id}`);
+    request.method = HttpRequestMethod5.Put;
+    request.headers = [
+      new HttpHeader5("Content-Type", "application/json"),
+      new HttpHeader5("auth", "my-auth-token")
+    ];
+    request.body = JSON.stringify({
+      current_uses: this.current_uses
+    });
+    await http6.request(request);
+  }
+};
+var World = class _World {
+  constructor(data) {
+    this.guild_id = data.guild_id;
+    this.overworld_border = data.overworld_border;
+    this.nether_border = data.nether_border;
+    this.end_border = data.end_border;
+  }
+  static async get_world(guild_id2) {
+    try {
+      const world_response = await http6.get(`http://nexuscore:8000/api/v0.1/server/world/${guild_id2}`);
+      const world_data = JSON.parse(world_response.body);
+      world_data.guild_id = guild_id2;
+      return new _World(world_data);
+    } catch (error) {
+      console.error("Error fetching world:", error);
+      throw error;
+    }
+  }
+  async update_world() {
+    const request = new HttpRequest5(`http://nexuscore:8000/api/v0.1/server/world/${this.guild_id}`);
+    request.method = HttpRequestMethod5.Put;
+    request.headers = [
+      new HttpHeader5("Content-Type", "application/json"),
+      new HttpHeader5("auth", "my-auth-token")
+    ];
+    request.body = JSON.stringify({
+      overworld_border: this.overworld_border,
+      nether_border: this.nether_border,
+      end_border: this.end_border
+    });
+    await http6.request(request);
+  }
+};
+var WorldCache = class _WorldCache {
+  static async load_world(guild_id2) {
+    _WorldCache.world = await World.get_world(guild_id2);
+  }
+};
+
 // behaviour_pack/scripts-dev/api/index.ts
 var api = {
   ThornyUser,
   Relay,
   Interaction,
   Quest,
-  QuestWithProgress
+  QuestWithProgress,
+  Item,
+  World
 };
 var api_default = api;
 
-// behaviour_pack/scripts-dev/loops/quests.ts
-import { system as system8, world as world8 } from "@minecraft/server";
-async function check_quests() {
-  try {
-    if (!api_default.Interaction.is_processing()) {
-      api_default.Interaction.set_processing(true);
-      let interaction = api_default.Interaction.dequeue();
-      while (interaction) {
-        let thorny_user = api_default.ThornyUser.fetch_user_by_id(interaction.thorny_id);
-        let quest = await api_default.QuestWithProgress.get_active_quest(thorny_user);
-        if (quest && await quest.increment_active_objective(interaction)) {
-          await quest.update_user_quest();
-          await thorny_user.update();
-          if (quest.status == "completed") {
-            api_default.Relay.event(
-              `${thorny_user.gamertag} has completed *${quest.title}!*`,
-              "Run `/quests view` to start it and reap the rewards!",
-              "other"
-            );
-            api_default.QuestWithProgress.clear_cache(thorny_user);
+// behaviour_pack/scripts-dev/components/sacrifice.ts
+function load_altar_component(guild_id2) {
+  const sacrificeTimers = /* @__PURE__ */ new Map();
+  const sacrificeTotals = /* @__PURE__ */ new Map();
+  const banned_gamertags = [
+    "MarsOfSoa",
+    "lumilime",
+    "bellissensei",
+    "Gamingwarrior65",
+    "Eziofilm65"
+    // 'ProtocolPav',
+  ];
+  async function sacrifice(event) {
+    if (event.player) {
+      const playerName = event.player.name;
+      const mainhand = event.player.getComponent(EntityComponentTypes2.Equippable)?.getEquipment(EquipmentSlot.Mainhand);
+      const border = WorldCache.world;
+      if (mainhand && !banned_gamertags.includes(playerName)) {
+        if (mainhand.amount == 1) {
+          event.player.getComponent(EntityComponentTypes2.Equippable)?.setEquipment(EquipmentSlot.Mainhand);
+        } else {
+          mainhand.amount -= 1;
+          event.player.getComponent(EntityComponentTypes2.Equippable)?.setEquipment(EquipmentSlot.Mainhand, mainhand);
+        }
+        try {
+          const sacrificial_item = await api_default.Item.get_item(mainhand.typeId);
+          sacrificial_item.current_uses += 1;
+          let modifier = 0;
+          let enchantment_levels = 0;
+          let enchantments = 0;
+          mainhand.getComponent(ItemComponentTypes.Enchantable)?.getEnchantments().forEach((enchantment) => {
+            enchantment_levels += enchantment.level;
+            enchantments += 1;
+          });
+          console.log(enchantment_levels, enchantments, enchantment_levels * enchantments * 0.3);
+          modifier += enchantment_levels * enchantments * 0.3 / 100 + (mainhand.nameTag ? 0.1 : 0);
+          console.log("modifier", modifier);
+          const durability = mainhand.getComponent(ItemComponentTypes.Durability);
+          if (durability) {
+            modifier -= durability.damage / durability.maxDurability;
           }
-        } else if (quest && quest.status == "failed") {
+          const original_block_value = sacrificial_item.value * (1 + modifier);
+          const log = Math.exp(-sacrificial_item.depreciation * 0.5 * Math.log(sacrificial_item.current_uses));
+          const weight = sacrificial_item.current_uses / sacrificial_item.max_uses;
+          const linear = 1 - weight;
+          const block_value = original_block_value * ((1 - weight) * log + weight * linear);
+          await sacrificial_item.update_item();
+          border.end_border += block_value;
+          await border.update_world();
+          await WorldCache.load_world(border.guild_id);
+          const total_value = sacrificeTotals.get(playerName)?.val;
+          const total_original_value = sacrificeTotals.get(playerName)?.orig;
+          if (total_value && total_original_value) {
+            sacrificeTotals.set(playerName, { val: block_value + total_value, orig: original_block_value + total_original_value });
+          } else {
+            sacrificeTotals.set(playerName, { val: block_value, orig: original_block_value });
+          }
+          event.dimension.playSound("random.pop", event.player.location, { volume: 0.5 });
+          if (sacrificeTimers.has(playerName)) {
+            system4.clearRun(sacrificeTimers.get(playerName));
+          }
+          const timeoutId = system4.runTimeout(() => {
+            ambient(event);
+            event.dimension.playSound("altar.sacrifice", event.block.center(), { volume: 8 });
+            const total_value2 = Math.round(sacrificeTotals.get(playerName)?.val);
+            const total_original = Math.round(sacrificeTotals.get(playerName)?.orig);
+            const message2 = utils_default.AltarMessage.random_sacrifice(total_value2, total_original);
+            utils_default.commands.send_message(
+              event.dimension.id,
+              playerName,
+              `[\xA7l\xA7aAltar\xA7r] ${message2}`
+            );
+            const valueRemaining = total_value2 / total_original;
+            if (valueRemaining < 0.3) {
+            }
+            sacrificeTimers.delete(playerName);
+            sacrificeTotals.delete(playerName);
+          }, TicksPerSecond3 * 0.5);
+          sacrificeTimers.set(playerName, timeoutId);
+        } catch (e) {
+          ambient(event);
+          const spawned_item = mainhand.clone();
+          spawned_item.amount = 1;
+          const spawned_location = event.block.center();
+          spawned_location.y += 0.7;
+          event.dimension.spawnItem(spawned_item, spawned_location);
+          const message2 = utils_default.AltarMessage.random_not_sacrificial();
+          utils_default.commands.send_message(
+            event.dimension.id,
+            playerName,
+            `[\xA7l\xA7aAltar\xA7r] ${message2}`
+          );
+        }
+      } else {
+        ambient(event);
+        const message2 = utils_default.AltarMessage.random_info(Math.round(border.end_border));
+        utils_default.commands.send_message(
+          event.dimension.id,
+          playerName,
+          `[\xA7l\xA7aAltar\xA7r] ${message2}`
+        );
+      }
+    }
+  }
+  function ambient(event) {
+    if (event.block.isValid) {
+      const location = event.block.center();
+      event.dimension.playSound("altar.ambient", location, { volume: 3 });
+    }
+  }
+  system4.beforeEvents.startup.subscribe((initEvent) => {
+    initEvent.blockComponentRegistry.registerCustomComponent(
+      "amethyst:sacrifice",
+      {
+        onRandomTick(event) {
+          ambient(event);
+        },
+        onPlayerInteract(event) {
+          sacrifice(event).then();
+        }
+      }
+    );
+  });
+}
+
+// behaviour_pack/scripts-dev/components/whoop.ts
+import {
+  BlockPermutation,
+  system as system5
+} from "@minecraft/server";
+function load_whoop_component() {
+  function play_fart(dimension, location) {
+    dimension.playSound("fart", location, { volume: 3, pitch: Math.max(0.45, Math.random() * 1.5) });
+    location.y += 0.65;
+    dimension.spawnParticle("minecraft:explosion_particle", location);
+  }
+  function on_interact(event) {
+    play_fart(event.dimension, event.block.center());
+  }
+  function on_redstone(event) {
+    const powered = event.block.permutation.getState("amethyst:powered_bit");
+    if (event.block.isValid && event.block.getRedstonePower() && !powered) {
+      event.block.setPermutation(BlockPermutation.resolve("amethyst:whoopee_cushion", { "amethyst:powered_bit": true }));
+      play_fart(event.dimension, event.block.center());
+    } else if (event.block.isValid && !event.block.getRedstonePower() && powered) {
+      event.block.setPermutation(BlockPermutation.resolve("amethyst:whoopee_cushion", { "amethyst:powered_bit": false }));
+    }
+  }
+  system5.beforeEvents.startup.subscribe((initEvent) => {
+    initEvent.blockComponentRegistry.registerCustomComponent(
+      "amethyst:whoop",
+      {
+        onTick(event) {
+          on_redstone(event);
+        },
+        onPlayerInteract(event) {
+          on_interact(event);
+        },
+        onStepOn(event) {
+          on_interact(event);
+        },
+        beforeOnPlayerPlace(event) {
+          on_interact(event);
+        }
+      }
+    );
+  });
+}
+
+// behaviour_pack/scripts-dev/components/index.ts
+function load_custom_components(guild_id2) {
+  load_fungus_spreading_component();
+  load_glitch_component();
+  load_whoop_component();
+  load_altar_component(guild_id2);
+}
+
+// behaviour_pack/scripts-dev/loops/elytra_no_mending.ts
+import { EquipmentSlot as EquipmentSlot2, world as world7, system as system6, EntityComponentTypes as EntityComponentTypes3, ItemComponentTypes as ItemComponentTypes2, EnchantmentType } from "@minecraft/server";
+function elytraCheck(player) {
+  const player_equipment = player.getComponent(EntityComponentTypes3.Equippable);
+  const item = player_equipment?.getEquipment(EquipmentSlot2.Chest);
+  if (item) {
+    const enchantments = item?.getComponent(ItemComponentTypes2.Enchantable);
+    const has_mending = enchantments?.hasEnchantment(MinecraftEnchantmentTypes.Mending);
+    if (has_mending && item?.typeId == MinecraftItemTypes.Elytra) {
+      if (!enchantments?.hasEnchantment(MinecraftEnchantmentTypes.Vanishing)) {
+        enchantments?.addEnchantment(
+          {
+            type: new EnchantmentType(MinecraftEnchantmentTypes.Vanishing),
+            level: 1
+          }
+        );
+      }
+      enchantments?.removeEnchantment(MinecraftEnchantmentTypes.Mending);
+      const durability_component = item.getComponent(ItemComponentTypes2.Durability);
+      if (durability_component) {
+        durability_component.damage = durability_component.maxDurability;
+      }
+      item.setLore([`
+\xA7o"My wings are cursed!"`]);
+      world7.getDimension("overworld").runCommand(`title "${player.name}" actionbar \xA7o\xA7iMy Elytra feels different...`);
+      player_equipment?.setEquipment(EquipmentSlot2.Chest, item);
+      console.log(`[ElytraCheck] Player ${player.name} has elytra with mending. Removing Mending.`);
+    }
+  }
+}
+function load_elytra_mending_checker() {
+  system6.runInterval(() => {
+    let playerlist = world7.getPlayers();
+    playerlist.forEach((player) => {
+      elytraCheck(player);
+    });
+  }, 20);
+  console.log("[Loops] Loaded Elytra Checker Loop");
+}
+
+// behaviour_pack/scripts-dev/loops/border.ts
+import { world as world8, system as system7, EntityDamageCause } from "@minecraft/server";
+function borderCheck(player, dimensionID, border_size, warning_range, outside) {
+  const position = player.location;
+  const distance_2d = Math.sqrt(position.x ** 2 + position.z ** 2);
+  if (border_size < distance_2d && outside.indexOf(player.name) == -1) {
+    outside.push(player.name);
+    console.log(`[Plugin] [Border] Player ${player.name} is outside of the ${dimensionID} border.`);
+  } else if (border_size > distance_2d && outside.indexOf(player.name) != -1) {
+    outside.splice(outside.indexOf(player.name), 1);
+    console.log(`[Plugin] [Border] Player ${player.name} has re-entered the ${dimensionID} border.`);
+  }
+  if (border_size < distance_2d) {
+    world8.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iI shouldn't go any further. It's too dangerous here.`);
+    world8.getDimension(dimensionID).runCommand(`effect "${player.name}" blindness 4 2`);
+    player.applyDamage(1.3, { cause: EntityDamageCause.void });
+  } else if (border_size - 20 < distance_2d) {
+    world8.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iThe Monolith's protection is wearing off. I can feel it...`);
+  }
+  if (border_size - 100 < distance_2d && warning_range.indexOf(player.name) == -1) {
+    warning_range.push(player.name);
+    world8.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iMaybe I should start heading back now...`);
+  } else if (border_size - 100 > distance_2d && warning_range.indexOf(player.name) != -1) {
+    warning_range.splice(warning_range.indexOf(player.name), 1);
+  }
+}
+function load_world_border(guild_id2) {
+  let players_100_blocks_away = { overworld: [], nether: [], end: [] };
+  let players_outside_border = { overworld: [], nether: [], end: [] };
+  system7.runInterval(() => {
+    let players = {
+      overworld: world8.getDimension(MinecraftDimensionTypes.Overworld).getPlayers(),
+      nether: world8.getDimension(MinecraftDimensionTypes.Nether).getPlayers(),
+      end: world8.getDimension(MinecraftDimensionTypes.TheEnd).getPlayers()
+    };
+    players.overworld.forEach((player) => {
+      borderCheck(player, MinecraftDimensionTypes.Overworld, WorldCache.world.overworld_border, players_100_blocks_away.overworld, players_outside_border.overworld);
+    });
+    players.nether.forEach((player) => {
+      borderCheck(player, MinecraftDimensionTypes.Nether, WorldCache.world.nether_border, players_100_blocks_away.nether, players_outside_border.nether);
+    });
+    players.end.forEach((player) => {
+      borderCheck(player, MinecraftDimensionTypes.TheEnd, WorldCache.world.end_border, players_100_blocks_away.end, players_outside_border.end);
+    });
+  }, 20);
+  console.log("[Loops] Loaded World Border Loop");
+}
+
+// behaviour_pack/scripts-dev/loops/quests.ts
+import { system as system8, world as world9 } from "@minecraft/server";
+async function check_quests() {
+  if (!api_default.Interaction.is_processing()) {
+    api_default.Interaction.set_processing(true);
+    let interaction = api_default.Interaction.dequeue();
+    while (interaction) {
+      let thorny_user = api_default.ThornyUser.fetch_user_by_id(interaction.thorny_id);
+      let quest = await api_default.QuestWithProgress.get_active_quest(thorny_user);
+      if (quest && await quest.increment_active_objective(interaction)) {
+        await quest.update_user_quest();
+        await thorny_user.update();
+        if (quest.status == "completed") {
           api_default.Relay.event(
-            `${thorny_user.gamertag} has failed *${quest.title}!*`,
-            "Better luck next time!",
+            `${thorny_user.gamertag} has completed *${quest.title}!*`,
+            "Run `/quests view` to start it and reap the rewards!",
             "other"
           );
-          await quest.fail_quest(thorny_user.thorny_id);
           api_default.QuestWithProgress.clear_cache(thorny_user);
         }
-        interaction = api_default.Interaction.dequeue();
+      } else if (quest && quest.status == "failed") {
+        api_default.Relay.event(
+          `${thorny_user.gamertag} has failed *${quest.title}!*`,
+          "Better luck next time!",
+          "other"
+        );
+        await quest.fail_quest(thorny_user.thorny_id);
+        api_default.QuestWithProgress.clear_cache(thorny_user);
       }
-      api_default.Interaction.set_processing(false);
+      interaction = api_default.Interaction.dequeue();
     }
-  } catch (e) {
     api_default.Interaction.set_processing(false);
-    throw e;
   }
 }
 async function display_timer() {
@@ -7601,7 +7893,7 @@ async function display_timer() {
       let remaining_seconds = Math.max(0, active_objective.objective_timer - elapsed_seconds);
       let minutes = Math.floor(remaining_seconds / 60);
       let seconds = remaining_seconds % 60;
-      let player = world8.getPlayers({ name: active_objective.thorny_user.gamertag })[0];
+      let player = world9.getPlayers({ name: active_objective.thorny_user.gamertag })[0];
       utils_default.commands.send_title(
         player.dimension.id,
         player.name,
@@ -7622,7 +7914,7 @@ function load_quest_loop() {
 }
 
 // behaviour_pack/scripts-dev/loops/glitches.ts
-import { system as system9, world as world9, TicksPerSecond as TicksPerSecond3 } from "@minecraft/server";
+import { system as system9, world as world10, TicksPerSecond as TicksPerSecond4 } from "@minecraft/server";
 function do_glitch() {
   const random = Math.random();
   const glitches_type = [
@@ -7634,7 +7926,7 @@ function do_glitch() {
   if (random <= 0.2) {
     const glitch = glitches_type[Math.floor(Math.random() * glitches_type.length)];
     console.log(`[Loops] Doing Glitches: ${glitch}`);
-    for (const player of world9.getAllPlayers()) {
+    for (const player of world10.getAllPlayers()) {
       glitch(player);
       player.sendMessage("\xA7oWhat was that?");
     }
@@ -7643,12 +7935,12 @@ function do_glitch() {
 function load_glitch_loop() {
   system9.runInterval(() => {
     do_glitch();
-  }, TicksPerSecond3 * 60 * 30);
+  }, TicksPerSecond4 * 60 * 30);
   console.log("[Loops] Loaded Glitches Loop");
 }
 
 // behaviour_pack/scripts-dev/loops/totem_of_togetherness.ts
-import { EntityComponentTypes as EntityComponentTypes5, EquipmentSlot as EquipmentSlot3, system as system10, world as world10 } from "@minecraft/server";
+import { EntityComponentTypes as EntityComponentTypes5, EquipmentSlot as EquipmentSlot3, system as system10, world as world11 } from "@minecraft/server";
 var healthboost = MinecraftEffectTypes.HealthBoost;
 function togetherness(player) {
   const position = player.location;
@@ -7676,7 +7968,7 @@ function togetherness(player) {
 }
 function load_totem_o_togetherness() {
   system10.runInterval(() => {
-    let playerlist = world10.getPlayers();
+    let playerlist = world11.getPlayers();
     playerlist.forEach((player) => {
       togetherness(player);
     });
@@ -7685,7 +7977,7 @@ function load_totem_o_togetherness() {
 }
 
 // behaviour_pack/scripts-dev/loops/location.ts
-import { EntityComponentTypes as EntityComponentTypes6, EquipmentSlot as EquipmentSlot4, system as system11, world as world11, TicksPerSecond as TicksPerSecond4 } from "@minecraft/server";
+import { EntityComponentTypes as EntityComponentTypes6, EquipmentSlot as EquipmentSlot4, system as system11, world as world12, TicksPerSecond as TicksPerSecond5 } from "@minecraft/server";
 function location_log(player) {
   const head_gear = player.getComponent(EntityComponentTypes6.Equippable)?.getEquipment(EquipmentSlot4.Head);
   const check_list = [
@@ -7705,18 +7997,18 @@ function location_log(player) {
 }
 function load_location_logger() {
   system11.runInterval(() => {
-    let playerlist = world11.getPlayers();
+    let playerlist = world12.getPlayers();
     let log = [];
     playerlist.forEach((player) => {
       log.push(location_log(player));
     });
     api_default.Relay.location(log);
-  }, TicksPerSecond4 * 5);
+  }, TicksPerSecond5 * 5);
   console.log("[Loops] Loaded Location Loop");
 }
 
 // behaviour_pack/scripts-dev/loops/champion_set.ts
-import { EntityComponentTypes as EntityComponentTypes7, EquipmentSlot as EquipmentSlot5, MolangVariableMap, system as system12, world as world12 } from "@minecraft/server";
+import { EntityComponentTypes as EntityComponentTypes7, EquipmentSlot as EquipmentSlot5, MolangVariableMap, system as system12, world as world13 } from "@minecraft/server";
 function champion(player) {
   const molang = new MolangVariableMap();
   molang.setColorRGB("variable.color", { red: 1, green: 0.913, blue: 0.576 });
@@ -7739,7 +8031,7 @@ function champion(player) {
 }
 function load_champion_set() {
   system12.runInterval(() => {
-    let playerlist = world12.getPlayers();
+    let playerlist = world13.getPlayers();
     playerlist.forEach((player) => {
       champion(player);
     });
@@ -7759,10 +8051,10 @@ function load_loops() {
 }
 
 // behaviour_pack/scripts-dev/events/blocks.ts
-import { world as world13, system as system13 } from "@minecraft/server";
+import { world as world14, system as system13 } from "@minecraft/server";
 import { EntityComponentTypes as EntityComponentTypes8, EquipmentSlot as EquipmentSlot6 } from "@minecraft/server";
 function load_block_event_handler() {
-  world13.beforeEvents.playerBreakBlock.subscribe((event) => {
+  world14.beforeEvents.playerBreakBlock.subscribe((event) => {
     const block_id = event.block.typeId;
     const block_location = [event.block.x, event.block.y, event.block.z];
     const dimension = event.player.dimension;
@@ -7784,7 +8076,7 @@ function load_block_event_handler() {
       api_default.Interaction.enqueue(interaction);
     });
   });
-  world13.afterEvents.playerPlaceBlock.subscribe((event) => {
+  world14.afterEvents.playerPlaceBlock.subscribe((event) => {
     const block_id = event.block.typeId;
     const block_location = [event.block.x, event.block.y, event.block.z];
     const dimension = event.player.dimension;
@@ -7805,7 +8097,7 @@ function load_block_event_handler() {
       interaction.post_interaction();
     });
   });
-  world13.afterEvents.playerInteractWithBlock.subscribe((event) => {
+  world14.afterEvents.playerInteractWithBlock.subscribe((event) => {
     const block_id = event.block.typeId;
     const block_location = [event.block.x, event.block.y, event.block.z];
     const dimension = event.player.dimension;
@@ -7939,9 +8231,9 @@ function load_block_event_handler() {
 }
 
 // behaviour_pack/scripts-dev/events/chat.ts
-import { EntityComponentTypes as EntityComponentTypes9, EquipmentSlot as EquipmentSlot7, system as system14, world as world14 } from "@minecraft/server";
+import { EntityComponentTypes as EntityComponentTypes9, EquipmentSlot as EquipmentSlot7, system as system14, world as world15 } from "@minecraft/server";
 function load_chat_handler() {
-  world14.beforeEvents.chatSend.subscribe((chat_event) => {
+  world15.beforeEvents.chatSend.subscribe((chat_event) => {
     const gamertag = chat_event.sender.name;
     const thorny_user = api_default.ThornyUser.fetch_user(gamertag);
     if (chat_event.message.startsWith("!lore")) {
@@ -7968,7 +8260,7 @@ function load_chat_handler() {
         }
       });
     } else {
-      world14.sendMessage({
+      world15.sendMessage({
         rawtext: [{ text: `\xA7l\xA78[\xA7r${thorny_user?.get_role_display()}\xA7l\xA78]\xA7r \xA77${gamertag}:\xA7r ${chat_event.message}` }]
       });
       system14.run(() => {
@@ -7980,9 +8272,9 @@ function load_chat_handler() {
 }
 
 // behaviour_pack/scripts-dev/events/connections.ts
-import { world as world15 } from "@minecraft/server";
+import { world as world16 } from "@minecraft/server";
 function load_connections_handler(guild_id2) {
-  world15.afterEvents.playerSpawn.subscribe((spawn_event) => {
+  world16.afterEvents.playerSpawn.subscribe((spawn_event) => {
     if (spawn_event.initialSpawn) {
       try {
         api_default.ThornyUser.get_user_from_api(guild_id2, spawn_event.player.name).then((thorny_user) => {
@@ -7998,10 +8290,10 @@ function load_connections_handler(guild_id2) {
       }
     }
   });
-  world15.afterEvents.playerJoin.subscribe((join_event) => {
+  world16.afterEvents.playerJoin.subscribe((join_event) => {
     console.log("Join Log! ", join_event.playerName, join_event.playerId);
   });
-  world15.afterEvents.playerLeave.subscribe((leave_event) => {
+  world16.afterEvents.playerLeave.subscribe((leave_event) => {
     const thorny_user = api_default.ThornyUser.fetch_user(leave_event.playerName);
     if (thorny_user) {
       api_default.QuestWithProgress.clear_cache(thorny_user);
@@ -8012,11 +8304,11 @@ function load_connections_handler(guild_id2) {
 }
 
 // behaviour_pack/scripts-dev/events/entities.ts
-import { system as system15, world as world16 } from "@minecraft/server";
-import { EntityComponentTypes as EntityComponentTypes10, EquipmentSlot as EquipmentSlot8, Player as Player11 } from "@minecraft/server";
+import { system as system15, world as world17 } from "@minecraft/server";
+import { EntityComponentTypes as EntityComponentTypes10, EquipmentSlot as EquipmentSlot8, Player as Player10 } from "@minecraft/server";
 function load_entity_event_handler() {
-  world16.afterEvents.entityDie.subscribe((event) => {
-    if (event.damageSource.damagingEntity instanceof Player11) {
+  world17.afterEvents.entityDie.subscribe((event) => {
+    if (event.damageSource.damagingEntity instanceof Player10) {
       const player = event.damageSource.damagingEntity;
       const dimension = player.dimension;
       const mainhand = player.getComponent(EntityComponentTypes10.Equippable)?.getEquipment(EquipmentSlot8.Mainhand);
@@ -8032,7 +8324,7 @@ function load_entity_event_handler() {
           dimension: dimension.id
         }
       );
-      if (event.deadEntity instanceof Player11) {
+      if (event.deadEntity instanceof Player10) {
         const dead_player = event.deadEntity;
         const dead_mainhand = dead_player.getComponent(EntityComponentTypes10.Equippable)?.getEquipment(EquipmentSlot8.Mainhand);
         interaction.reference = dead_player.name;
@@ -8056,7 +8348,7 @@ function load_entity_event_handler() {
         interaction.post_interaction();
       }
       api_default.Interaction.enqueue(interaction);
-    } else if (event.deadEntity instanceof Player11 && event.damageSource.damagingEntity) {
+    } else if (event.deadEntity instanceof Player10 && event.damageSource.damagingEntity) {
       const killer = event.damageSource.damagingEntity;
       const player = event.deadEntity;
       const dimension = player.dimension;
@@ -8075,7 +8367,7 @@ function load_entity_event_handler() {
       );
       death_interaction.post_interaction();
       api_default.Relay.event(utils_default.DeathMessage.random_pve(player.name, killer.typeId), "", "other");
-    } else if (event.deadEntity instanceof Player11 && !event.damageSource.damagingEntity) {
+    } else if (event.deadEntity instanceof Player10 && !event.damageSource.damagingEntity) {
       const player = event.deadEntity;
       const dimension = player.dimension;
       const mainhand = player.getComponent(EntityComponentTypes10.Equippable)?.getEquipment(EquipmentSlot8.Mainhand);
@@ -8095,7 +8387,7 @@ function load_entity_event_handler() {
       api_default.Relay.event(utils_default.DeathMessage.random_suicide(player.name, event.damageSource.cause), "", "other");
     }
   });
-  world16.afterEvents.playerInteractWithEntity.subscribe((event) => {
+  world17.afterEvents.playerInteractWithEntity.subscribe((event) => {
     const entity_id = event.target.typeId;
     const entity_location = [event.target.location.x, event.target.location.y, event.target.location.z];
     const dimension = event.player.dimension;
@@ -8161,6 +8453,7 @@ function load_world_event_handlers(guild_id2) {
 
 // behaviour_pack/scripts-dev/main.ts
 var guild_id = "1213827104945471538";
+WorldCache.load_world(guild_id).then();
 load_loops();
-load_custom_components();
+load_custom_components(guild_id);
 load_world_event_handlers(guild_id);

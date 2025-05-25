@@ -12,6 +12,10 @@
 		"textures": "reactor_inactive",
 		"sound": "obsidian"
 	},
+	"amethyst:altar": {
+		"textures": "altar",
+		"sound": "tuff"
+	},
 	"amethyst:whoopee_cushion": {
 		"textures": "whoopee_cushion",
 		"sound": "wool"
