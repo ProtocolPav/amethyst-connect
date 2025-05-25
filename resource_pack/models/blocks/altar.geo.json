@@ -1,0 +1,49 @@
+{
+	"format_version": "1.19.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.altar",
+				"texture_width": 128,
+				"texture_height": 128,
+				"visible_bounds_width": 2,
+				"visible_bounds_height": 2.5,
+				"visible_bounds_offset": [0, 0.75, 0]
+			},
+			"bones": [
+				{
+					"name": "bb_main",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{"origin": [-6, 10, -6], "size": [12, 2, 12], "uv": [0, 16]},
+						{"origin": [-5, 9, -5], "size": [10, 2, 10], "uv": [0, 30]},
+						{"origin": [-1, 6, -4], "size": [2, 2, 8], "uv": [48, 16]},
+						{"origin": [-1, 6, -4], "size": [2, 2, 8], "pivot": [0, 6, 0], "rotation": [0, -90, 0], "uv": [24, 52]},
+						{"origin": [-3, 2, -3], "size": [6, 8, 6], "uv": [0, 42]},
+						{"origin": [-4, 2, -4], "size": [8, 3, 8], "uv": [40, 41]},
+						{"origin": [-7, 0, -7], "size": [14, 2, 14], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "tablecloth",
+					"pivot": [7, 8, 0],
+					"cubes": [
+						{"origin": [-8, 8, -2], "size": [0, 2, 4], "pivot": [-7, 8, 0], "rotation": [0, 180, 0], "uv": [-2, -2]},
+						{"origin": [6, 8, -2], "size": [0, 2, 4], "uv": [-2, -2]},
+						{"origin": [-1, 8, 3], "size": [0, 2, 4], "pivot": [0, 8, 5], "rotation": [0, 90, 0], "uv": [-2, -2]},
+						{"origin": [-1, 8, -7], "size": [0, 2, 4], "pivot": [0, 8, -5], "rotation": [0, -90, 0], "uv": [-2, -2]}
+					]
+				}
+			],
+			"item_display_transforms": {
+				"thirdperson_righthand": {
+					"rotation": [0, 0, 0],
+					"translation": [0, 0, 0],
+					"scale": [0.6, 0.6, 0.6],
+					"rotation_pivot": [0, 0, 0],
+					"scale_pivot": [0, 0, 0]
+				}
+			}
+		}
+	]
+}

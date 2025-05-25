@@ -17,6 +17,16 @@
 			"category": "ui",
 			"sounds": ["sounds/quests/quest_fail"]
 		},
+		"altar.ambient": {
+			"category": "ambient",
+			"max_distance": 48.0,
+			"sounds": ["sounds/altar/ambient"]
+		},
+		"altar.sacrifice": {
+			"category": "sound",
+			"max_distance": 128.0,
+			"sounds": ["sounds/altar/sacrifice_1"]
+		},
 		"fart": {
 			"category": "record",
 			"max_distance": 48.0,

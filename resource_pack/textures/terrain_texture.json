@@ -10,6 +10,9 @@
 		"glitch_block": {
 			"textures": "textures/blocks/glitch_block.png"
 		},
+		"altar": {
+			"textures": "textures/blocks/altar.png"
+		},
 		"whoopee_cushion": {
 			"textures": "textures/blocks/whoopee_cushion.png"
 		},

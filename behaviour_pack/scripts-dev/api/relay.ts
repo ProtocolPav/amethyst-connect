@@ -3,7 +3,7 @@ import { HttpRequest, HttpHeader, HttpRequestMethod, http } from '@minecraft/ser
 
 export default class Relay {
     public static message(nametag: string, content: string) {
-        const request = new HttpRequest('http://nexuscore:8000/api/v0.1/events/relay');
+        const request = new HttpRequest('http://nexuscore:8000/api/v0.2/events/relay');
         request.method = HttpRequestMethod.Post;
         request.body = JSON.stringify({
             'type': 'message',
@@ -21,7 +21,7 @@ export default class Relay {
     }
 
     public static event(title: string, content: string, event_type: 'join' | 'leave' | 'other') {
-        const request = new HttpRequest('http://nexuscore:8000/api/v0.1/events/relay');
+        const request = new HttpRequest('http://nexuscore:8000/api/v0.2/events/relay');
         request.method = HttpRequestMethod.Post;
         request.body = JSON.stringify({
             'type': event_type,
@@ -39,7 +39,7 @@ export default class Relay {
     }
 
     public static location(locations: {gamertag: string, location: number[], hidden: boolean}[]) {
-        const request = new HttpRequest('http://nexuscore:8000/api/v0.1/server/players');
+        const request = new HttpRequest('http://nexuscore:8000/api/v0.2/server/players');
         request.method = HttpRequestMethod.Post;
         request.body = JSON.stringify(locations.map(location => ({
             'gamertag': location.gamertag,

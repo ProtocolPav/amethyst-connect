@@ -1,0 +1,40 @@
+{
+	"format_version": "1.21.50",
+	"minecraft:block": {
+		"description": {
+			"identifier": "amethyst:altar",
+			"menu_category": {
+				"category": "construction"
+			}
+		},
+		"components": {
+			"minecraft:display_name": "Altar",
+			"minecraft:collision_box": {
+				"origin": [-7, 0, -7],
+				"size": [14, 12, 14]
+			},
+			"minecraft:selection_box": {
+				"origin": [-7, 0, -7],
+				"size": [14, 13, 14]
+			},
+			"minecraft:destructible_by_mining": false,
+			"minecraft:destructible_by_explosion": false,
+			"minecraft:geometry": "geometry.altar",
+			"minecraft:material_instances": {
+				"*": {
+					"texture": "altar",
+					"render_method": "alpha_test"
+				},
+				"down": {
+					"texture": "tuff_bricks",
+					"render_method": "alpha_test"
+				}
+			},
+			"minecraft:light_emission": 9,
+			"minecraft:map_color": "#525252",
+			"minecraft:custom_components": [
+				"amethyst:sacrifice"
+			]
+		}
+	}
+}

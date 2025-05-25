@@ -17,6 +17,7 @@ interface IThornyUser {
     last_message: Date
     gamertag: string
     whitelist: string
+    profile: object
 }
 
 export default class ThornyUser implements IThornyUser {
@@ -39,6 +40,7 @@ export default class ThornyUser implements IThornyUser {
     last_message: Date
     gamertag: string
     whitelist: string
+    profile: object
 
     constructor(api_data: IThornyUser) {
         this.thorny_id = api_data.thorny_id
@@ -57,13 +59,14 @@ export default class ThornyUser implements IThornyUser {
         this.last_message = api_data.last_message
         this.gamertag = api_data.gamertag
         this.whitelist = api_data.whitelist
+        this.profile = api_data.profile
     }
 
     public static async get_user_from_api(guild_id: string, gamertag: string): Promise<ThornyUser> {
-        const response = await http.get(`http://nexuscore:8000/api/v0.1/users/guild/${guild_id}/${gamertag.replace(" ", "%20")}`)
+        const response = await http.get(`http://nexuscore:8000/api/v0.2/users/guild/${guild_id}/${gamertag.replace(" ", "%20")}`)
         const thorny_user = new ThornyUser(JSON.parse(response.body) as IThornyUser)
 
-        // Adds user to map for quick fetching
+        // Adds user to the map for quick fetching
         ThornyUser.thorny_user_map[gamertag] = thorny_user
         ThornyUser.thorny_id_map[thorny_user.thorny_id] = thorny_user
         thorny_user.gamertag = gamertag
@@ -80,17 +83,19 @@ export default class ThornyUser implements IThornyUser {
     }
     
     /**
-     * Update this user in NexusCore
+     * Update this user in NexusCore.
+     * Currently only updates balance.
      */
     public async update() {
-        const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/users/${this.thorny_id}`);
+        const request = new HttpRequest(`http://nexuscore:8000/api/v0.2/users/${this.thorny_id}`);
         request.method = HttpRequestMethod.Put;
-        request.body = JSON.stringify(this)
+        request.body = JSON.stringify({
+            "balance": this.balance
+        })
         request.headers = [
             new HttpHeader("Content-Type", "application/json"),
             new HttpHeader("auth", "my-auth-token"),
         ];
-        // modify this to not update every field
         await http.request(request);
     }
 
@@ -99,13 +104,13 @@ export default class ThornyUser implements IThornyUser {
      * connect or disconnect
      */
     public send_connect_event(event_type: "connect" | "disconnect") {
-        const request = new HttpRequest(`http://nexuscore:8000/api/v0.1/events/connection`);
+        const request = new HttpRequest(`http://nexuscore:8000/api/v0.2/events/connection`);
         request.method = HttpRequestMethod.Post;
         request.headers = [
             new HttpHeader("Content-Type", "application/json"),
             new HttpHeader("auth", "my-auth-token"),
         ];
-        request.body = JSON.stringify({"type": event_type, "thorny_id": this.thorny_id});
+        request.body = JSON.stringify({"type": event_type, "thorny_id": this.thorny_id, 'ignored': false});
         console.log(`[CONNECTION] Sending ${event_type} to NexusCore for ThornyID ${this.thorny_id} (${this.whitelist} / ${this.gamertag})`);
     
         http.request(request);
