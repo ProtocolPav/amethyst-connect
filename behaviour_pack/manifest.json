@@ -1,17 +1,17 @@
 {
 	"format_version": 2,
 	"metadata": {
-		"authors": [
-			"ProtocolPav",
-			"Ezio"
-		]
+		"authors": ["ProtocolPav", "Ezio"],
+		"generated_with": {
+			"blockbench_entity_wizard": ["1.7.0"]
+		}
 	},
 	"header": {
 		"name": "Amethyst Connect Behaviour Pack",
 		"description": "Required pack for Amethyst's full functionality",
-		"min_engine_version": [ 1, 21, 70 ],
+		"min_engine_version": [1, 21, 40],
 		"uuid": "5f5ab0ea-79f8-4d1c-b283-0b7d05a538a9",
-		"version": [ 2, 4, 1 ]
+		"version": [2, 3, 2]
 	},
 	"modules": [
 		{
@@ -19,21 +19,21 @@
 			"language": "javascript",
 			"uuid": "c2758c76-c27c-4f04-add5-93951a2c32b8",
 			"entry": "scripts/main.js",
-			"version": [ 1, 0, 0 ]
+			"version": [1, 0, 0]
 		}
 	],
 	"dependencies": [
 		{
 			"uuid": "1ced0423-4bcf-4970-9749-b047e89d365c",
-			"version": [ 2, 4, 1 ]
+			"version": [2, 3, 2]
 		},
 		{
 			"module_name": "@minecraft/server",
-			"version": "2.0.0-beta"
+			"version": "1.18.0-beta"
 		},
 		{
 			"module_name": "@minecraft/server-ui",
-			"version": "2.0.0-beta"
+			"version": "1.4.0-beta"
 		},
 		{
 			"module_name": "@minecraft/server-admin",
