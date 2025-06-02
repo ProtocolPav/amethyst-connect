@@ -20,7 +20,7 @@ export default class Relay {
         http.request(request);
     }
 
-    public static event(title: string, content: string, event_type: 'join' | 'leave' | 'other') {
+    public static event(title: string, content: string, event_type: 'join' | 'leave' | 'start' | 'other') {
         const request = new HttpRequest('http://nexuscore:8000/api/v0.2/events/relay');
         request.method = HttpRequestMethod.Post;
         request.body = JSON.stringify({
