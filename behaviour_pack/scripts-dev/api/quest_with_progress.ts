@@ -191,7 +191,7 @@ export default class QuestWithProgress extends Quest {
         }
     }
 
-    get_active_objective(): ObjectiveWithProgress | null {
+    public get_active_objective(): ObjectiveWithProgress | null {
         return this.objectives.find(objective => objective.status === 'in_progress') ?? null
     }
 
@@ -227,6 +227,10 @@ export default class QuestWithProgress extends Quest {
         ];
 
         await http.request(request)
+    }
+
+    public get_progress(): number {
+        return this.objectives.filter(objective => objective.status === 'completed').length
     }
 
     /**
