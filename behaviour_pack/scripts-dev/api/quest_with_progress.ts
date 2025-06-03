@@ -120,9 +120,6 @@ class ObjectiveWithProgress extends Objective {
             this.status = 'failed'
             this.end = new Date()
 
-            await quest.fail_quest(interaction.thorny_id)
-            utils.commands.play_quest_fail_sound(this.thorny_user.gamertag)
-
             return false
         }
 
@@ -278,11 +275,21 @@ export default class QuestWithProgress extends Quest {
                 this.status = 'failed'
                 this.end_time = new Date()
 
+                utils.commands.play_quest_fail_sound(this.thorny_user.gamertag)
+
                 utils.commands.send_title(
                     interaction.dimension,
                     this.thorny_user.gamertag,
                     'title',
                     `§lQuest Failed :(`
+                )
+
+                utils.commands.send_message(
+                    interaction.dimension,
+                    '@a',
+                    `§c+=+=+=+=+=+=+ Quest Failed :( +=+=+=+=+=+=+§r\n` +
+                    `${this.thorny_user.gamertag} has failed §l§n${this.title}§r!\n` +
+                    `Think you can do better? Run §5/quests view§r on Discord to start it!`
                 )
             }
 
