@@ -28,6 +28,18 @@ function clean_id(id: string) {
         .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize each word
 }
 
+function normalizeDateString(datetime: string): string {
+    if (!datetime.includes('.')) {
+        // Add microseconds if missing
+        return `${datetime}.000000`;
+    }
+
+    // Pad or trim to exactly 6 digits
+    return datetime.replace(/\.(\d{1,6})\d*/, (_, digits) => {
+        return `.${digits.padEnd(6, '0')}`;
+    });
+}
+
 const utils = {
     DeathMessage,
     AltarMessage,
@@ -36,7 +48,8 @@ const utils = {
     commands,
     convert_seconds_to_hms,
     clean_id,
-    combine
+    combine,
+    normalizeDateString
 }
 
 export default utils

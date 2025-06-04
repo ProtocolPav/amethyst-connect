@@ -6,18 +6,6 @@ import utils from "../utils"
 import ThornyUser from "./user"
 import { parse, format } from "date-fns"
 
-function normalizeDateString(datetime: string): string {
-    if (!datetime.includes('.')) {
-        // Add microseconds if missing
-        return `${datetime}.000000`;
-    }
-
-    // Pad or trim to exactly 6 digits
-    return datetime.replace(/\.(\d{1,6})\d*/, (_, digits) => {
-        return `.${digits.padEnd(6, '0')}`;
-    });
-}
-
 interface IObjectiveWithProgress extends IObjective {
     start: string | null
     end: string | null
@@ -42,8 +30,8 @@ class ObjectiveWithProgress extends Objective {
     constructor(data: IObjectiveWithProgress, thorny_user: ThornyUser) {
         super(data)
         this.thorny_user = thorny_user
-        this.start = data.start ? parse(normalizeDateString(data.start), 'yyyy-MM-dd HH:mm:ss.SSSSSS', new Date()) : null
-        this.end = data.end ? parse(normalizeDateString(data.end), 'yyyy-MM-dd HH:mm:ss.SSSSSS', new Date()) : null
+        this.start = data.start ? parse(utils.normalizeDateString(data.start), 'yyyy-MM-dd HH:mm:ss.SSSSSS', new Date()) : null
+        this.end = data.end ? parse(utils.normalizeDateString(data.end), 'yyyy-MM-dd HH:mm:ss.SSSSSS', new Date()) : null
         this.completion = data.completion
         this.status = data.status
     }
@@ -139,8 +127,8 @@ export default class QuestWithProgress extends Quest {
     constructor(data: IQuestWithProgress, thorny_user: ThornyUser) {
         super(data)
         this.thorny_user = thorny_user
-        this.accepted_on = parse(normalizeDateString(data.accepted_on), 'yyyy-MM-dd HH:mm:ss.SSSSSSS', new Date())
-        this.started_on = data.started_on ? parse(normalizeDateString(data.started_on), 'yyyy-MM-dd HH:mm:ss.SSSSSS', new Date()) : null
+        this.accepted_on = parse(utils.normalizeDateString(data.accepted_on), 'yyyy-MM-dd HH:mm:ss.SSSSSSS', new Date())
+        this.started_on = data.started_on ? parse(utils.normalizeDateString(data.started_on), 'yyyy-MM-dd HH:mm:ss.SSSSSS', new Date()) : null
         this.status = data.status
 
         this.objectives = []
