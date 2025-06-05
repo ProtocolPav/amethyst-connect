@@ -24,6 +24,8 @@ export interface IObjective {
     required_mainhand: string | null
     required_location: [number, number] | null
     location_radius: number
+    required_deaths: number | null
+    continue_on_fail: boolean
     rewards: IReward[]
 }
 
@@ -33,6 +35,9 @@ export interface IQuest {
     end_time: string
     title: string
     description: string
+    created_by: number
+    tags: string[]
+    quest_type: string
     objectives: IObjective[]
 }
 
@@ -75,7 +80,7 @@ export class Reward {
     }
 }
 
-export class Objective {
+export class Objective implements IObjective {
     objective_id: number
     objective: string
     order: number
@@ -88,6 +93,8 @@ export class Objective {
     required_mainhand: string | null
     required_location: [number, number] | null
     location_radius: number
+    required_deaths: number | null
+    continue_on_fail: boolean
     rewards: Reward[]
 
     constructor(data: IObjective) {
@@ -103,6 +110,8 @@ export class Objective {
         this.required_mainhand = data.required_mainhand
         this.required_location = data.required_location
         this.location_radius = data.location_radius
+        this.required_deaths = data.required_deaths
+        this.continue_on_fail = data.continue_on_fail
 
         this.rewards = []
         for (let reward of data.rewards) {
@@ -143,6 +152,14 @@ export class Objective {
 
         if (this.objective_timer) {
             requirements.push(`- Within ${utils.convert_seconds_to_hms(this.objective_timer)}`)
+        }
+
+        if (this.required_deaths) {
+            requirements.push(`- No more than ${this.required_deaths} deaths`)
+        }
+
+        if (this.continue_on_fail) {
+            requirements.push(`- Failing this objective will NOT fail the entire quest`)
         }
 
         return requirements.join('\n')
@@ -226,6 +243,9 @@ export default class Quest {
     end_time: Date
     title: string
     description: string
+    created_by: number
+    tags: string[]
+    quest_type: string
     objectives: Objective[]
 
     constructor(data: IQuest) {
@@ -234,6 +254,9 @@ export default class Quest {
         this.end_time = parse(data.end_time, 'yyyy-MM-dd HH:mm:ss.SSSSSS', new Date())
         this.title = data.title
         this.description = data.description
+        this.created_by = data.created_by
+        this.quest_type = data.quest_type
+        this.tags = data.tags
 
         this.objectives = []
         for (let objective of data.objectives) {

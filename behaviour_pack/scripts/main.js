@@ -6497,16 +6497,10 @@ function cleanEscapedString2(input) {
 // behaviour_pack/scripts-dev/utils/checks.ts
 function distance_check(c1, c2, radius) {
   const distance = Math.sqrt((c1[0] - c2[0]) ** 2 + (c1[1] - c2[1]) ** 2);
-  if (distance <= radius) {
-    return true;
-  }
-  return false;
+  return distance <= radius;
 }
 function timer_check(now, start, seconds) {
-  if (differenceInSeconds(now, start) > seconds) {
-    return false;
-  }
-  return true;
+  return differenceInSeconds(now, start) <= seconds;
 }
 var checks = {
   timer_check,
@@ -6516,15 +6510,55 @@ var checks_default = checks;
 
 // behaviour_pack/scripts-dev/utils/motd.ts
 import { world as world2 } from "@minecraft/server";
-function send_motd(player) {
-  const motd_short = "You're a star! \uE107";
-  const motd = "\xA7oDo our quests by running /quests view on discord!";
-  world2.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`title "${player.name}" actionbar \xA7a\xA7lWelcome to Everthorn!\xA7r ${motd_short}`);
-  player.sendMessage(`\xA7aWelcome to Everthorn, \xA7l${player.name}\xA7r
-| ${motd_short}\xA7r
-| ${motd}\xA7r
+function send_motd(player, quest) {
+  const motd_shorts = [
+    "You're a star! \uE107",
+    "Your adventure awaits...",
+    "Don't forget to eat! \uE100",
+    "Ready to explore?",
+    "First we mine, then we craft.",
+    "It's craftin' time! \uE10A",
+    "I lava you! \uE10C",
+    "RISE AND GRIND!!!",
+    "Got what it takes?",
+    "Dream big, build bigger. \uE108",
+    "We missed you!!!",
+    "Hey, you dropped this \uE108",
+    "Together We Stand \uE10C",
+    "Do some quests!"
+  ];
+  const motd_longs = [
+    "\xA7oDo our quests by running \xA7l\xA75/quests view\xA7r\xA7o on discord!",
+    "\xA7oPssst... Have you checked out this month's \xA7l\xA7gMonthly Market\xA7r\xA7o yet?",
+    "\xA7oExplore different projects by traversing our \xA7lroad network\xA7r\xA7ro.",
+    "\xA7oHave you seen our AMAZING \xA7l\xA7nSubway System\xA7r\xA7o? Ask about it!",
+    "\xA7oCheck out our \xA7lLive Map\xA7r\xA7o on \xA79everthorn.net/map\xA7r\xA7o!",
+    "\xA7oBuild to your heart's content, and become part of Everthorn's history.",
+    "\xA7oRemember, projects \xA7lmust\xA7r\xA7o be connected to our \xA7lroad network\xA7r\xA7o.",
+    "\xA7oFeelin' lonely? Ping the \xA7l@Get On The Server\xA7r\xA7o ping :))"
+  ];
+  const randomShort = motd_shorts[Math.floor(Math.random() * motd_shorts.length)];
+  let randomLong = motd_longs[Math.floor(Math.random() * motd_longs.length)];
+  let questReminder = "";
+  if (Math.random() < 5e-3) {
+    randomLong = "\xA7o\xA7p\xA7lLucky you! You just found 1 Nug! Send a screenshot in #general and ping a CM to claim it!";
+  }
+  if (quest) {
+    questReminder = `\xA7l\xA7aActive Quest:\xA7r ${quest.title}
+\xA7l\xA7bYour Progress:\xA7r ${quest.get_progress()}/${quest.objectives.length}
 ---------
-`);
+`;
+  }
+  world2.getDimension(MinecraftDimensionTypes.Overworld).runCommand(
+    `title "${player.name}" actionbar \xA7a\xA7lWelcome to Everthorn!\xA7r ${randomShort}`
+  );
+  player.sendMessage(
+    `\xA7aWelcome to Everthorn, \xA7l${player.name}\xA7r
+\xA77${randomShort}\xA7r
+${randomLong}\xA7r
+---------
+${questReminder}`
+  );
 }
 
 // behaviour_pack/scripts-dev/utils/commands.ts
@@ -6719,28 +6753,6 @@ var commands = {
 };
 var commands_default = commands;
 
-// behaviour_pack/scripts-dev/utils/time_string.ts
-function convert_seconds_to_hms(seconds) {
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor(seconds % 3600 / 60);
-  const remainingSeconds = seconds % 60;
-  return `${hours}h ${minutes}m ${remainingSeconds}s`;
-}
-
-// behaviour_pack/scripts-dev/utils/clean_minecraft_ids.ts
-function clean_id(id) {
-  return id.replace(/^[^:]+:/, "").replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
-}
-
-// behaviour_pack/scripts-dev/utils/combine_two_lists.ts
-function combine(list1, list2, id) {
-  let combined_list = [];
-  for (let item of list1) {
-    combined_list.push({ ...item, ...list2.find((item2) => item2[id] === item[id]) });
-  }
-  return combined_list;
-}
-
 // behaviour_pack/scripts-dev/utils/altar_messages.ts
 var AltarMessage = class {
   static random_sacrifice(blockValue, originalBlockValue) {
@@ -6883,6 +6895,30 @@ var AltarMessage = class {
 };
 
 // behaviour_pack/scripts-dev/utils/index.ts
+function convert_seconds_to_hms(seconds) {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor(seconds % 3600 / 60);
+  const remainingSeconds = seconds % 60;
+  return `${hours}h ${minutes}m ${remainingSeconds}s`;
+}
+function combine(list1, list2, id) {
+  let combined_list = [];
+  for (let item of list1) {
+    combined_list.push({ ...item, ...list2.find((item2) => item2[id] === item[id]) });
+  }
+  return combined_list;
+}
+function clean_id(id) {
+  return id.replace(/^[^:]+:/, "").replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
+}
+function normalizeDateString(datetime) {
+  if (!datetime.includes(".")) {
+    return `${datetime}.000000`;
+  }
+  return datetime.replace(/\.(\d{1,6})\d*/, (_, digits) => {
+    return `.${digits.padEnd(6, "0")}`;
+  });
+}
 var utils = {
   DeathMessage,
   AltarMessage,
@@ -6891,7 +6927,8 @@ var utils = {
   commands: commands_default,
   convert_seconds_to_hms,
   clean_id,
-  combine
+  combine,
+  normalizeDateString
 };
 var utils_default = utils;
 
@@ -7180,6 +7217,8 @@ var Objective = class {
     this.required_mainhand = data.required_mainhand;
     this.required_location = data.required_location;
     this.location_radius = data.location_radius;
+    this.required_deaths = data.required_deaths;
+    this.continue_on_fail = data.continue_on_fail;
     this.rewards = [];
     for (let reward of data.rewards) {
       this.rewards.push(new Reward(reward));
@@ -7211,6 +7250,12 @@ var Objective = class {
     }
     if (this.objective_timer) {
       requirements.push(`- Within ${utils_default.convert_seconds_to_hms(this.objective_timer)}`);
+    }
+    if (this.required_deaths) {
+      requirements.push(`- No more than ${this.required_deaths} deaths`);
+    }
+    if (this.continue_on_fail) {
+      requirements.push(`- Failing this objective will NOT fail the entire quest`);
     }
     return requirements.join("\n");
   }
@@ -7281,6 +7326,9 @@ var Quest = class _Quest {
     this.end_time = parse(data.end_time, "yyyy-MM-dd HH:mm:ss.SSSSSS", /* @__PURE__ */ new Date());
     this.title = data.title;
     this.description = data.description;
+    this.created_by = data.created_by;
+    this.quest_type = data.quest_type;
+    this.tags = data.tags;
     this.objectives = [];
     for (let objective of data.objectives) {
       this.objectives.push(new Objective(objective));
@@ -7300,22 +7348,15 @@ var Quest = class _Quest {
 
 // behaviour_pack/scripts-dev/api/quest_with_progress.ts
 import { http as http5, HttpHeader as HttpHeader4, HttpRequest as HttpRequest4, HttpRequestMethod as HttpRequestMethod4 } from "@minecraft/server-net";
-function normalizeDateString(datetime) {
-  if (!datetime.includes(".")) {
-    return `${datetime}.000000`;
-  }
-  return datetime.replace(/\.(\d{1,6})\d*/, (_, digits) => {
-    return `.${digits.padEnd(6, "0")}`;
-  });
-}
 var ObjectiveWithProgress = class extends Objective {
   constructor(data, thorny_user) {
     super(data);
     this.thorny_user = thorny_user;
-    this.start = data.start ? parse(normalizeDateString(data.start), "yyyy-MM-dd HH:mm:ss.SSSSSS", /* @__PURE__ */ new Date()) : null;
-    this.end = data.end ? parse(normalizeDateString(data.end), "yyyy-MM-dd HH:mm:ss.SSSSSS", /* @__PURE__ */ new Date()) : null;
+    this.start = data.start ? parse(utils_default.normalizeDateString(data.start), "yyyy-MM-dd HH:mm:ss.SSSSSS", /* @__PURE__ */ new Date()) : null;
+    this.end = data.end ? parse(utils_default.normalizeDateString(data.end), "yyyy-MM-dd HH:mm:ss.SSSSSS", /* @__PURE__ */ new Date()) : null;
     this.completion = data.completion;
     this.status = data.status;
+    this.deaths = 0;
   }
   async complete_objective(interaction, quest) {
     const index = quest.objectives.indexOf(this);
@@ -7374,8 +7415,13 @@ var ObjectiveWithProgress = class extends Objective {
     } else if (requirement_check.fail_objective) {
       this.status = "failed";
       this.end = /* @__PURE__ */ new Date();
-      await quest.fail_quest(interaction.thorny_id);
-      utils_default.commands.play_quest_fail_sound(this.thorny_user.gamertag);
+      return false;
+    } else if (interaction.type === "die" && this.required_deaths) {
+      this.deaths += 1;
+      if (this.deaths > this.required_deaths) {
+        this.status = "failed";
+        this.end = /* @__PURE__ */ new Date();
+      }
       return false;
     }
     return false;
@@ -7388,8 +7434,8 @@ var QuestWithProgress = class _QuestWithProgress extends Quest {
   constructor(data, thorny_user) {
     super(data);
     this.thorny_user = thorny_user;
-    this.accepted_on = parse(normalizeDateString(data.accepted_on), "yyyy-MM-dd HH:mm:ss.SSSSSSS", /* @__PURE__ */ new Date());
-    this.started_on = data.started_on ? parse(normalizeDateString(data.started_on), "yyyy-MM-dd HH:mm:ss.SSSSSS", /* @__PURE__ */ new Date()) : null;
+    this.accepted_on = parse(utils_default.normalizeDateString(data.accepted_on), "yyyy-MM-dd HH:mm:ss.SSSSSSS", /* @__PURE__ */ new Date());
+    this.started_on = data.started_on ? parse(utils_default.normalizeDateString(data.started_on), "yyyy-MM-dd HH:mm:ss.SSSSSS", /* @__PURE__ */ new Date()) : null;
     this.status = data.status;
     this.objectives = [];
     for (let objective of data.objectives) {
@@ -7457,7 +7503,12 @@ var QuestWithProgress = class _QuestWithProgress extends Quest {
     ];
     await http5.request(request);
   }
+  get_progress() {
+    return this.objectives.filter((objective) => objective.status === "completed").length;
+  }
   /**
+   * Increments the active objective if it exists.
+   * Updates the quest and objective's start times, as well as the next objective's start time if needed.
    * @returns
    * A boolean representing if the objective has been incremented or not
    */
@@ -7489,14 +7540,29 @@ Run \xA75/quests view\xA7r on Discord to start it!`
         );
       } else if (next_objective && next_objective.objective_id !== active_objective.objective_id) {
         next_objective.start = /* @__PURE__ */ new Date();
-      } else if (active_objective.status === "failed") {
+      } else if (active_objective.status === "failed" && !active_objective.continue_on_fail) {
         this.status = "failed";
         this.end_time = /* @__PURE__ */ new Date();
+        utils_default.commands.play_quest_fail_sound(this.thorny_user.gamertag);
         utils_default.commands.send_title(
           interaction.dimension,
           this.thorny_user.gamertag,
           "title",
           `\xA7lQuest Failed :(`
+        );
+        utils_default.commands.send_message(
+          interaction.dimension,
+          "@a",
+          `\xA7c+=+=+=+=+=+=+ Quest Failed :( +=+=+=+=+=+=+\xA7r
+${this.thorny_user.gamertag} has failed \xA7l\xA7n${this.title}\xA7r!
+Think you can do better? Run \xA75/quests view\xA7r on Discord to start it!`
+        );
+      } else if (active_objective.status === "failed" && active_objective.continue_on_fail) {
+        utils_default.commands.play_quest_fail_sound(this.thorny_user.gamertag);
+        utils_default.commands.send_message(
+          interaction.dimension,
+          this.thorny_user.gamertag,
+          "\xA74You failed the objective, but the quest will go on!"
         );
       }
       return incremented;
@@ -8320,24 +8386,22 @@ function load_chat_handler() {
 // behaviour_pack/scripts-dev/events/connections.ts
 import { world as world16 } from "@minecraft/server";
 function load_connections_handler(guild_id2) {
-  world16.afterEvents.playerSpawn.subscribe((spawn_event) => {
+  world16.afterEvents.playerSpawn.subscribe(async (spawn_event) => {
     if (spawn_event.initialSpawn) {
       try {
-        api_default.ThornyUser.get_user_from_api(guild_id2, spawn_event.player.name).then((thorny_user) => {
-          thorny_user.send_connect_event("connect");
-          api_default.Relay.event(`${spawn_event.player.name} has joined the server`, "", "join");
-          utils_default.send_motd(spawn_event.player);
-          if (thorny_user.patron) {
-            spawn_event.player.nameTag = `\xA7l\xA7c${spawn_event.player.nameTag}`;
-          }
-        });
+        const thorny_user = await api_default.ThornyUser.get_user_from_api(guild_id2, spawn_event.player.name);
+        thorny_user.send_connect_event("connect");
+        api_default.Relay.event(`${spawn_event.player.name} has joined the server`, "", "join");
+        const quest = await api_default.QuestWithProgress.get_active_quest(thorny_user);
+        utils_default.send_motd(spawn_event.player, quest);
+        if (thorny_user.patron) {
+          spawn_event.player.nameTag = `\xA7l\xA7c${spawn_event.player.nameTag}`;
+        }
       } catch (e) {
+        api_default.Relay.event(`${spawn_event.player.name} has joined the server`, "API Issue Detected", "join");
         console.error(e);
       }
     }
-  });
-  world16.afterEvents.playerJoin.subscribe((join_event) => {
-    console.log("Join Log! ", join_event.playerName, join_event.playerId);
   });
   world16.afterEvents.playerLeave.subscribe((leave_event) => {
     const thorny_user = api_default.ThornyUser.fetch_user(leave_event.playerName);
@@ -8500,8 +8564,13 @@ function load_world_event_handlers(guild_id2) {
 }
 
 // behaviour_pack/scripts-dev/main.ts
-var guild_id = "611008530077712395";
+var guild_id = "1213827104945471538";
 WorldCache.load_world(guild_id).then();
 load_loops();
 load_custom_components(guild_id);
 load_world_event_handlers(guild_id);
+api_default.Relay.event(
+  "AmethystConnect Plugin successfully loaded",
+  "Don't see this on server startup? Ping a CM! It's important!",
+  "start"
+);

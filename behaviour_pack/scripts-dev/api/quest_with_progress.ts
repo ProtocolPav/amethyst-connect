@@ -25,6 +25,7 @@ class ObjectiveWithProgress extends Objective {
     start: Date | null
     end: Date | null
     completion: number
+    deaths: number
     status: 'in_progress' | 'completed' | 'failed'
 
     constructor(data: IObjectiveWithProgress, thorny_user: ThornyUser) {
@@ -34,6 +35,7 @@ class ObjectiveWithProgress extends Objective {
         this.end = data.end ? parse(utils.normalizeDateString(data.end), 'yyyy-MM-dd HH:mm:ss.SSSSSS', new Date()) : null
         this.completion = data.completion
         this.status = data.status
+        this.deaths = 0
     }
 
     private async complete_objective(interaction: Interaction, quest: QuestWithProgress) {
@@ -107,6 +109,16 @@ class ObjectiveWithProgress extends Objective {
         else if (requirement_check.fail_objective) {
             this.status = 'failed'
             this.end = new Date()
+
+            return false
+        }
+        else if (interaction.type === 'die' && this.required_deaths) {
+            this.deaths += 1
+
+            if (this.deaths > this.required_deaths) {
+                this.status = 'failed'
+                this.end = new Date()
+            }
 
             return false
         }
@@ -219,6 +231,8 @@ export default class QuestWithProgress extends Quest {
     }
 
     /**
+     * Increments the active objective if it exists.
+     * Updates the quest and objective's start times, as well as the next objective's start time if needed.
      * @returns
      * A boolean representing if the objective has been incremented or not
      */
@@ -259,7 +273,7 @@ export default class QuestWithProgress extends Quest {
             else if (next_objective && next_objective.objective_id !== active_objective.objective_id) {
                 next_objective.start = new Date()
             }
-            else if (active_objective.status === 'failed') {
+            else if (active_objective.status === 'failed' && !active_objective.continue_on_fail) {
                 this.status = 'failed'
                 this.end_time = new Date()
 
@@ -278,6 +292,15 @@ export default class QuestWithProgress extends Quest {
                     `§c+=+=+=+=+=+=+ Quest Failed :( +=+=+=+=+=+=+§r\n` +
                     `${this.thorny_user.gamertag} has failed §l§n${this.title}§r!\n` +
                     `Think you can do better? Run §5/quests view§r on Discord to start it!`
+                )
+            }
+            else if (active_objective.status === 'failed' && active_objective.continue_on_fail) {
+                utils.commands.play_quest_fail_sound(this.thorny_user.gamertag)
+
+                utils.commands.send_message(
+                    interaction.dimension,
+                    this.thorny_user.gamertag,
+                    "§4You failed the objective, but the quest will go on!"
                 )
             }
 
