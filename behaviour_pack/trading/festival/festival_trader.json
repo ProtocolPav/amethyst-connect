@@ -1,0 +1,680 @@
+{
+    "tiers": [
+      {
+        "groups": [
+          {
+            "num_to_select": 9, 
+            "trades": [
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:oak_log",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:oak_log"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:spruce_log",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:spruce_log"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:birch_log",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:birch_log"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:jungle_log",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:jungle_log"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:acacia_log",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:acacia_log"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:oak_log",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:oak_log"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:dark_oak_log",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:dark_oak_log"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:mangrove_log",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:mangrove_log"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:cherry_log",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:cherry_log"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:pale_oak_log",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:pale_oak_log"}],
+                     "quantity":8
+                  }
+                ]
+              }
+              
+            
+            ]
+          },
+          {
+            "num_to_select": 9, 
+            "trades": [
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:stripped_oak_log",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:stripped_oak_log"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:stripped_spruce_log",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:stripped_spruce_log"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:stripped_birch_log",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:stripped_birch_log"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:stripped_jungle_log",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:stripped_jungle_log"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:stripped_acacia_log",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:stripped_acacia_log"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:stripped_oak_log",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:stripped_oak_log"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:stripped_dark_oak_log",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:stripped_dark_oak_log"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:stripped_mangrove_log",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:stripped_mangrove_log"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:stripped_cherry_log",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:stripped_cherry_log"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:stripped_pale_oak_log",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:stripped_pale_oak_log"}],
+                     "quantity":8
+                  }
+                ]
+              }
+              
+            
+            ]
+          },
+          {
+            "num_to_select": 9, 
+            "trades": [
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:oak_planks",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:oak_planks"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:spruce_planks",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:spruce_planks"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:birch_planks",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:birch_planks"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:jungle_planks",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:jungle_planks"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:acacia_planks",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:acacia_planks"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:oak_planks",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:oak_planks"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:dark_oak_planks",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:dark_oak_planks"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:mangrove_planks",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:mangrove_planks"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:cherry_planks",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:cherry_planks"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:pale_oak_log",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:pale_oak_planks"}],
+                     "quantity":8
+                  }
+                ]
+              }
+              
+            
+            ]
+          },
+          {
+            "num_to_select": 4, 
+            "trades": [
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:bamboo_block",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:bamboo_block"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:stripped_bamboo_block",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:stripped_bamboo_block"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:bamboo_planks",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:bamboo_planks"}],
+                     "quantity":8
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "minecraft:emerald",
+                    "quantity": 1
+                  },{
+                    "item": "minecraft:bamboo_mosaic",
+                    "quantity": 1
+                  }
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:spawn_egg",
+                    "functions":[{"function":"set_actor_id","id":"fmb:bamboo_mosaic"}],
+                     "quantity":8
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
