@@ -5,12 +5,28 @@
          {
             "num_to_select": 4, 
             "trades": [
-              {
+               {
                 "max_uses": 10000,
                 "wants": [
                   {
                     "item": "amethyst:diamond_nugget",
                     "quantity": 5
+                  }
+                  
+                ],
+                "gives": [
+                  {
+                    "item": "minecraft:diamond_block",
+                     "quantity":1
+                  }
+                ]
+              },
+              {
+                "max_uses": 10000,
+                "wants": [
+                  {
+                    "item": "amethyst:diamond_nugget",
+                    "quantity": 10
                   }
                 ],
                 "gives": [
