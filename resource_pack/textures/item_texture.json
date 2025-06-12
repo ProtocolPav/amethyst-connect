@@ -31,6 +31,9 @@
 		},
 		"trophy_third": {
 			"textures": "textures/items/trophy_third.png"
+		},
+		"diamond_nugget": {
+			"textures": "textures/items/diamond_nugget.png"
 		}
 		
 	}
