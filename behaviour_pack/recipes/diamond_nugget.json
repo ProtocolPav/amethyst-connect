@@ -1,0 +1,30 @@
+{
+	"format_version": "1.20.30",
+	"minecraft:recipe_shaped": {
+		"description": {
+			"identifier": "amethyst:diamond_nugget_0"
+		},
+		"tags": [
+			"crafting_table"
+		],
+		"key": {
+			"D": {
+				"item": "amethyst:diamond_nugget"
+			}
+		},
+		"pattern": [
+			"DDD",
+			"DDD",
+			"DDD"
+		],
+		"result": {
+			"item": "minecraft:diamond"
+		},
+		"unlock": [
+			{
+				"item": "amethyst:diamond_nugget",
+				"count": 1
+			}
+		]
+	}
+}
