@@ -6923,10 +6923,32 @@ var AltarMessage = class {
   }
 };
 
+// behaviour_pack/scripts-dev/utils/dragon_messages.ts
+var DragonHeartMessage = class {
+  static heart_mined(heartsMined) {
+    const heartMessages = {
+      1: `\xA75The Ancient Dragon's roar echoes across dimensions... \xA7r"NO! You dare shatter my essence? My remaining \xA7l5 Hearts\xA7r beat frantically across the outer End islands. Each one you destroy weakens my immortal form... I must stop you before it's too late!"`,
+      2: `\xA75The Dragon's voice cracks with growing desperation... \xA7r"My power... it's draining away! \xA7l4 Hearts\xA7r still pulse on distant islands, but I can feel my strength ebbing. You don't understand - without them, I become... vulnerable. MORTAL."`,
+      3: `\xA75Panic seeps into the Dragon's ancient voice... \xA7r"Three of my Hearts destroyed! Only \xA7l3 remain\xA7r to sustain my immortality! My scales grow brittle, my fire dims... If you take the rest, I'll be nothing more than flesh and bone. Please... reconsider this madness!"`,
+      4: `\xA75The Dragon's terror becomes palpable... \xA7r"I BEG YOU, STOP! With only \xA7l2 Hearts\xA7r left, my ancient body begins to fail! My wings tremble, my breath grows weak... Soon I'll be defenseless against mortal weapons. You are not victorious, you are VICIOUS!"`,
+      5: `\xA75The Dragon's voice breaks into desperate whispers... \xA7r"One... only \xA7l1 Heart\xA7r remains between me and certain death. I can feel mortality creeping through my veins like poison. When it's gone, any blade can pierce my hide, any arrow can find my heart. You've doomed me to die like... like them."`,
+      6: `\xA75The Dragon's final scream pierces reality itself... \xA7r"IT IS FINISHED! All \xA7l6 Hearts\xA7r lie shattered! My immortality bleeds away like water through sand! I am... I am just flesh now. Mortal. Killable. The hunt begins, and I... I am the prey."`
+    };
+    return heartMessages[heartsMined] || "\xA7cError: Invalid heart count";
+  }
+  static heart_discovery() {
+    return "\xA75A Draconic Heart pulses with desperate energy... \xA7rThe Dragon's voice trembles: 'Please... that fragment sustains my very existence. Without it, I grow closer to mortality with each passing moment.'";
+  }
+  static heart_proximity_warning() {
+    return "\xA75The air thrums with panicked draconic energy... \xA7rSomething ancient and terrified of death lies nearby.";
+  }
+};
+
 // behaviour_pack/scripts-dev/utils/index.ts
 var utils = {
   DeathMessage,
   AltarMessage,
+  DragonHeartMessage,
   send_motd,
   checks: checks_default,
   commands: commands_default,
@@ -7848,17 +7870,18 @@ import {
   EntityComponentTypes as EntityComponentTypes4
 } from "@minecraft/server";
 function load_heal_dragon_component() {
+  let mined_blocks = 0;
   function heal_dragon(event) {
     if (event.block.isValid) {
       const dragon = event.block.dimension.getEntities({ type: MinecraftEntityTypes.EnderDragon })[0];
       if (dragon && dragon.isValid) {
         dragon.getComponent(EntityComponentTypes4.Health)?.resetToMaxValue();
       }
+      event.dimension.playSound("mob.warden.heartbeat", event.block.location);
     }
   }
   function heart_destroy(event) {
-    event.dimension.playSound("mob.enderdragon.growl", event.block.location);
-    utils_default.commands.send_message(event.dimension.id, "@a", "The Dragon has been weakened. Mine all Draconic Hearts.");
+    mined_blocks++;
     event.dimension.spawnEntity(
       "amethyst:the_breath",
       event.block.location
@@ -7870,6 +7893,13 @@ function load_heal_dragon_component() {
     event.dimension.spawnEntity(
       "amethyst:endstone_golem",
       event.block.location
+    );
+    event.dimension.playSound("mob.enderdragon.growl", event.block.location);
+    const message2 = utils_default.DragonHeartMessage.heart_mined(mined_blocks);
+    utils_default.commands.send_message(
+      event.dimension.id,
+      "@a",
+      message2
     );
   }
   system7.beforeEvents.startup.subscribe((initEvent) => {
