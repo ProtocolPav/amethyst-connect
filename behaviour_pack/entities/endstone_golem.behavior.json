@@ -56,7 +56,7 @@
 				},
 				"knockback": {
 					"horizontal_strength": 0.2,
-					"vertical_strength": 6.5
+					"vertical_strength": 11.5
 				}
 			},
 			"minecraft:damage_sensor": {
@@ -131,7 +131,7 @@
 								"delay_per_summon": 0.0,
 								"num_entities_spawned": 6,
 								"entity_type": "minecraft:evocation_fang",
-								"size": 3,
+								"size": 6,
 								"entity_lifespan": 2,
 								"sound_event": "prepare.attack"
 							}
@@ -154,7 +154,7 @@
 								"delay_per_summon": 0.1,
 								"num_entities_spawned": 12,
 								"entity_type": "minecraft:evocation_fang",
-								"size": 16,
+								"size": 10,
 								"entity_lifespan": 2
 							}
 						]
