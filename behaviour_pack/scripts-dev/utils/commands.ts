@@ -142,7 +142,9 @@ function vision_entity_glitch(player: Player) {
         MinecraftEntityTypes.Breeze,
         MinecraftEntityTypes.Camel,
         MinecraftEntityTypes.Sheep,
-        MinecraftEntityTypes.Stray
+        MinecraftEntityTypes.Stray,
+        'amethyst:the_breath',
+        'amethyst:endstone_golem'
     ]
 
     const entity = entities[Math.floor(Math.random() * entities.length)]

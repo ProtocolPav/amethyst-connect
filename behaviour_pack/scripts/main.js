@@ -6745,6 +6745,17 @@ function effect_glitch(player) {
     }
   );
 }
+function place_glitch_block(player) {
+  const block = "amethyst:glitch_block";
+  let location = player.location;
+  let facing = player.getViewDirection();
+  location.x += facing.x * 2;
+  location.z += facing.z * 2;
+  let random_block = player.dimension.getBlock(location);
+  if (random_block?.typeId === MinecraftBlockTypes.Air && player.dimension.getEntitiesAtBlockLocation(location).length === 0) {
+    random_block.setType(block);
+  }
+}
 var commands = {
   send_message,
   play_quest_complete_sound,
@@ -6756,7 +6767,8 @@ var commands = {
   noise_glitch,
   vision_block_glitch,
   vision_entity_glitch,
-  effect_glitch
+  effect_glitch,
+  place_glitch_block
 };
 var commands_default = commands;
 
@@ -6977,8 +6989,8 @@ var DragonHeartMessage = class {
   }
   static summon_minions() {
     const mob_counts = {
-      "amethyst:endstone_golem": 2,
-      "amethyst:the_breath": 1
+      "amethyst:endstone_golem": 2.2,
+      "amethyst:the_breath": 1.4
     };
     const radius = 30;
     const dimension = world4.getDimension(MinecraftDimensionTypes.TheEnd);
@@ -7019,7 +7031,7 @@ function load_glitch_component() {
   function glitch(event) {
     if (Math.random() < 0.07 && event.block.isValid) {
       const location = event.block.location;
-      const radius = 20;
+      const radius = 18;
       const glitches_type = [
         utils_default.commands.noise_glitch,
         utils_default.commands.vision_block_glitch,
@@ -7027,9 +7039,14 @@ function load_glitch_component() {
         utils_default.commands.effect_glitch
       ];
       const glitch2 = glitches_type[Math.floor(Math.random() * glitches_type.length)];
-      event.block.dimension.getPlayers({ location, maxDistance: radius }).forEach((player) => {
-        glitch2(player);
-      });
+      const players = event.block.dimension.getPlayers({ location, maxDistance: radius });
+      if (players.length === 0) {
+        event.block.setType("minecraft:air");
+      } else {
+        players.forEach((player) => {
+          glitch2(player);
+        });
+      }
     }
   }
   function glitch_particles(event) {
@@ -8148,12 +8165,14 @@ function do_glitch() {
     utils_default.commands.noise_glitch,
     utils_default.commands.effect_glitch
   ];
-  if (random <= 0.2) {
+  if (random <= 0.27) {
     const glitch = glitches_type[Math.floor(Math.random() * glitches_type.length)];
-    console.log(`[Loops] Doing Glitches: ${glitch}`);
     for (const player of world11.getAllPlayers()) {
       glitch(player);
-      player.sendMessage("\xA7oWhat was that?");
+      player.sendMessage("[You whisper to yourself] \xA7oWhat was that?");
+      if (Math.random() < 0.4) {
+        utils_default.commands.place_glitch_block(player);
+      }
     }
   }
 }
