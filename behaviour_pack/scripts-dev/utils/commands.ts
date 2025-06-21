@@ -218,6 +218,23 @@ function effect_glitch(player: Player) {
     )
 }
 
+function place_glitch_block(player: Player) {
+    const block = 'amethyst:glitch_block'
+
+    let location = player.location
+    let facing = player.getViewDirection()
+
+    location.x += facing.x * 2
+    location.z += facing.z * 2
+
+    let random_block = player.dimension.getBlock(location)
+
+    if (random_block?.typeId === MinecraftBlockTypes.Air
+        && player.dimension.getEntitiesAtBlockLocation(location).length === 0) {
+        random_block.setType(block)
+    }
+}
+
 const commands = {
     send_message,
     play_quest_complete_sound,
@@ -229,7 +246,8 @@ const commands = {
     noise_glitch,
     vision_block_glitch,
     vision_entity_glitch,
-    effect_glitch
+    effect_glitch,
+    place_glitch_block
 }
 
 export default commands
