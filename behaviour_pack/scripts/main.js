@@ -6924,23 +6924,79 @@ var AltarMessage = class {
 };
 
 // behaviour_pack/scripts-dev/utils/dragon_messages.ts
+import { world as world4 } from "@minecraft/server";
 var DragonHeartMessage = class {
   static heart_mined(heartsMined) {
     const heartMessages = {
-      1: `\xA75The Ancient Dragon's roar echoes across dimensions... \xA7r"NO! You dare shatter my essence? My remaining \xA7l5 Hearts\xA7r beat frantically across the outer End islands. Each one you destroy weakens my immortal form... I must stop you before it's too late!"`,
-      2: `\xA75The Dragon's voice cracks with growing desperation... \xA7r"My power... it's draining away! \xA7l4 Hearts\xA7r still pulse on distant islands, but I can feel my strength ebbing. You don't understand - without them, I become... vulnerable. MORTAL."`,
-      3: `\xA75Panic seeps into the Dragon's ancient voice... \xA7r"Three of my Hearts destroyed! Only \xA7l3 remain\xA7r to sustain my immortality! My scales grow brittle, my fire dims... If you take the rest, I'll be nothing more than flesh and bone. Please... reconsider this madness!"`,
-      4: `\xA75The Dragon's terror becomes palpable... \xA7r"I BEG YOU, STOP! With only \xA7l2 Hearts\xA7r left, my ancient body begins to fail! My wings tremble, my breath grows weak... Soon I'll be defenseless against mortal weapons. You are not victorious, you are VICIOUS!"`,
-      5: `\xA75The Dragon's voice breaks into desperate whispers... \xA7r"One... only \xA7l1 Heart\xA7r remains between me and certain death. I can feel mortality creeping through my veins like poison. When it's gone, any blade can pierce my hide, any arrow can find my heart. You've doomed me to die like... like them."`,
-      6: `\xA75The Dragon's final scream pierces reality itself... \xA7r"IT IS FINISHED! All \xA7l6 Hearts\xA7r lie shattered! My immortality bleeds away like water through sand! I am... I am just flesh now. Mortal. Killable. The hunt begins, and I... I am the prey."`
+      1: `\xA7l\xA75The Ancient Dragon's roar echoes across dimensions...
+\xA7r"NO! You dare shatter my essence? My remaining \xA7l5 Hearts\xA7r beat frantically across the Relic Islands. Each one you destroy weakens my immortal form... I must stop you before it's too late!"`,
+      2: `\xA7l\xA75The Dragon's voice cracks with growing desperation...
+\xA7r"My power... it's draining away! \xA7l4 Hearts\xA7r still pulse on distant islands, but I can feel my strength ebbing. You don't understand - without them, I become... vulnerable. MORTAL."`,
+      3: `\xA7l\xA75Panic seeps into the Dragon's ancient voice...
+\xA7r"Three of my Hearts destroyed! Only \xA7l3 remain\xA7r to sustain my immortality! My scales grow brittle, my fire dims... If you take the rest, I'll be nothing more than flesh and bone. Please... reconsider this madness!"`,
+      4: `\xA7l\xA75The Dragon's terror becomes palpable...
+\xA7r"I BEG YOU, STOP! With only \xA7l2 Hearts\xA7r left, my ancient body begins to fail! My wings tremble, my breath grows weak... Soon I'll be defenseless against mortal weapons. You are not victorious, you are VICIOUS!"`,
+      5: `\xA7l\xA75The Dragon's voice breaks into desperate whispers...
+\xA7r"One... only \xA7l1 Heart\xA7r remains between me and certain death. I can feel mortality creeping through my veins like poison. When it's gone, any blade can pierce my hide, any arrow can find my heart. You've doomed me to die like... like the rest of them."`,
+      6: `\xA7l\xA75The Dragon's final scream pierces reality itself...
+\xA7r"IT IS FINISHED! All \xA7l6 Hearts\xA7r lie shattered! My immortality bleeds away like water through sand! I am... I am just flesh now. Mortal. Killable. The hunt begins, and I... I am the prey."`
     };
     return heartMessages[heartsMined] || "\xA7cError: Invalid heart count";
   }
-  static heart_discovery() {
-    return "\xA75A Draconic Heart pulses with desperate energy... \xA7rThe Dragon's voice trembles: 'Please... that fragment sustains my very existence. Without it, I grow closer to mortality with each passing moment.'";
+  static health_stage_message(stage) {
+    if (stage === 1) {
+      const stage1Messages = [
+        `\xA7l\xA75The Ancient Dragon roars with fury...
+\xA7r"You think destroying my Hearts makes me weak? I am still DEATH INCARNATE! My minions will feast on your bones!"`,
+        `\xA7l\xA75Draconic power surges through the battlefield...
+\xA7r"Mortal fools! Even weakened, I command legions! Rise, my servants! Show them the price of defiance!"`,
+        `\xA7l\xA75The Dragon's eyes blaze with ancient hatred...
+\xA7r"You may have made me vulnerable, but I am FAR from defeated! Behold the armies that serve the Dragon Lord!"`,
+        `\xA7l\xA75Wings beat like thunder across the End...
+\xA7r"My immortality may be gone, but my RAGE remains eternal! Come forth, children of darkness! Defend your master!"`,
+        `\xA7l\xA75The battlefield trembles with draconic might...
+\xA7r"You celebrate too early, mortals! Even a mortal dragon commands respect! My minions will drown you in shadow!"`
+      ];
+      return stage1Messages[Math.floor(Math.random() * stage1Messages.length)];
+    } else if (stage === 2) {
+      const stage2Messages = [
+        `\xA7l\xA75The Dragon's voice cracks with desperation...
+\xA7r"No... NO! This cannot be! My loyal servants, protect me! I refuse to die like some common beast!"`,
+        `\xA7l\xA75Blood drips from ancient scales...
+\xA7r"I am the ANCIENT DRAGON! I will not fall to mortals! Rise, my champions! Give your lives for your master!"`,
+        `\xA7l\xA75The Dragon's roar becomes a pained shriek...
+\xA7r"My strength fades... but my will remains! Every creature in the End, come to my aid! I WILL NOT DIE ALONE!"`,
+        `\xA7l\xA75Panic seeps into the Dragon's ancient voice...
+\xA7r"This is impossible! I have ruled for millennia! My minions, my faithful servants... save me from this humiliation!"`,
+        `\xA7l\xA75The Dragon's breathing grows labored...
+\xA7r"I can feel death approaching... but I will take you all with me! My final army, emerge from the shadows! We die together!"`
+      ];
+      return stage2Messages[Math.floor(Math.random() * stage2Messages.length)];
+    }
+    return `\xA75The Ancient Dragon speaks... \xA7r"Unknown stage of battle reached..."`;
   }
-  static heart_proximity_warning() {
-    return "\xA75The air thrums with panicked draconic energy... \xA7rSomething ancient and terrified of death lies nearby.";
+  static summon_minions() {
+    const mob_counts = {
+      "amethyst:endstone_golem": 2,
+      "amethyst:the_breath": 1
+    };
+    const radius = 30;
+    const dimension = world4.getDimension(MinecraftDimensionTypes.TheEnd);
+    const player_count = dimension.getPlayers().length;
+    const totalMobs = Object.values(mob_counts).reduce((sum, count) => sum + count * player_count, 0);
+    const angleIncrement = 2 * Math.PI / totalMobs;
+    let mobIndex = 0;
+    for (const [mobType, countPerPlayer] of Object.entries(mob_counts)) {
+      const totalCount = countPerPlayer * player_count;
+      for (let i = 0; i < totalCount; i++) {
+        const angle = angleIncrement * mobIndex;
+        const x = radius * Math.cos(angle);
+        const z = radius * Math.sin(angle);
+        const groundY = dimension.getTopmostBlock({ x, z })?.y || 70;
+        dimension.spawnEntity(mobType, { x, y: groundY + 1, z });
+        mobIndex++;
+      }
+    }
   }
 };
 
@@ -7928,7 +7984,7 @@ function load_custom_components(guild_id2) {
 }
 
 // behaviour_pack/scripts-dev/loops/elytra_no_mending.ts
-import { EquipmentSlot as EquipmentSlot3, world as world7, system as system8, EntityComponentTypes as EntityComponentTypes5, ItemComponentTypes as ItemComponentTypes2, EnchantmentType } from "@minecraft/server";
+import { EquipmentSlot as EquipmentSlot3, world as world8, system as system8, EntityComponentTypes as EntityComponentTypes5, ItemComponentTypes as ItemComponentTypes2, EnchantmentType } from "@minecraft/server";
 function elytraCheck(player) {
   const player_equipment = player.getComponent(EntityComponentTypes5.Equippable);
   const item = player_equipment?.getEquipment(EquipmentSlot3.Chest);
@@ -7951,7 +8007,7 @@ function elytraCheck(player) {
       }
       item.setLore([`
 \xA7o"My wings are cursed!"`]);
-      world7.getDimension("overworld").runCommand(`title "${player.name}" actionbar \xA7o\xA7iMy Elytra feels different...`);
+      world8.getDimension("overworld").runCommand(`title "${player.name}" actionbar \xA7o\xA7iMy Elytra feels different...`);
       player_equipment?.setEquipment(EquipmentSlot3.Chest, item);
       console.log(`[ElytraCheck] Player ${player.name} has elytra with mending. Removing Mending.`);
     }
@@ -7959,7 +8015,7 @@ function elytraCheck(player) {
 }
 function load_elytra_mending_checker() {
   system8.runInterval(() => {
-    let playerlist = world7.getPlayers();
+    let playerlist = world8.getPlayers();
     playerlist.forEach((player) => {
       elytraCheck(player);
     });
@@ -7968,7 +8024,7 @@ function load_elytra_mending_checker() {
 }
 
 // behaviour_pack/scripts-dev/loops/border.ts
-import { world as world8, system as system9, EntityDamageCause } from "@minecraft/server";
+import { world as world9, system as system9, EntityDamageCause } from "@minecraft/server";
 function borderCheck(player, dimensionID, border_size, warning_range, outside) {
   const position = player.location;
   const distance_2d = Math.sqrt(position.x ** 2 + position.z ** 2);
@@ -7980,15 +8036,15 @@ function borderCheck(player, dimensionID, border_size, warning_range, outside) {
     console.log(`[Plugin] [Border] Player ${player.name} has re-entered the ${dimensionID} border.`);
   }
   if (border_size < distance_2d) {
-    world8.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iI shouldn't go any further. It's too dangerous here.`);
-    world8.getDimension(dimensionID).runCommand(`effect "${player.name}" blindness 4 2`);
+    world9.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iI shouldn't go any further. It's too dangerous here.`);
+    world9.getDimension(dimensionID).runCommand(`effect "${player.name}" blindness 4 2`);
     player.applyDamage(1.3, { cause: EntityDamageCause.void });
   } else if (border_size - 20 < distance_2d) {
-    world8.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iThe Monolith's protection is wearing off. I can feel it...`);
+    world9.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iThe Monolith's protection is wearing off. I can feel it...`);
   }
   if (border_size - 100 < distance_2d && warning_range.indexOf(player.name) == -1) {
     warning_range.push(player.name);
-    world8.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iMaybe I should start heading back now...`);
+    world9.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iMaybe I should start heading back now...`);
   } else if (border_size - 100 > distance_2d && warning_range.indexOf(player.name) != -1) {
     warning_range.splice(warning_range.indexOf(player.name), 1);
   }
@@ -7998,9 +8054,9 @@ function load_world_border(guild_id2) {
   let players_outside_border = { overworld: [], nether: [], end: [] };
   system9.runInterval(() => {
     let players = {
-      overworld: world8.getDimension(MinecraftDimensionTypes.Overworld).getPlayers(),
-      nether: world8.getDimension(MinecraftDimensionTypes.Nether).getPlayers(),
-      end: world8.getDimension(MinecraftDimensionTypes.TheEnd).getPlayers()
+      overworld: world9.getDimension(MinecraftDimensionTypes.Overworld).getPlayers(),
+      nether: world9.getDimension(MinecraftDimensionTypes.Nether).getPlayers(),
+      end: world9.getDimension(MinecraftDimensionTypes.TheEnd).getPlayers()
     };
     players.overworld.forEach((player) => {
       borderCheck(player, MinecraftDimensionTypes.Overworld, WorldCache.world.overworld_border, players_100_blocks_away.overworld, players_outside_border.overworld);
@@ -8016,7 +8072,7 @@ function load_world_border(guild_id2) {
 }
 
 // behaviour_pack/scripts-dev/loops/quests.ts
-import { system as system10, world as world9 } from "@minecraft/server";
+import { system as system10, world as world10 } from "@minecraft/server";
 async function check_quests() {
   try {
     if (!api_default.Interaction.is_processing()) {
@@ -8062,7 +8118,7 @@ async function display_timer() {
       let remaining_seconds = Math.max(0, active_objective.objective_timer - elapsed_seconds);
       let minutes = Math.floor(remaining_seconds / 60);
       let seconds = remaining_seconds % 60;
-      let player = world9.getPlayers({ name: active_objective.thorny_user.gamertag })[0];
+      let player = world10.getPlayers({ name: active_objective.thorny_user.gamertag })[0];
       utils_default.commands.send_title(
         player.dimension.id,
         player.name,
@@ -8083,7 +8139,7 @@ function load_quest_loop() {
 }
 
 // behaviour_pack/scripts-dev/loops/glitches.ts
-import { system as system11, world as world10, TicksPerSecond as TicksPerSecond5 } from "@minecraft/server";
+import { system as system11, world as world11, TicksPerSecond as TicksPerSecond5 } from "@minecraft/server";
 function do_glitch() {
   const random = Math.random();
   const glitches_type = [
@@ -8095,7 +8151,7 @@ function do_glitch() {
   if (random <= 0.2) {
     const glitch = glitches_type[Math.floor(Math.random() * glitches_type.length)];
     console.log(`[Loops] Doing Glitches: ${glitch}`);
-    for (const player of world10.getAllPlayers()) {
+    for (const player of world11.getAllPlayers()) {
       glitch(player);
       player.sendMessage("\xA7oWhat was that?");
     }
@@ -8109,7 +8165,7 @@ function load_glitch_loop() {
 }
 
 // behaviour_pack/scripts-dev/loops/totem_of_togetherness.ts
-import { EntityComponentTypes as EntityComponentTypes7, EquipmentSlot as EquipmentSlot4, system as system12, world as world11 } from "@minecraft/server";
+import { EntityComponentTypes as EntityComponentTypes7, EquipmentSlot as EquipmentSlot4, system as system12, world as world12 } from "@minecraft/server";
 var healthboost = MinecraftEffectTypes.HealthBoost;
 function togetherness(player) {
   const position = player.location;
@@ -8137,7 +8193,7 @@ function togetherness(player) {
 }
 function load_totem_o_togetherness() {
   system12.runInterval(() => {
-    let playerlist = world11.getPlayers();
+    let playerlist = world12.getPlayers();
     playerlist.forEach((player) => {
       togetherness(player);
     });
@@ -8146,7 +8202,7 @@ function load_totem_o_togetherness() {
 }
 
 // behaviour_pack/scripts-dev/loops/location.ts
-import { EntityComponentTypes as EntityComponentTypes8, EquipmentSlot as EquipmentSlot5, system as system13, world as world12, TicksPerSecond as TicksPerSecond6 } from "@minecraft/server";
+import { EntityComponentTypes as EntityComponentTypes8, EquipmentSlot as EquipmentSlot5, system as system13, world as world13, TicksPerSecond as TicksPerSecond6 } from "@minecraft/server";
 function location_log(player) {
   const head_gear = player.getComponent(EntityComponentTypes8.Equippable)?.getEquipment(EquipmentSlot5.Head);
   const check_list = [
@@ -8166,7 +8222,7 @@ function location_log(player) {
 }
 function load_location_logger() {
   system13.runInterval(() => {
-    let playerlist = world12.getPlayers();
+    let playerlist = world13.getPlayers();
     let log = [];
     playerlist.forEach((player) => {
       log.push(location_log(player));
@@ -8177,7 +8233,7 @@ function load_location_logger() {
 }
 
 // behaviour_pack/scripts-dev/loops/champion_set.ts
-import { EntityComponentTypes as EntityComponentTypes9, EquipmentSlot as EquipmentSlot6, MolangVariableMap, system as system14, world as world13 } from "@minecraft/server";
+import { EntityComponentTypes as EntityComponentTypes9, EquipmentSlot as EquipmentSlot6, MolangVariableMap, system as system14, world as world14 } from "@minecraft/server";
 function champion(player) {
   const molang = new MolangVariableMap();
   molang.setColorRGB("variable.color", { red: 1, green: 0.913, blue: 0.576 });
@@ -8200,7 +8256,7 @@ function champion(player) {
 }
 function load_champion_set() {
   system14.runInterval(() => {
-    let playerlist = world13.getPlayers();
+    let playerlist = world14.getPlayers();
     playerlist.forEach((player) => {
       champion(player);
     });
@@ -8220,10 +8276,10 @@ function load_loops() {
 }
 
 // behaviour_pack/scripts-dev/events/blocks.ts
-import { world as world14, system as system15 } from "@minecraft/server";
+import { world as world15, system as system15 } from "@minecraft/server";
 import { EntityComponentTypes as EntityComponentTypes10, EquipmentSlot as EquipmentSlot7 } from "@minecraft/server";
 function load_block_event_handler() {
-  world14.beforeEvents.playerBreakBlock.subscribe((event) => {
+  world15.beforeEvents.playerBreakBlock.subscribe((event) => {
     const block_id = event.block.typeId;
     const block_location = [event.block.x, event.block.y, event.block.z];
     const dimension = event.player.dimension;
@@ -8243,7 +8299,7 @@ function load_block_event_handler() {
       api_default.Interaction.enqueue(interaction);
     });
   });
-  world14.afterEvents.playerPlaceBlock.subscribe((event) => {
+  world15.afterEvents.playerPlaceBlock.subscribe((event) => {
     const block_id = event.block.typeId;
     const block_location = [event.block.x, event.block.y, event.block.z];
     const dimension = event.player.dimension;
@@ -8262,7 +8318,7 @@ function load_block_event_handler() {
       interaction.post_interaction();
     });
   });
-  world14.afterEvents.playerInteractWithBlock.subscribe((event) => {
+  world15.afterEvents.playerInteractWithBlock.subscribe((event) => {
     const block_id = event.block.typeId;
     const block_location = [event.block.x, event.block.y, event.block.z];
     const dimension = event.player.dimension;
@@ -8394,9 +8450,9 @@ function load_block_event_handler() {
 }
 
 // behaviour_pack/scripts-dev/events/chat.ts
-import { EntityComponentTypes as EntityComponentTypes11, EquipmentSlot as EquipmentSlot8, system as system16, world as world15 } from "@minecraft/server";
+import { EntityComponentTypes as EntityComponentTypes11, EquipmentSlot as EquipmentSlot8, system as system16, world as world16 } from "@minecraft/server";
 function load_chat_handler() {
-  world15.beforeEvents.chatSend.subscribe((chat_event) => {
+  world16.beforeEvents.chatSend.subscribe((chat_event) => {
     const gamertag = chat_event.sender.name;
     const thorny_user = api_default.ThornyUser.fetch_user(gamertag);
     if (chat_event.message.startsWith("!lore")) {
@@ -8423,7 +8479,7 @@ function load_chat_handler() {
         }
       });
     } else {
-      world15.sendMessage({
+      world16.sendMessage({
         rawtext: [{ text: `\xA7l\xA78[\xA7r${thorny_user?.get_role_display()}\xA7l\xA78]\xA7r \xA77${gamertag}:\xA7r ${chat_event.message}` }]
       });
       system16.run(() => {
@@ -8435,9 +8491,9 @@ function load_chat_handler() {
 }
 
 // behaviour_pack/scripts-dev/events/connections.ts
-import { world as world16 } from "@minecraft/server";
+import { world as world17 } from "@minecraft/server";
 function load_connections_handler(guild_id2) {
-  world16.afterEvents.playerSpawn.subscribe((spawn_event) => {
+  world17.afterEvents.playerSpawn.subscribe((spawn_event) => {
     if (spawn_event.initialSpawn) {
       try {
         api_default.ThornyUser.get_user_from_api(guild_id2, spawn_event.player.name).then((thorny_user) => {
@@ -8453,10 +8509,10 @@ function load_connections_handler(guild_id2) {
       }
     }
   });
-  world16.afterEvents.playerJoin.subscribe((join_event) => {
+  world17.afterEvents.playerJoin.subscribe((join_event) => {
     console.log("Join Log! ", join_event.playerName, join_event.playerId);
   });
-  world16.afterEvents.playerLeave.subscribe((leave_event) => {
+  world17.afterEvents.playerLeave.subscribe((leave_event) => {
     const thorny_user = api_default.ThornyUser.fetch_user(leave_event.playerName);
     if (thorny_user) {
       api_default.QuestWithProgress.clear_cache(thorny_user);
@@ -8467,10 +8523,10 @@ function load_connections_handler(guild_id2) {
 }
 
 // behaviour_pack/scripts-dev/events/entities.ts
-import { system as system17, world as world17 } from "@minecraft/server";
+import { system as system17, world as world18 } from "@minecraft/server";
 import { EntityComponentTypes as EntityComponentTypes12, EquipmentSlot as EquipmentSlot9, Player as Player11 } from "@minecraft/server";
 function load_entity_event_handler() {
-  world17.afterEvents.entityDie.subscribe((event) => {
+  world18.afterEvents.entityDie.subscribe((event) => {
     if (event.damageSource.damagingEntity instanceof Player11) {
       const player = event.damageSource.damagingEntity;
       const dimension = player.dimension;
@@ -8542,7 +8598,7 @@ function load_entity_event_handler() {
       api_default.Relay.event(utils_default.DeathMessage.random_suicide(player.name, event.damageSource.cause), "", "other");
     }
   });
-  world17.afterEvents.playerInteractWithEntity.subscribe((event) => {
+  world18.afterEvents.playerInteractWithEntity.subscribe((event) => {
     const entity_id = event.target.typeId;
     const entity_location = [event.target.location.x, event.target.location.y, event.target.location.z];
     const dimension = event.player.dimension;
@@ -8582,14 +8638,40 @@ function load_entity_event_handler() {
       });
     }
   });
+  let first_stage = false;
+  let second_stage = false;
+  world18.afterEvents.entityHurt.subscribe((event) => {
+    if (event.hurtEntity.typeId === MinecraftEntityTypes.EnderDragon) {
+      const health_component = event.hurtEntity.getComponent(EntityComponentTypes12.Health);
+      if (health_component && !first_stage && health_component?.currentValue / health_component?.effectiveMax <= 0.75) {
+        first_stage = true;
+        const message2 = utils_default.DragonHeartMessage.health_stage_message(1);
+        utils_default.commands.send_message(
+          event.hurtEntity.dimension.id,
+          "@a",
+          message2
+        );
+        utils_default.DragonHeartMessage.summon_minions();
+      } else if (health_component && !second_stage && health_component?.currentValue / health_component?.effectiveMax <= 0.25) {
+        second_stage = true;
+        const message2 = utils_default.DragonHeartMessage.health_stage_message(2);
+        utils_default.commands.send_message(
+          event.hurtEntity.dimension.id,
+          "@a",
+          message2
+        );
+        utils_default.DragonHeartMessage.summon_minions();
+      }
+    }
+  });
 }
 
 // behaviour_pack/scripts-dev/events/script_events.ts
-import { system as system18, world as world18 } from "@minecraft/server";
+import { system as system18, world as world19 } from "@minecraft/server";
 function load_script_event_handler() {
   system18.afterEvents.scriptEventReceive.subscribe((script_event) => {
     const thorny_user = api_default.ThornyUser.fetch_user(script_event.message);
-    const player = world18.getPlayers({ name: script_event.message })[0];
+    const player = world19.getPlayers({ name: script_event.message })[0];
     if (thorny_user) {
       const interaction = new api_default.Interaction(
         {
