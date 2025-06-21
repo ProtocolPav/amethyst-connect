@@ -6,9 +6,6 @@
             "menu_category": {
                 "category": "nature",
                 "is_hidden_in_commands": false
-            },
-            "states": {
-                "amethyst:powered_bit": [false, true]
             }
         },
         "components": {
@@ -24,15 +21,11 @@
             },
             "minecraft:display_name": "Draconic Heart",
             "minecraft:custom_components": [
-                "amethyst:whoop"
+                "amethyst:heal_dragon"
             ],
             "minecraft:tick": {
                 "interval_range": [2, 2],
                 "looping": true
-            },
-            "minecraft:redstone_conductivity": {
-                "allows_wire_to_step_down": true,
-                "redstone_conductor": true
             }
         }
     }
