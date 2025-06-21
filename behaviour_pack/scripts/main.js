@@ -1,5 +1,8 @@
 // behaviour_pack/scripts-dev/components/fungus_spread.ts
-import { system, TicksPerSecond } from "@minecraft/server";
+import {
+  system,
+  TicksPerSecond
+} from "@minecraft/server";
 
 // node_modules/@minecraft/vanilla-data/lib/index.js
 var MinecraftBiomeTypes = ((MinecraftBiomeTypes2) => {
@@ -237,7 +240,9 @@ var MinecraftBlockTypes = ((MinecraftBlockTypes22) => {
   MinecraftBlockTypes22["BubbleCoralFan"] = "minecraft:bubble_coral_fan";
   MinecraftBlockTypes22["BubbleCoralWallFan"] = "minecraft:bubble_coral_wall_fan";
   MinecraftBlockTypes22["BuddingAmethyst"] = "minecraft:budding_amethyst";
+  MinecraftBlockTypes22["Bush"] = "minecraft:bush";
   MinecraftBlockTypes22["Cactus"] = "minecraft:cactus";
+  MinecraftBlockTypes22["CactusFlower"] = "minecraft:cactus_flower";
   MinecraftBlockTypes22["Cake"] = "minecraft:cake";
   MinecraftBlockTypes22["Calcite"] = "minecraft:calcite";
   MinecraftBlockTypes22["CalibratedSculkSensor"] = "minecraft:calibrated_sculk_sensor";
@@ -447,6 +452,7 @@ var MinecraftBlockTypes = ((MinecraftBlockTypes22) => {
   MinecraftBlockTypes22["DoubleCutCopperSlab"] = "minecraft:double_cut_copper_slab";
   MinecraftBlockTypes22["DragonEgg"] = "minecraft:dragon_egg";
   MinecraftBlockTypes22["DragonHead"] = "minecraft:dragon_head";
+  MinecraftBlockTypes22["DriedGhast"] = "minecraft:dried_ghast";
   MinecraftBlockTypes22["DriedKelpBlock"] = "minecraft:dried_kelp_block";
   MinecraftBlockTypes22["DripstoneBlock"] = "minecraft:dripstone_block";
   MinecraftBlockTypes22["Dropper"] = "minecraft:dropper";
@@ -601,6 +607,7 @@ var MinecraftBlockTypes = ((MinecraftBlockTypes22) => {
   MinecraftBlockTypes22["FireCoralBlock"] = "minecraft:fire_coral_block";
   MinecraftBlockTypes22["FireCoralFan"] = "minecraft:fire_coral_fan";
   MinecraftBlockTypes22["FireCoralWallFan"] = "minecraft:fire_coral_wall_fan";
+  MinecraftBlockTypes22["FireflyBush"] = "minecraft:firefly_bush";
   MinecraftBlockTypes22["FletchingTable"] = "minecraft:fletching_table";
   MinecraftBlockTypes22["FlowerPot"] = "minecraft:flower_pot";
   MinecraftBlockTypes22["FloweringAzalea"] = "minecraft:flowering_azalea";
@@ -737,6 +744,7 @@ var MinecraftBlockTypes = ((MinecraftBlockTypes22) => {
   MinecraftBlockTypes22["LargeAmethystBud"] = "minecraft:large_amethyst_bud";
   MinecraftBlockTypes22["LargeFern"] = "minecraft:large_fern";
   MinecraftBlockTypes22["Lava"] = "minecraft:lava";
+  MinecraftBlockTypes22["LeafLitter"] = "minecraft:leaf_litter";
   MinecraftBlockTypes22["Lectern"] = "minecraft:lectern";
   MinecraftBlockTypes22["Lever"] = "minecraft:lever";
   MinecraftBlockTypes22["LightBlock0"] = "minecraft:light_block_0";
@@ -1092,6 +1100,7 @@ var MinecraftBlockTypes = ((MinecraftBlockTypes22) => {
   MinecraftBlockTypes22["SeaLantern"] = "minecraft:sea_lantern";
   MinecraftBlockTypes22["SeaPickle"] = "minecraft:sea_pickle";
   MinecraftBlockTypes22["Seagrass"] = "minecraft:seagrass";
+  MinecraftBlockTypes22["ShortDryGrass"] = "minecraft:short_dry_grass";
   MinecraftBlockTypes22["ShortGrass"] = "minecraft:short_grass";
   MinecraftBlockTypes22["Shroomlight"] = "minecraft:shroomlight";
   MinecraftBlockTypes22["SilverGlazedTerracotta"] = "minecraft:silver_glazed_terracotta";
@@ -1188,6 +1197,7 @@ var MinecraftBlockTypes = ((MinecraftBlockTypes22) => {
   MinecraftBlockTypes22["SuspiciousGravel"] = "minecraft:suspicious_gravel";
   MinecraftBlockTypes22["SuspiciousSand"] = "minecraft:suspicious_sand";
   MinecraftBlockTypes22["SweetBerryBush"] = "minecraft:sweet_berry_bush";
+  MinecraftBlockTypes22["TallDryGrass"] = "minecraft:tall_dry_grass";
   MinecraftBlockTypes22["TallGrass"] = "minecraft:tall_grass";
   MinecraftBlockTypes22["Target"] = "minecraft:target";
   MinecraftBlockTypes22["TintedGlass"] = "minecraft:tinted_glass";
@@ -1315,6 +1325,7 @@ var MinecraftBlockTypes = ((MinecraftBlockTypes22) => {
   MinecraftBlockTypes22["WhiteTerracotta"] = "minecraft:white_terracotta";
   MinecraftBlockTypes22["WhiteTulip"] = "minecraft:white_tulip";
   MinecraftBlockTypes22["WhiteWool"] = "minecraft:white_wool";
+  MinecraftBlockTypes22["Wildflowers"] = "minecraft:wildflowers";
   MinecraftBlockTypes22["WitherRose"] = "minecraft:wither_rose";
   MinecraftBlockTypes22["WitherSkeletonSkull"] = "minecraft:wither_skeleton_skull";
   MinecraftBlockTypes22["WoodenButton"] = "minecraft:wooden_button";
@@ -1335,6 +1346,7 @@ var MinecraftBlockTypes = ((MinecraftBlockTypes22) => {
   return MinecraftBlockTypes22;
 })(MinecraftBlockTypes || {});
 var MinecraftCameraPresetsTypes = ((MinecraftCameraPresetsTypes2) => {
+  MinecraftCameraPresetsTypes2["ControlSchemeCamera"] = "minecraft:control_scheme_camera";
   MinecraftCameraPresetsTypes2["FirstPerson"] = "minecraft:first_person";
   MinecraftCameraPresetsTypes2["FixedBoom"] = "minecraft:fixed_boom";
   MinecraftCameraPresetsTypes2["FollowOrbit"] = "minecraft:follow_orbit";
@@ -1357,44 +1369,44 @@ var MinecraftDimensionTypes = ((MinecraftDimensionTypes2) => {
   MinecraftDimensionTypes2["TheEnd"] = "minecraft:the_end";
   return MinecraftDimensionTypes2;
 })(MinecraftDimensionTypes || {});
-var MinecraftEffectTypes = ((MinecraftEffectTypes2) => {
-  MinecraftEffectTypes2["Absorption"] = "minecraft:absorption";
-  MinecraftEffectTypes2["BadOmen"] = "minecraft:bad_omen";
-  MinecraftEffectTypes2["Blindness"] = "minecraft:blindness";
-  MinecraftEffectTypes2["ConduitPower"] = "minecraft:conduit_power";
-  MinecraftEffectTypes2["Darkness"] = "minecraft:darkness";
-  MinecraftEffectTypes2["FatalPoison"] = "minecraft:fatal_poison";
-  MinecraftEffectTypes2["FireResistance"] = "minecraft:fire_resistance";
-  MinecraftEffectTypes2["Haste"] = "minecraft:haste";
-  MinecraftEffectTypes2["HealthBoost"] = "minecraft:health_boost";
-  MinecraftEffectTypes2["Hunger"] = "minecraft:hunger";
-  MinecraftEffectTypes2["Infested"] = "minecraft:infested";
-  MinecraftEffectTypes2["InstantDamage"] = "minecraft:instant_damage";
-  MinecraftEffectTypes2["InstantHealth"] = "minecraft:instant_health";
-  MinecraftEffectTypes2["Invisibility"] = "minecraft:invisibility";
-  MinecraftEffectTypes2["JumpBoost"] = "minecraft:jump_boost";
-  MinecraftEffectTypes2["Levitation"] = "minecraft:levitation";
-  MinecraftEffectTypes2["MiningFatigue"] = "minecraft:mining_fatigue";
-  MinecraftEffectTypes2["Nausea"] = "minecraft:nausea";
-  MinecraftEffectTypes2["NightVision"] = "minecraft:night_vision";
-  MinecraftEffectTypes2["Oozing"] = "minecraft:oozing";
-  MinecraftEffectTypes2["Poison"] = "minecraft:poison";
-  MinecraftEffectTypes2["RaidOmen"] = "minecraft:raid_omen";
-  MinecraftEffectTypes2["Regeneration"] = "minecraft:regeneration";
-  MinecraftEffectTypes2["Resistance"] = "minecraft:resistance";
-  MinecraftEffectTypes2["Saturation"] = "minecraft:saturation";
-  MinecraftEffectTypes2["SlowFalling"] = "minecraft:slow_falling";
-  MinecraftEffectTypes2["Slowness"] = "minecraft:slowness";
-  MinecraftEffectTypes2["Speed"] = "minecraft:speed";
-  MinecraftEffectTypes2["Strength"] = "minecraft:strength";
-  MinecraftEffectTypes2["TrialOmen"] = "minecraft:trial_omen";
-  MinecraftEffectTypes2["VillageHero"] = "minecraft:village_hero";
-  MinecraftEffectTypes2["WaterBreathing"] = "minecraft:water_breathing";
-  MinecraftEffectTypes2["Weakness"] = "minecraft:weakness";
-  MinecraftEffectTypes2["Weaving"] = "minecraft:weaving";
-  MinecraftEffectTypes2["WindCharged"] = "minecraft:wind_charged";
-  MinecraftEffectTypes2["Wither"] = "minecraft:wither";
-  return MinecraftEffectTypes2;
+var MinecraftEffectTypes = ((MinecraftEffectTypes22) => {
+  MinecraftEffectTypes22["Absorption"] = "minecraft:absorption";
+  MinecraftEffectTypes22["BadOmen"] = "minecraft:bad_omen";
+  MinecraftEffectTypes22["Blindness"] = "minecraft:blindness";
+  MinecraftEffectTypes22["ConduitPower"] = "minecraft:conduit_power";
+  MinecraftEffectTypes22["Darkness"] = "minecraft:darkness";
+  MinecraftEffectTypes22["FatalPoison"] = "minecraft:fatal_poison";
+  MinecraftEffectTypes22["FireResistance"] = "minecraft:fire_resistance";
+  MinecraftEffectTypes22["Haste"] = "minecraft:haste";
+  MinecraftEffectTypes22["HealthBoost"] = "minecraft:health_boost";
+  MinecraftEffectTypes22["Hunger"] = "minecraft:hunger";
+  MinecraftEffectTypes22["Infested"] = "minecraft:infested";
+  MinecraftEffectTypes22["InstantDamage"] = "minecraft:instant_damage";
+  MinecraftEffectTypes22["InstantHealth"] = "minecraft:instant_health";
+  MinecraftEffectTypes22["Invisibility"] = "minecraft:invisibility";
+  MinecraftEffectTypes22["JumpBoost"] = "minecraft:jump_boost";
+  MinecraftEffectTypes22["Levitation"] = "minecraft:levitation";
+  MinecraftEffectTypes22["MiningFatigue"] = "minecraft:mining_fatigue";
+  MinecraftEffectTypes22["Nausea"] = "minecraft:nausea";
+  MinecraftEffectTypes22["NightVision"] = "minecraft:night_vision";
+  MinecraftEffectTypes22["Oozing"] = "minecraft:oozing";
+  MinecraftEffectTypes22["Poison"] = "minecraft:poison";
+  MinecraftEffectTypes22["RaidOmen"] = "minecraft:raid_omen";
+  MinecraftEffectTypes22["Regeneration"] = "minecraft:regeneration";
+  MinecraftEffectTypes22["Resistance"] = "minecraft:resistance";
+  MinecraftEffectTypes22["Saturation"] = "minecraft:saturation";
+  MinecraftEffectTypes22["SlowFalling"] = "minecraft:slow_falling";
+  MinecraftEffectTypes22["Slowness"] = "minecraft:slowness";
+  MinecraftEffectTypes22["Speed"] = "minecraft:speed";
+  MinecraftEffectTypes22["Strength"] = "minecraft:strength";
+  MinecraftEffectTypes22["TrialOmen"] = "minecraft:trial_omen";
+  MinecraftEffectTypes22["VillageHero"] = "minecraft:village_hero";
+  MinecraftEffectTypes22["WaterBreathing"] = "minecraft:water_breathing";
+  MinecraftEffectTypes22["Weakness"] = "minecraft:weakness";
+  MinecraftEffectTypes22["Weaving"] = "minecraft:weaving";
+  MinecraftEffectTypes22["WindCharged"] = "minecraft:wind_charged";
+  MinecraftEffectTypes22["Wither"] = "minecraft:wither";
+  return MinecraftEffectTypes22;
 })(MinecraftEffectTypes || {});
 var MinecraftEnchantmentTypes = ((MinecraftEnchantmentTypes2) => {
   MinecraftEnchantmentTypes2["AquaAffinity"] = "minecraft:aqua_affinity";
@@ -1488,6 +1500,7 @@ var MinecraftEntityTypes = ((MinecraftEntityTypes2) => {
   MinecraftEntityTypes2["GlowSquid"] = "minecraft:glow_squid";
   MinecraftEntityTypes2["Goat"] = "minecraft:goat";
   MinecraftEntityTypes2["Guardian"] = "minecraft:guardian";
+  MinecraftEntityTypes2["HappyGhast"] = "minecraft:happy_ghast";
   MinecraftEntityTypes2["Hoglin"] = "minecraft:hoglin";
   MinecraftEntityTypes2["HopperMinecart"] = "minecraft:hopper_minecart";
   MinecraftEntityTypes2["Horse"] = "minecraft:horse";
@@ -1689,6 +1702,7 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["BlackConcretePowder"] = "minecraft:black_concrete_powder";
   MinecraftItemTypes2["BlackDye"] = "minecraft:black_dye";
   MinecraftItemTypes2["BlackGlazedTerracotta"] = "minecraft:black_glazed_terracotta";
+  MinecraftItemTypes2["BlackHarness"] = "minecraft:black_harness";
   MinecraftItemTypes2["BlackShulkerBox"] = "minecraft:black_shulker_box";
   MinecraftItemTypes2["BlackStainedGlass"] = "minecraft:black_stained_glass";
   MinecraftItemTypes2["BlackStainedGlassPane"] = "minecraft:black_stained_glass_pane";
@@ -1709,7 +1723,9 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["BlueConcrete"] = "minecraft:blue_concrete";
   MinecraftItemTypes2["BlueConcretePowder"] = "minecraft:blue_concrete_powder";
   MinecraftItemTypes2["BlueDye"] = "minecraft:blue_dye";
+  MinecraftItemTypes2["BlueEgg"] = "minecraft:blue_egg";
   MinecraftItemTypes2["BlueGlazedTerracotta"] = "minecraft:blue_glazed_terracotta";
+  MinecraftItemTypes2["BlueHarness"] = "minecraft:blue_harness";
   MinecraftItemTypes2["BlueIce"] = "minecraft:blue_ice";
   MinecraftItemTypes2["BlueOrchid"] = "minecraft:blue_orchid";
   MinecraftItemTypes2["BlueShulkerBox"] = "minecraft:blue_shulker_box";
@@ -1747,7 +1763,9 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["BrownConcrete"] = "minecraft:brown_concrete";
   MinecraftItemTypes2["BrownConcretePowder"] = "minecraft:brown_concrete_powder";
   MinecraftItemTypes2["BrownDye"] = "minecraft:brown_dye";
+  MinecraftItemTypes2["BrownEgg"] = "minecraft:brown_egg";
   MinecraftItemTypes2["BrownGlazedTerracotta"] = "minecraft:brown_glazed_terracotta";
+  MinecraftItemTypes2["BrownHarness"] = "minecraft:brown_harness";
   MinecraftItemTypes2["BrownMushroom"] = "minecraft:brown_mushroom";
   MinecraftItemTypes2["BrownMushroomBlock"] = "minecraft:brown_mushroom_block";
   MinecraftItemTypes2["BrownShulkerBox"] = "minecraft:brown_shulker_box";
@@ -1763,7 +1781,9 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["BuddingAmethyst"] = "minecraft:budding_amethyst";
   MinecraftItemTypes2["Bundle"] = "minecraft:bundle";
   MinecraftItemTypes2["BurnPotterySherd"] = "minecraft:burn_pottery_sherd";
+  MinecraftItemTypes2["Bush"] = "minecraft:bush";
   MinecraftItemTypes2["Cactus"] = "minecraft:cactus";
+  MinecraftItemTypes2["CactusFlower"] = "minecraft:cactus_flower";
   MinecraftItemTypes2["Cake"] = "minecraft:cake";
   MinecraftItemTypes2["Calcite"] = "minecraft:calcite";
   MinecraftItemTypes2["CalibratedSculkSensor"] = "minecraft:calibrated_sculk_sensor";
@@ -1908,6 +1928,7 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["CyanConcretePowder"] = "minecraft:cyan_concrete_powder";
   MinecraftItemTypes2["CyanDye"] = "minecraft:cyan_dye";
   MinecraftItemTypes2["CyanGlazedTerracotta"] = "minecraft:cyan_glazed_terracotta";
+  MinecraftItemTypes2["CyanHarness"] = "minecraft:cyan_harness";
   MinecraftItemTypes2["CyanShulkerBox"] = "minecraft:cyan_shulker_box";
   MinecraftItemTypes2["CyanStainedGlass"] = "minecraft:cyan_stained_glass";
   MinecraftItemTypes2["CyanStainedGlassPane"] = "minecraft:cyan_stained_glass_pane";
@@ -1999,6 +2020,7 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["DragonBreath"] = "minecraft:dragon_breath";
   MinecraftItemTypes2["DragonEgg"] = "minecraft:dragon_egg";
   MinecraftItemTypes2["DragonHead"] = "minecraft:dragon_head";
+  MinecraftItemTypes2["DriedGhast"] = "minecraft:dried_ghast";
   MinecraftItemTypes2["DriedKelp"] = "minecraft:dried_kelp";
   MinecraftItemTypes2["DriedKelpBlock"] = "minecraft:dried_kelp_block";
   MinecraftItemTypes2["DripstoneBlock"] = "minecraft:dripstone_block";
@@ -2054,6 +2076,7 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["FireCoral"] = "minecraft:fire_coral";
   MinecraftItemTypes2["FireCoralBlock"] = "minecraft:fire_coral_block";
   MinecraftItemTypes2["FireCoralFan"] = "minecraft:fire_coral_fan";
+  MinecraftItemTypes2["FireflyBush"] = "minecraft:firefly_bush";
   MinecraftItemTypes2["FireworkRocket"] = "minecraft:firework_rocket";
   MinecraftItemTypes2["FireworkStar"] = "minecraft:firework_star";
   MinecraftItemTypes2["FishingRod"] = "minecraft:fishing_rod";
@@ -2121,6 +2144,7 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["GrayConcretePowder"] = "minecraft:gray_concrete_powder";
   MinecraftItemTypes2["GrayDye"] = "minecraft:gray_dye";
   MinecraftItemTypes2["GrayGlazedTerracotta"] = "minecraft:gray_glazed_terracotta";
+  MinecraftItemTypes2["GrayHarness"] = "minecraft:gray_harness";
   MinecraftItemTypes2["GrayShulkerBox"] = "minecraft:gray_shulker_box";
   MinecraftItemTypes2["GrayStainedGlass"] = "minecraft:gray_stained_glass";
   MinecraftItemTypes2["GrayStainedGlassPane"] = "minecraft:gray_stained_glass_pane";
@@ -2133,6 +2157,7 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["GreenConcretePowder"] = "minecraft:green_concrete_powder";
   MinecraftItemTypes2["GreenDye"] = "minecraft:green_dye";
   MinecraftItemTypes2["GreenGlazedTerracotta"] = "minecraft:green_glazed_terracotta";
+  MinecraftItemTypes2["GreenHarness"] = "minecraft:green_harness";
   MinecraftItemTypes2["GreenShulkerBox"] = "minecraft:green_shulker_box";
   MinecraftItemTypes2["GreenStainedGlass"] = "minecraft:green_stained_glass";
   MinecraftItemTypes2["GreenStainedGlassPane"] = "minecraft:green_stained_glass_pane";
@@ -2144,6 +2169,7 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["GusterBannerPattern"] = "minecraft:guster_banner_pattern";
   MinecraftItemTypes2["GusterPotterySherd"] = "minecraft:guster_pottery_sherd";
   MinecraftItemTypes2["HangingRoots"] = "minecraft:hanging_roots";
+  MinecraftItemTypes2["HappyGhastSpawnEgg"] = "minecraft:happy_ghast_spawn_egg";
   MinecraftItemTypes2["HardenedClay"] = "minecraft:hardened_clay";
   MinecraftItemTypes2["HayBlock"] = "minecraft:hay_block";
   MinecraftItemTypes2["HeartOfTheSea"] = "minecraft:heart_of_the_sea";
@@ -2221,6 +2247,7 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["LargeFern"] = "minecraft:large_fern";
   MinecraftItemTypes2["LavaBucket"] = "minecraft:lava_bucket";
   MinecraftItemTypes2["Lead"] = "minecraft:lead";
+  MinecraftItemTypes2["LeafLitter"] = "minecraft:leaf_litter";
   MinecraftItemTypes2["Leather"] = "minecraft:leather";
   MinecraftItemTypes2["LeatherBoots"] = "minecraft:leather_boots";
   MinecraftItemTypes2["LeatherChestplate"] = "minecraft:leather_chestplate";
@@ -2252,6 +2279,7 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["LightBlueConcretePowder"] = "minecraft:light_blue_concrete_powder";
   MinecraftItemTypes2["LightBlueDye"] = "minecraft:light_blue_dye";
   MinecraftItemTypes2["LightBlueGlazedTerracotta"] = "minecraft:light_blue_glazed_terracotta";
+  MinecraftItemTypes2["LightBlueHarness"] = "minecraft:light_blue_harness";
   MinecraftItemTypes2["LightBlueShulkerBox"] = "minecraft:light_blue_shulker_box";
   MinecraftItemTypes2["LightBlueStainedGlass"] = "minecraft:light_blue_stained_glass";
   MinecraftItemTypes2["LightBlueStainedGlassPane"] = "minecraft:light_blue_stained_glass_pane";
@@ -2263,6 +2291,7 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["LightGrayConcrete"] = "minecraft:light_gray_concrete";
   MinecraftItemTypes2["LightGrayConcretePowder"] = "minecraft:light_gray_concrete_powder";
   MinecraftItemTypes2["LightGrayDye"] = "minecraft:light_gray_dye";
+  MinecraftItemTypes2["LightGrayHarness"] = "minecraft:light_gray_harness";
   MinecraftItemTypes2["LightGrayShulkerBox"] = "minecraft:light_gray_shulker_box";
   MinecraftItemTypes2["LightGrayStainedGlass"] = "minecraft:light_gray_stained_glass";
   MinecraftItemTypes2["LightGrayStainedGlassPane"] = "minecraft:light_gray_stained_glass_pane";
@@ -2279,6 +2308,7 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["LimeConcretePowder"] = "minecraft:lime_concrete_powder";
   MinecraftItemTypes2["LimeDye"] = "minecraft:lime_dye";
   MinecraftItemTypes2["LimeGlazedTerracotta"] = "minecraft:lime_glazed_terracotta";
+  MinecraftItemTypes2["LimeHarness"] = "minecraft:lime_harness";
   MinecraftItemTypes2["LimeShulkerBox"] = "minecraft:lime_shulker_box";
   MinecraftItemTypes2["LimeStainedGlass"] = "minecraft:lime_stained_glass";
   MinecraftItemTypes2["LimeStainedGlassPane"] = "minecraft:lime_stained_glass_pane";
@@ -2298,6 +2328,7 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["MagentaConcretePowder"] = "minecraft:magenta_concrete_powder";
   MinecraftItemTypes2["MagentaDye"] = "minecraft:magenta_dye";
   MinecraftItemTypes2["MagentaGlazedTerracotta"] = "minecraft:magenta_glazed_terracotta";
+  MinecraftItemTypes2["MagentaHarness"] = "minecraft:magenta_harness";
   MinecraftItemTypes2["MagentaShulkerBox"] = "minecraft:magenta_shulker_box";
   MinecraftItemTypes2["MagentaStainedGlass"] = "minecraft:magenta_stained_glass";
   MinecraftItemTypes2["MagentaStainedGlassPane"] = "minecraft:magenta_stained_glass_pane";
@@ -2371,6 +2402,7 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["MusicDiscRelic"] = "minecraft:music_disc_relic";
   MinecraftItemTypes2["MusicDiscStal"] = "minecraft:music_disc_stal";
   MinecraftItemTypes2["MusicDiscStrad"] = "minecraft:music_disc_strad";
+  MinecraftItemTypes2["MusicDiscTears"] = "minecraft:music_disc_tears";
   MinecraftItemTypes2["MusicDiscWait"] = "minecraft:music_disc_wait";
   MinecraftItemTypes2["MusicDiscWard"] = "minecraft:music_disc_ward";
   MinecraftItemTypes2["Mutton"] = "minecraft:mutton";
@@ -2431,6 +2463,7 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["OrangeConcretePowder"] = "minecraft:orange_concrete_powder";
   MinecraftItemTypes2["OrangeDye"] = "minecraft:orange_dye";
   MinecraftItemTypes2["OrangeGlazedTerracotta"] = "minecraft:orange_glazed_terracotta";
+  MinecraftItemTypes2["OrangeHarness"] = "minecraft:orange_harness";
   MinecraftItemTypes2["OrangeShulkerBox"] = "minecraft:orange_shulker_box";
   MinecraftItemTypes2["OrangeStainedGlass"] = "minecraft:orange_stained_glass";
   MinecraftItemTypes2["OrangeStainedGlassPane"] = "minecraft:orange_stained_glass_pane";
@@ -2491,6 +2524,7 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["PinkConcretePowder"] = "minecraft:pink_concrete_powder";
   MinecraftItemTypes2["PinkDye"] = "minecraft:pink_dye";
   MinecraftItemTypes2["PinkGlazedTerracotta"] = "minecraft:pink_glazed_terracotta";
+  MinecraftItemTypes2["PinkHarness"] = "minecraft:pink_harness";
   MinecraftItemTypes2["PinkPetals"] = "minecraft:pink_petals";
   MinecraftItemTypes2["PinkShulkerBox"] = "minecraft:pink_shulker_box";
   MinecraftItemTypes2["PinkStainedGlass"] = "minecraft:pink_stained_glass";
@@ -2564,6 +2598,7 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["PurpleConcretePowder"] = "minecraft:purple_concrete_powder";
   MinecraftItemTypes2["PurpleDye"] = "minecraft:purple_dye";
   MinecraftItemTypes2["PurpleGlazedTerracotta"] = "minecraft:purple_glazed_terracotta";
+  MinecraftItemTypes2["PurpleHarness"] = "minecraft:purple_harness";
   MinecraftItemTypes2["PurpleShulkerBox"] = "minecraft:purple_shulker_box";
   MinecraftItemTypes2["PurpleStainedGlass"] = "minecraft:purple_stained_glass";
   MinecraftItemTypes2["PurpleStainedGlassPane"] = "minecraft:purple_stained_glass_pane";
@@ -2602,6 +2637,7 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["RedConcretePowder"] = "minecraft:red_concrete_powder";
   MinecraftItemTypes2["RedDye"] = "minecraft:red_dye";
   MinecraftItemTypes2["RedGlazedTerracotta"] = "minecraft:red_glazed_terracotta";
+  MinecraftItemTypes2["RedHarness"] = "minecraft:red_harness";
   MinecraftItemTypes2["RedMushroom"] = "minecraft:red_mushroom";
   MinecraftItemTypes2["RedMushroomBlock"] = "minecraft:red_mushroom_block";
   MinecraftItemTypes2["RedNetherBrick"] = "minecraft:red_nether_brick";
@@ -2664,6 +2700,7 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["SheepSpawnEgg"] = "minecraft:sheep_spawn_egg";
   MinecraftItemTypes2["ShelterPotterySherd"] = "minecraft:shelter_pottery_sherd";
   MinecraftItemTypes2["Shield"] = "minecraft:shield";
+  MinecraftItemTypes2["ShortDryGrass"] = "minecraft:short_dry_grass";
   MinecraftItemTypes2["ShortGrass"] = "minecraft:short_grass";
   MinecraftItemTypes2["Shroomlight"] = "minecraft:shroomlight";
   MinecraftItemTypes2["ShulkerShell"] = "minecraft:shulker_shell";
@@ -2786,6 +2823,7 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["SweetBerries"] = "minecraft:sweet_berries";
   MinecraftItemTypes2["TadpoleBucket"] = "minecraft:tadpole_bucket";
   MinecraftItemTypes2["TadpoleSpawnEgg"] = "minecraft:tadpole_spawn_egg";
+  MinecraftItemTypes2["TallDryGrass"] = "minecraft:tall_dry_grass";
   MinecraftItemTypes2["TallGrass"] = "minecraft:tall_grass";
   MinecraftItemTypes2["Target"] = "minecraft:target";
   MinecraftItemTypes2["TideArmorTrimSmithingTemplate"] = "minecraft:tide_armor_trim_smithing_template";
@@ -2911,6 +2949,7 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["WhiteConcretePowder"] = "minecraft:white_concrete_powder";
   MinecraftItemTypes2["WhiteDye"] = "minecraft:white_dye";
   MinecraftItemTypes2["WhiteGlazedTerracotta"] = "minecraft:white_glazed_terracotta";
+  MinecraftItemTypes2["WhiteHarness"] = "minecraft:white_harness";
   MinecraftItemTypes2["WhiteShulkerBox"] = "minecraft:white_shulker_box";
   MinecraftItemTypes2["WhiteStainedGlass"] = "minecraft:white_stained_glass";
   MinecraftItemTypes2["WhiteStainedGlassPane"] = "minecraft:white_stained_glass_pane";
@@ -2918,6 +2957,7 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["WhiteTulip"] = "minecraft:white_tulip";
   MinecraftItemTypes2["WhiteWool"] = "minecraft:white_wool";
   MinecraftItemTypes2["WildArmorTrimSmithingTemplate"] = "minecraft:wild_armor_trim_smithing_template";
+  MinecraftItemTypes2["Wildflowers"] = "minecraft:wildflowers";
   MinecraftItemTypes2["WindCharge"] = "minecraft:wind_charge";
   MinecraftItemTypes2["WitchSpawnEgg"] = "minecraft:witch_spawn_egg";
   MinecraftItemTypes2["WitherRose"] = "minecraft:wither_rose";
@@ -2942,6 +2982,7 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["YellowConcretePowder"] = "minecraft:yellow_concrete_powder";
   MinecraftItemTypes2["YellowDye"] = "minecraft:yellow_dye";
   MinecraftItemTypes2["YellowGlazedTerracotta"] = "minecraft:yellow_glazed_terracotta";
+  MinecraftItemTypes2["YellowHarness"] = "minecraft:yellow_harness";
   MinecraftItemTypes2["YellowShulkerBox"] = "minecraft:yellow_shulker_box";
   MinecraftItemTypes2["YellowStainedGlass"] = "minecraft:yellow_stained_glass";
   MinecraftItemTypes2["YellowStainedGlassPane"] = "minecraft:yellow_stained_glass_pane";
@@ -3051,7 +3092,7 @@ function load_fungus_spreading_component() {
         onRandomTick(event) {
           fungus_spread(event);
         },
-        onPlayerDestroy(event) {
+        onPlayerBreak(event) {
           fungus_destroy(event);
         }
       }
@@ -6704,6 +6745,17 @@ function effect_glitch(player) {
     }
   );
 }
+function place_glitch_block(player) {
+  const block = "amethyst:glitch_block";
+  let location = player.location;
+  let facing = player.getViewDirection();
+  location.x += facing.x * 2;
+  location.z += facing.z * 2;
+  let random_block = player.dimension.getBlock(location);
+  if (random_block?.typeId === MinecraftBlockTypes.Air && player.dimension.getEntitiesAtBlockLocation(location).length === 0) {
+    random_block.setType(block);
+  }
+}
 var commands = {
   send_message,
   play_quest_complete_sound,
@@ -6715,7 +6767,8 @@ var commands = {
   noise_glitch,
   vision_block_glitch,
   vision_entity_glitch,
-  effect_glitch
+  effect_glitch,
+  place_glitch_block
 };
 var commands_default = commands;
 
@@ -6882,10 +6935,88 @@ var AltarMessage = class {
   }
 };
 
+// behaviour_pack/scripts-dev/utils/dragon_messages.ts
+import { world as world4 } from "@minecraft/server";
+var DragonHeartMessage = class {
+  static heart_mined(heartsMined) {
+    const heartMessages = {
+      1: `\xA7l\xA75The Ancient Dragon's roar echoes across dimensions...
+\xA7r"NO! You dare shatter my essence? My remaining \xA7l5 Hearts\xA7r beat frantically across the Relic Islands. Each one you destroy weakens my immortal form... I must stop you before it's too late!"`,
+      2: `\xA7l\xA75The Dragon's voice cracks with growing desperation...
+\xA7r"My power... it's draining away! \xA7l4 Hearts\xA7r still pulse on distant islands, but I can feel my strength ebbing. You don't understand - without them, I become... vulnerable. MORTAL."`,
+      3: `\xA7l\xA75Panic seeps into the Dragon's ancient voice...
+\xA7r"Three of my Hearts destroyed! Only \xA7l3 remain\xA7r to sustain my immortality! My scales grow brittle, my fire dims... If you take the rest, I'll be nothing more than flesh and bone. Please... reconsider this madness!"`,
+      4: `\xA7l\xA75The Dragon's terror becomes palpable...
+\xA7r"I BEG YOU, STOP! With only \xA7l2 Hearts\xA7r left, my ancient body begins to fail! My wings tremble, my breath grows weak... Soon I'll be defenseless against mortal weapons. You are not victorious, you are VICIOUS!"`,
+      5: `\xA7l\xA75The Dragon's voice breaks into desperate whispers...
+\xA7r"One... only \xA7l1 Heart\xA7r remains between me and certain death. I can feel mortality creeping through my veins like poison. When it's gone, any blade can pierce my hide, any arrow can find my heart. You've doomed me to die like... like the rest of them."`,
+      6: `\xA7l\xA75The Dragon's final scream pierces reality itself...
+\xA7r"IT IS FINISHED! All \xA7l6 Hearts\xA7r lie shattered! My immortality bleeds away like water through sand! I am... I am just flesh now. Mortal. Killable. The hunt begins, and I... I am the prey."`
+    };
+    return heartMessages[heartsMined] || "\xA7cError: Invalid heart count";
+  }
+  static health_stage_message(stage) {
+    if (stage === 1) {
+      const stage1Messages = [
+        `\xA7l\xA75The Ancient Dragon roars with fury...
+\xA7r"You think destroying my Hearts makes me weak? I am still DEATH INCARNATE! My minions will feast on your bones!"`,
+        `\xA7l\xA75Draconic power surges through the battlefield...
+\xA7r"Mortal fools! Even weakened, I command legions! Rise, my servants! Show them the price of defiance!"`,
+        `\xA7l\xA75The Dragon's eyes blaze with ancient hatred...
+\xA7r"You may have made me vulnerable, but I am FAR from defeated! Behold the armies that serve the Dragon Lord!"`,
+        `\xA7l\xA75Wings beat like thunder across the End...
+\xA7r"My immortality may be gone, but my RAGE remains eternal! Come forth, children of darkness! Defend your master!"`,
+        `\xA7l\xA75The battlefield trembles with draconic might...
+\xA7r"You celebrate too early, mortals! Even a mortal dragon commands respect! My minions will drown you in shadow!"`
+      ];
+      return stage1Messages[Math.floor(Math.random() * stage1Messages.length)];
+    } else if (stage === 2) {
+      const stage2Messages = [
+        `\xA7l\xA75The Dragon's voice cracks with desperation...
+\xA7r"No... NO! This cannot be! My loyal servants, protect me! I refuse to die like some common beast!"`,
+        `\xA7l\xA75Blood drips from ancient scales...
+\xA7r"I am the ANCIENT DRAGON! I will not fall to mortals! Rise, my champions! Give your lives for your master!"`,
+        `\xA7l\xA75The Dragon's roar becomes a pained shriek...
+\xA7r"My strength fades... but my will remains! Every creature in the End, come to my aid! I WILL NOT DIE ALONE!"`,
+        `\xA7l\xA75Panic seeps into the Dragon's ancient voice...
+\xA7r"This is impossible! I have ruled for millennia! My minions, my faithful servants... save me from this humiliation!"`,
+        `\xA7l\xA75The Dragon's breathing grows labored...
+\xA7r"I can feel death approaching... but I will take you all with me! My final army, emerge from the shadows! We die together!"`
+      ];
+      return stage2Messages[Math.floor(Math.random() * stage2Messages.length)];
+    }
+    return `\xA75The Ancient Dragon speaks... \xA7r"Unknown stage of battle reached..."`;
+  }
+  static summon_minions() {
+    const mob_counts = {
+      "amethyst:endstone_golem": 2.2,
+      "amethyst:the_breath": 1.4
+    };
+    const radius = 30;
+    const dimension = world4.getDimension(MinecraftDimensionTypes.TheEnd);
+    const player_count = dimension.getPlayers().length;
+    const totalMobs = Object.values(mob_counts).reduce((sum, count) => sum + count * player_count, 0);
+    const angleIncrement = 2 * Math.PI / totalMobs;
+    let mobIndex = 0;
+    for (const [mobType, countPerPlayer] of Object.entries(mob_counts)) {
+      const totalCount = countPerPlayer * player_count;
+      for (let i = 0; i < totalCount; i++) {
+        const angle = angleIncrement * mobIndex;
+        const x = radius * Math.cos(angle);
+        const z = radius * Math.sin(angle);
+        const groundY = dimension.getTopmostBlock({ x, z })?.y || 70;
+        dimension.spawnEntity(mobType, { x, y: groundY + 1, z });
+        mobIndex++;
+      }
+    }
+  }
+};
+
 // behaviour_pack/scripts-dev/utils/index.ts
 var utils = {
   DeathMessage,
   AltarMessage,
+  DragonHeartMessage,
   send_motd,
   checks: checks_default,
   commands: commands_default,
@@ -6900,7 +7031,7 @@ function load_glitch_component() {
   function glitch(event) {
     if (Math.random() < 0.07 && event.block.isValid) {
       const location = event.block.location;
-      const radius = 20;
+      const radius = 18;
       const glitches_type = [
         utils_default.commands.noise_glitch,
         utils_default.commands.vision_block_glitch,
@@ -6908,9 +7039,14 @@ function load_glitch_component() {
         utils_default.commands.effect_glitch
       ];
       const glitch2 = glitches_type[Math.floor(Math.random() * glitches_type.length)];
-      event.block.dimension.getPlayers({ location, maxDistance: radius }).forEach((player) => {
-        glitch2(player);
-      });
+      const players = event.block.dimension.getPlayers({ location, maxDistance: radius });
+      if (players.length === 0) {
+        event.block.setType("minecraft:air");
+      } else {
+        players.forEach((player) => {
+          glitch2(player);
+        });
+      }
     }
   }
   function glitch_particles(event) {
@@ -7801,6 +7937,59 @@ function load_reactor_activate_component() {
   });
 }
 
+// behaviour_pack/scripts-dev/components/heal_dragon.ts
+import {
+  system as system7,
+  EntityComponentTypes as EntityComponentTypes4
+} from "@minecraft/server";
+function load_heal_dragon_component() {
+  let mined_blocks = 0;
+  function heal_dragon(event) {
+    if (event.block.isValid) {
+      const dragon = event.block.dimension.getEntities({ type: MinecraftEntityTypes.EnderDragon })[0];
+      if (dragon && dragon.isValid) {
+        dragon.getComponent(EntityComponentTypes4.Health)?.resetToMaxValue();
+      }
+      event.dimension.playSound("mob.warden.heartbeat", event.block.location);
+    }
+  }
+  function heart_destroy(event) {
+    mined_blocks++;
+    event.dimension.spawnEntity(
+      "amethyst:the_breath",
+      event.block.location
+    );
+    event.dimension.spawnEntity(
+      "amethyst:the_breath",
+      event.block.location
+    );
+    event.dimension.spawnEntity(
+      "amethyst:endstone_golem",
+      event.block.location
+    );
+    event.dimension.playSound("mob.enderdragon.growl", event.block.location);
+    const message2 = utils_default.DragonHeartMessage.heart_mined(mined_blocks);
+    utils_default.commands.send_message(
+      event.dimension.id,
+      "@a",
+      message2
+    );
+  }
+  system7.beforeEvents.startup.subscribe((initEvent) => {
+    initEvent.blockComponentRegistry.registerCustomComponent(
+      "amethyst:heal_dragon",
+      {
+        onTick(event) {
+          heal_dragon(event);
+        },
+        onPlayerBreak(event) {
+          heart_destroy(event);
+        }
+      }
+    );
+  });
+}
+
 // behaviour_pack/scripts-dev/components/index.ts
 function load_custom_components(guild_id2) {
   load_fungus_spreading_component();
@@ -7808,12 +7997,13 @@ function load_custom_components(guild_id2) {
   load_whoop_component();
   load_altar_component(guild_id2);
   load_reactor_activate_component();
+  load_heal_dragon_component();
 }
 
 // behaviour_pack/scripts-dev/loops/elytra_no_mending.ts
-import { EquipmentSlot as EquipmentSlot3, world as world7, system as system7, EntityComponentTypes as EntityComponentTypes4, ItemComponentTypes as ItemComponentTypes2, EnchantmentType } from "@minecraft/server";
+import { EquipmentSlot as EquipmentSlot3, world as world8, system as system8, EntityComponentTypes as EntityComponentTypes5, ItemComponentTypes as ItemComponentTypes2, EnchantmentType } from "@minecraft/server";
 function elytraCheck(player) {
-  const player_equipment = player.getComponent(EntityComponentTypes4.Equippable);
+  const player_equipment = player.getComponent(EntityComponentTypes5.Equippable);
   const item = player_equipment?.getEquipment(EquipmentSlot3.Chest);
   if (item) {
     const enchantments = item?.getComponent(ItemComponentTypes2.Enchantable);
@@ -7834,15 +8024,15 @@ function elytraCheck(player) {
       }
       item.setLore([`
 \xA7o"My wings are cursed!"`]);
-      world7.getDimension("overworld").runCommand(`title "${player.name}" actionbar \xA7o\xA7iMy Elytra feels different...`);
+      world8.getDimension("overworld").runCommand(`title "${player.name}" actionbar \xA7o\xA7iMy Elytra feels different...`);
       player_equipment?.setEquipment(EquipmentSlot3.Chest, item);
       console.log(`[ElytraCheck] Player ${player.name} has elytra with mending. Removing Mending.`);
     }
   }
 }
 function load_elytra_mending_checker() {
-  system7.runInterval(() => {
-    let playerlist = world7.getPlayers();
+  system8.runInterval(() => {
+    let playerlist = world8.getPlayers();
     playerlist.forEach((player) => {
       elytraCheck(player);
     });
@@ -7851,7 +8041,7 @@ function load_elytra_mending_checker() {
 }
 
 // behaviour_pack/scripts-dev/loops/border.ts
-import { world as world8, system as system8, EntityDamageCause } from "@minecraft/server";
+import { world as world9, system as system9, EntityDamageCause } from "@minecraft/server";
 function borderCheck(player, dimensionID, border_size, warning_range, outside) {
   const position = player.location;
   const distance_2d = Math.sqrt(position.x ** 2 + position.z ** 2);
@@ -7863,15 +8053,15 @@ function borderCheck(player, dimensionID, border_size, warning_range, outside) {
     console.log(`[Plugin] [Border] Player ${player.name} has re-entered the ${dimensionID} border.`);
   }
   if (border_size < distance_2d) {
-    world8.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iI shouldn't go any further. It's too dangerous here.`);
-    world8.getDimension(dimensionID).runCommand(`effect "${player.name}" blindness 4 2`);
+    world9.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iI shouldn't go any further. It's too dangerous here.`);
+    world9.getDimension(dimensionID).runCommand(`effect "${player.name}" blindness 4 2`);
     player.applyDamage(1.3, { cause: EntityDamageCause.void });
   } else if (border_size - 20 < distance_2d) {
-    world8.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iThe Monolith's protection is wearing off. I can feel it...`);
+    world9.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iThe Monolith's protection is wearing off. I can feel it...`);
   }
   if (border_size - 100 < distance_2d && warning_range.indexOf(player.name) == -1) {
     warning_range.push(player.name);
-    world8.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iMaybe I should start heading back now...`);
+    world9.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iMaybe I should start heading back now...`);
   } else if (border_size - 100 > distance_2d && warning_range.indexOf(player.name) != -1) {
     warning_range.splice(warning_range.indexOf(player.name), 1);
   }
@@ -7879,11 +8069,11 @@ function borderCheck(player, dimensionID, border_size, warning_range, outside) {
 function load_world_border(guild_id2) {
   let players_100_blocks_away = { overworld: [], nether: [], end: [] };
   let players_outside_border = { overworld: [], nether: [], end: [] };
-  system8.runInterval(() => {
+  system9.runInterval(() => {
     let players = {
-      overworld: world8.getDimension(MinecraftDimensionTypes.Overworld).getPlayers(),
-      nether: world8.getDimension(MinecraftDimensionTypes.Nether).getPlayers(),
-      end: world8.getDimension(MinecraftDimensionTypes.TheEnd).getPlayers()
+      overworld: world9.getDimension(MinecraftDimensionTypes.Overworld).getPlayers(),
+      nether: world9.getDimension(MinecraftDimensionTypes.Nether).getPlayers(),
+      end: world9.getDimension(MinecraftDimensionTypes.TheEnd).getPlayers()
     };
     players.overworld.forEach((player) => {
       borderCheck(player, MinecraftDimensionTypes.Overworld, WorldCache.world.overworld_border, players_100_blocks_away.overworld, players_outside_border.overworld);
@@ -7899,7 +8089,7 @@ function load_world_border(guild_id2) {
 }
 
 // behaviour_pack/scripts-dev/loops/quests.ts
-import { system as system9, world as world9 } from "@minecraft/server";
+import { system as system10, world as world10 } from "@minecraft/server";
 async function check_quests() {
   try {
     if (!api_default.Interaction.is_processing()) {
@@ -7945,7 +8135,7 @@ async function display_timer() {
       let remaining_seconds = Math.max(0, active_objective.objective_timer - elapsed_seconds);
       let minutes = Math.floor(remaining_seconds / 60);
       let seconds = remaining_seconds % 60;
-      let player = world9.getPlayers({ name: active_objective.thorny_user.gamertag })[0];
+      let player = world10.getPlayers({ name: active_objective.thorny_user.gamertag })[0];
       utils_default.commands.send_title(
         player.dimension.id,
         player.name,
@@ -7956,17 +8146,17 @@ async function display_timer() {
   }
 }
 function load_quest_loop() {
-  system9.runInterval(async () => {
+  system10.runInterval(async () => {
     await check_quests();
   }, 1);
-  system9.runInterval(async () => {
+  system10.runInterval(async () => {
     await display_timer();
   }, 10);
   console.log("[Loops] Loaded Quests Loop");
 }
 
 // behaviour_pack/scripts-dev/loops/glitches.ts
-import { system as system10, world as world10, TicksPerSecond as TicksPerSecond4 } from "@minecraft/server";
+import { system as system11, world as world11, TicksPerSecond as TicksPerSecond5 } from "@minecraft/server";
 function do_glitch() {
   const random = Math.random();
   const glitches_type = [
@@ -7975,28 +8165,30 @@ function do_glitch() {
     utils_default.commands.noise_glitch,
     utils_default.commands.effect_glitch
   ];
-  if (random <= 0.2) {
+  if (random <= 0.27) {
     const glitch = glitches_type[Math.floor(Math.random() * glitches_type.length)];
-    console.log(`[Loops] Doing Glitches: ${glitch}`);
-    for (const player of world10.getAllPlayers()) {
+    for (const player of world11.getAllPlayers()) {
       glitch(player);
-      player.sendMessage("\xA7oWhat was that?");
+      player.sendMessage("[You whisper to yourself] \xA7oWhat was that?");
+      if (Math.random() < 0.4) {
+        utils_default.commands.place_glitch_block(player);
+      }
     }
   }
 }
 function load_glitch_loop() {
-  system10.runInterval(() => {
+  system11.runInterval(() => {
     do_glitch();
-  }, TicksPerSecond4 * 60 * 30);
+  }, TicksPerSecond5 * 60 * 30);
   console.log("[Loops] Loaded Glitches Loop");
 }
 
 // behaviour_pack/scripts-dev/loops/totem_of_togetherness.ts
-import { EntityComponentTypes as EntityComponentTypes6, EquipmentSlot as EquipmentSlot4, system as system11, world as world11 } from "@minecraft/server";
+import { EntityComponentTypes as EntityComponentTypes7, EquipmentSlot as EquipmentSlot4, system as system12, world as world12 } from "@minecraft/server";
 var healthboost = MinecraftEffectTypes.HealthBoost;
 function togetherness(player) {
   const position = player.location;
-  const equippable = player.getComponent(EntityComponentTypes6.Equippable);
+  const equippable = player.getComponent(EntityComponentTypes7.Equippable);
   const offhand = equippable?.getEquipment(EquipmentSlot4.Offhand);
   const mainhand = equippable?.getEquipment(EquipmentSlot4.Mainhand);
   if (offhand?.hasTag("amethyst:togetherness") || mainhand?.hasTag("amethyst:togetherness")) {
@@ -8019,8 +8211,8 @@ function togetherness(player) {
   }
 }
 function load_totem_o_togetherness() {
-  system11.runInterval(() => {
-    let playerlist = world11.getPlayers();
+  system12.runInterval(() => {
+    let playerlist = world12.getPlayers();
     playerlist.forEach((player) => {
       togetherness(player);
     });
@@ -8029,9 +8221,9 @@ function load_totem_o_togetherness() {
 }
 
 // behaviour_pack/scripts-dev/loops/location.ts
-import { EntityComponentTypes as EntityComponentTypes7, EquipmentSlot as EquipmentSlot5, system as system12, world as world12, TicksPerSecond as TicksPerSecond5 } from "@minecraft/server";
+import { EntityComponentTypes as EntityComponentTypes8, EquipmentSlot as EquipmentSlot5, system as system13, world as world13, TicksPerSecond as TicksPerSecond6 } from "@minecraft/server";
 function location_log(player) {
-  const head_gear = player.getComponent(EntityComponentTypes7.Equippable)?.getEquipment(EquipmentSlot5.Head);
+  const head_gear = player.getComponent(EntityComponentTypes8.Equippable)?.getEquipment(EquipmentSlot5.Head);
   const check_list = [
     MinecraftItemTypes.SkeletonSkull,
     MinecraftItemTypes.WitherSkeletonSkull,
@@ -8048,24 +8240,24 @@ function location_log(player) {
   return { "gamertag": player.name, "location": location, "hidden": hidden };
 }
 function load_location_logger() {
-  system12.runInterval(() => {
-    let playerlist = world12.getPlayers();
+  system13.runInterval(() => {
+    let playerlist = world13.getPlayers();
     let log = [];
     playerlist.forEach((player) => {
       log.push(location_log(player));
     });
     api_default.Relay.location(log);
-  }, TicksPerSecond5 * 5);
+  }, TicksPerSecond6 * 5);
   console.log("[Loops] Loaded Location Loop");
 }
 
 // behaviour_pack/scripts-dev/loops/champion_set.ts
-import { EntityComponentTypes as EntityComponentTypes8, EquipmentSlot as EquipmentSlot6, MolangVariableMap, system as system13, world as world13 } from "@minecraft/server";
+import { EntityComponentTypes as EntityComponentTypes9, EquipmentSlot as EquipmentSlot6, MolangVariableMap, system as system14, world as world14 } from "@minecraft/server";
 function champion(player) {
   const molang = new MolangVariableMap();
   molang.setColorRGB("variable.color", { red: 1, green: 0.913, blue: 0.576 });
   const position = player.location;
-  const equippable = player.getComponent(EntityComponentTypes8.Equippable);
+  const equippable = player.getComponent(EntityComponentTypes9.Equippable);
   let equipped = 0;
   equippable?.getEquipment(EquipmentSlot6.Head)?.hasTag("amethyst:champion") ? equipped++ : null;
   equippable?.getEquipment(EquipmentSlot6.Chest)?.hasTag("amethyst:champion") ? equipped++ : null;
@@ -8082,8 +8274,8 @@ function champion(player) {
   }
 }
 function load_champion_set() {
-  system13.runInterval(() => {
-    let playerlist = world13.getPlayers();
+  system14.runInterval(() => {
+    let playerlist = world14.getPlayers();
     playerlist.forEach((player) => {
       champion(player);
     });
@@ -8103,15 +8295,15 @@ function load_loops() {
 }
 
 // behaviour_pack/scripts-dev/events/blocks.ts
-import { world as world14, system as system14 } from "@minecraft/server";
-import { EntityComponentTypes as EntityComponentTypes9, EquipmentSlot as EquipmentSlot7 } from "@minecraft/server";
+import { world as world15, system as system15 } from "@minecraft/server";
+import { EntityComponentTypes as EntityComponentTypes10, EquipmentSlot as EquipmentSlot7 } from "@minecraft/server";
 function load_block_event_handler() {
-  world14.beforeEvents.playerBreakBlock.subscribe((event) => {
+  world15.beforeEvents.playerBreakBlock.subscribe((event) => {
     const block_id = event.block.typeId;
     const block_location = [event.block.x, event.block.y, event.block.z];
     const dimension = event.player.dimension;
-    const mainhand = event.player.getComponent(EntityComponentTypes9.Equippable)?.getEquipment(EquipmentSlot7.Mainhand);
-    system14.run(() => {
+    const mainhand = event.player.getComponent(EntityComponentTypes10.Equippable)?.getEquipment(EquipmentSlot7.Mainhand);
+    system15.run(() => {
       const interaction = new api_default.Interaction(
         {
           thorny_id: api_default.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
@@ -8126,12 +8318,12 @@ function load_block_event_handler() {
       api_default.Interaction.enqueue(interaction);
     });
   });
-  world14.afterEvents.playerPlaceBlock.subscribe((event) => {
+  world15.afterEvents.playerPlaceBlock.subscribe((event) => {
     const block_id = event.block.typeId;
     const block_location = [event.block.x, event.block.y, event.block.z];
     const dimension = event.player.dimension;
-    const mainhand = event.player.getComponent(EntityComponentTypes9.Equippable)?.getEquipment(EquipmentSlot7.Mainhand);
-    system14.run(() => {
+    const mainhand = event.player.getComponent(EntityComponentTypes10.Equippable)?.getEquipment(EquipmentSlot7.Mainhand);
+    system15.run(() => {
       const interaction = new api_default.Interaction(
         {
           thorny_id: api_default.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
@@ -8145,11 +8337,11 @@ function load_block_event_handler() {
       interaction.post_interaction();
     });
   });
-  world14.afterEvents.playerInteractWithBlock.subscribe((event) => {
+  world15.afterEvents.playerInteractWithBlock.subscribe((event) => {
     const block_id = event.block.typeId;
     const block_location = [event.block.x, event.block.y, event.block.z];
     const dimension = event.player.dimension;
-    const mainhand = event.player.getComponent(EntityComponentTypes9.Equippable)?.getEquipment(EquipmentSlot7.Mainhand);
+    const mainhand = event.player.getComponent(EntityComponentTypes10.Equippable)?.getEquipment(EquipmentSlot7.Mainhand);
     const all_blocks = [
       // Containers
       MinecraftBlockTypes.Chest,
@@ -8259,7 +8451,7 @@ function load_block_event_handler() {
       MinecraftBlockTypes.WaxedWeatheredCopperTrapdoor
     ];
     if (all_blocks.includes(block_id) && !(event.beforeItemStack?.typeId === block_id && event.itemStack?.amount !== event.beforeItemStack?.amount)) {
-      system14.run(() => {
+      system15.run(() => {
         const interaction = new api_default.Interaction(
           {
             thorny_id: api_default.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
@@ -8277,15 +8469,15 @@ function load_block_event_handler() {
 }
 
 // behaviour_pack/scripts-dev/events/chat.ts
-import { EntityComponentTypes as EntityComponentTypes10, EquipmentSlot as EquipmentSlot8, system as system15, world as world15 } from "@minecraft/server";
+import { EntityComponentTypes as EntityComponentTypes11, EquipmentSlot as EquipmentSlot8, system as system16, world as world16 } from "@minecraft/server";
 function load_chat_handler() {
-  world15.beforeEvents.chatSend.subscribe((chat_event) => {
+  world16.beforeEvents.chatSend.subscribe((chat_event) => {
     const gamertag = chat_event.sender.name;
     const thorny_user = api_default.ThornyUser.fetch_user(gamertag);
     if (chat_event.message.startsWith("!lore")) {
-      const equippable = chat_event.sender.getComponent(EntityComponentTypes10.Equippable);
+      const equippable = chat_event.sender.getComponent(EntityComponentTypes11.Equippable);
       const mainhand = equippable?.getEquipment(EquipmentSlot8.Mainhand);
-      system15.run(() => {
+      system16.run(() => {
         switch (chat_event.message.split(" ")[1].toLowerCase()) {
           case "add":
             if (mainhand) {
@@ -8306,10 +8498,10 @@ function load_chat_handler() {
         }
       });
     } else {
-      world15.sendMessage({
+      world16.sendMessage({
         rawtext: [{ text: `\xA7l\xA78[\xA7r${thorny_user?.get_role_display()}\xA7l\xA78]\xA7r \xA77${gamertag}:\xA7r ${chat_event.message}` }]
       });
-      system15.run(() => {
+      system16.run(() => {
         api_default.Relay.message(gamertag, chat_event.message);
       });
     }
@@ -8318,9 +8510,9 @@ function load_chat_handler() {
 }
 
 // behaviour_pack/scripts-dev/events/connections.ts
-import { world as world16 } from "@minecraft/server";
+import { world as world17 } from "@minecraft/server";
 function load_connections_handler(guild_id2) {
-  world16.afterEvents.playerSpawn.subscribe((spawn_event) => {
+  world17.afterEvents.playerSpawn.subscribe((spawn_event) => {
     if (spawn_event.initialSpawn) {
       try {
         api_default.ThornyUser.get_user_from_api(guild_id2, spawn_event.player.name).then((thorny_user) => {
@@ -8336,10 +8528,10 @@ function load_connections_handler(guild_id2) {
       }
     }
   });
-  world16.afterEvents.playerJoin.subscribe((join_event) => {
+  world17.afterEvents.playerJoin.subscribe((join_event) => {
     console.log("Join Log! ", join_event.playerName, join_event.playerId);
   });
-  world16.afterEvents.playerLeave.subscribe((leave_event) => {
+  world17.afterEvents.playerLeave.subscribe((leave_event) => {
     const thorny_user = api_default.ThornyUser.fetch_user(leave_event.playerName);
     if (thorny_user) {
       api_default.QuestWithProgress.clear_cache(thorny_user);
@@ -8350,14 +8542,14 @@ function load_connections_handler(guild_id2) {
 }
 
 // behaviour_pack/scripts-dev/events/entities.ts
-import { system as system16, world as world17 } from "@minecraft/server";
-import { EntityComponentTypes as EntityComponentTypes11, EquipmentSlot as EquipmentSlot9, Player as Player11 } from "@minecraft/server";
+import { system as system17, world as world18 } from "@minecraft/server";
+import { EntityComponentTypes as EntityComponentTypes12, EquipmentSlot as EquipmentSlot9, Player as Player11 } from "@minecraft/server";
 function load_entity_event_handler() {
-  world17.afterEvents.entityDie.subscribe((event) => {
+  world18.afterEvents.entityDie.subscribe((event) => {
     if (event.damageSource.damagingEntity instanceof Player11) {
       const player = event.damageSource.damagingEntity;
       const dimension = player.dimension;
-      const mainhand = player.getComponent(EntityComponentTypes11.Equippable)?.getEquipment(EquipmentSlot9.Mainhand);
+      const mainhand = player.getComponent(EntityComponentTypes12.Equippable)?.getEquipment(EquipmentSlot9.Mainhand);
       const interaction = new api_default.Interaction(
         {
           thorny_id: api_default.ThornyUser.fetch_user(player.name)?.thorny_id ?? 0,
@@ -8370,7 +8562,7 @@ function load_entity_event_handler() {
       );
       if (event.deadEntity instanceof Player11) {
         const dead_player = event.deadEntity;
-        const dead_mainhand = dead_player.getComponent(EntityComponentTypes11.Equippable)?.getEquipment(EquipmentSlot9.Mainhand);
+        const dead_mainhand = dead_player.getComponent(EntityComponentTypes12.Equippable)?.getEquipment(EquipmentSlot9.Mainhand);
         interaction.reference = dead_player.name;
         const death_interaction = new api_default.Interaction(
           {
@@ -8394,7 +8586,7 @@ function load_entity_event_handler() {
       const killer = event.damageSource.damagingEntity;
       const player = event.deadEntity;
       const dimension = player.dimension;
-      const mainhand = player.getComponent(EntityComponentTypes11.Equippable)?.getEquipment(EquipmentSlot9.Mainhand);
+      const mainhand = player.getComponent(EntityComponentTypes12.Equippable)?.getEquipment(EquipmentSlot9.Mainhand);
       const death_interaction = new api_default.Interaction(
         {
           thorny_id: api_default.ThornyUser.fetch_user(player.name)?.thorny_id ?? 0,
@@ -8410,7 +8602,7 @@ function load_entity_event_handler() {
     } else if (event.deadEntity instanceof Player11 && !event.damageSource.damagingEntity) {
       const player = event.deadEntity;
       const dimension = player.dimension;
-      const mainhand = player.getComponent(EntityComponentTypes11.Equippable)?.getEquipment(EquipmentSlot9.Mainhand);
+      const mainhand = player.getComponent(EntityComponentTypes12.Equippable)?.getEquipment(EquipmentSlot9.Mainhand);
       const death_interaction = new api_default.Interaction(
         {
           thorny_id: api_default.ThornyUser.fetch_user(player.name)?.thorny_id ?? 0,
@@ -8425,11 +8617,11 @@ function load_entity_event_handler() {
       api_default.Relay.event(utils_default.DeathMessage.random_suicide(player.name, event.damageSource.cause), "", "other");
     }
   });
-  world17.afterEvents.playerInteractWithEntity.subscribe((event) => {
+  world18.afterEvents.playerInteractWithEntity.subscribe((event) => {
     const entity_id = event.target.typeId;
     const entity_location = [event.target.location.x, event.target.location.y, event.target.location.z];
     const dimension = event.player.dimension;
-    const mainhand = event.player.getComponent(EntityComponentTypes11.Equippable)?.getEquipment(EquipmentSlot9.Mainhand);
+    const mainhand = event.player.getComponent(EntityComponentTypes12.Equippable)?.getEquipment(EquipmentSlot9.Mainhand);
     const all_entities = [
       // Villagers
       MinecraftEntityTypes.Villager,
@@ -8450,7 +8642,7 @@ function load_entity_event_handler() {
       MinecraftEntityTypes.HopperMinecart
     ];
     if (all_entities.includes(entity_id)) {
-      system16.run(() => {
+      system17.run(() => {
         const interaction = new api_default.Interaction(
           {
             thorny_id: api_default.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
@@ -8465,14 +8657,40 @@ function load_entity_event_handler() {
       });
     }
   });
+  let first_stage = false;
+  let second_stage = false;
+  world18.afterEvents.entityHurt.subscribe((event) => {
+    if (event.hurtEntity.typeId === MinecraftEntityTypes.EnderDragon) {
+      const health_component = event.hurtEntity.getComponent(EntityComponentTypes12.Health);
+      if (health_component && !first_stage && health_component?.currentValue / health_component?.effectiveMax <= 0.75) {
+        first_stage = true;
+        const message2 = utils_default.DragonHeartMessage.health_stage_message(1);
+        utils_default.commands.send_message(
+          event.hurtEntity.dimension.id,
+          "@a",
+          message2
+        );
+        utils_default.DragonHeartMessage.summon_minions();
+      } else if (health_component && !second_stage && health_component?.currentValue / health_component?.effectiveMax <= 0.25) {
+        second_stage = true;
+        const message2 = utils_default.DragonHeartMessage.health_stage_message(2);
+        utils_default.commands.send_message(
+          event.hurtEntity.dimension.id,
+          "@a",
+          message2
+        );
+        utils_default.DragonHeartMessage.summon_minions();
+      }
+    }
+  });
 }
 
 // behaviour_pack/scripts-dev/events/script_events.ts
-import { system as system17, world as world18 } from "@minecraft/server";
+import { system as system18, world as world19 } from "@minecraft/server";
 function load_script_event_handler() {
-  system17.afterEvents.scriptEventReceive.subscribe((script_event) => {
+  system18.afterEvents.scriptEventReceive.subscribe((script_event) => {
     const thorny_user = api_default.ThornyUser.fetch_user(script_event.message);
-    const player = world18.getPlayers({ name: script_event.message })[0];
+    const player = world19.getPlayers({ name: script_event.message })[0];
     if (thorny_user) {
       const interaction = new api_default.Interaction(
         {
@@ -8500,7 +8718,7 @@ function load_world_event_handlers(guild_id2) {
 }
 
 // behaviour_pack/scripts-dev/main.ts
-var guild_id = "611008530077712395";
+var guild_id = "1213827104945471538";
 WorldCache.load_world(guild_id).then();
 load_loops();
 load_custom_components(guild_id);
