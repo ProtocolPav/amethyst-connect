@@ -53,6 +53,10 @@
 				"damage": {
 					"range_min": 3,
 					"range_max": 6
+				},
+				"knockback": {
+					"horizontal_strength": 0.5,
+					"vertical_strength": 1.5
 				}
 			},
 			"minecraft:damage_sensor": {
