@@ -9,6 +9,13 @@
 			"is_experimental": false
 		},
 		"components": {
+			"minecraft:despawn": {
+				"despawn_from_distance": {},
+				"despawn_from_inactivity": true,
+				"despawn_from_simulation_edge": true,
+				"min_range_inactivity_timer": 30,
+				"min_range_random_chance": 800
+			},
 			"minecraft:type_family": {
 				"family": ["enderman", "mob", "monster", "end"]
 			},
@@ -51,12 +58,12 @@
 			"minecraft:can_climb": {},
 			"minecraft:attack": {
 				"damage": {
-					"range_min": 3,
-					"range_max": 6
+					"range_min": 1,
+					"range_max": 3
 				},
 				"knockback": {
 					"horizontal_strength": 0.2,
-					"vertical_strength": 11.5
+					"vertical_strength": 21.5
 				}
 			},
 			"minecraft:damage_sensor": {
