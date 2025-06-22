@@ -90,7 +90,8 @@ export default class ThornyUser implements IThornyUser {
         const request = new HttpRequest(`http://nexuscore:8000/api/v0.2/users/${this.thorny_id}`);
         request.method = HttpRequestMethod.Put;
         request.body = JSON.stringify({
-            "balance": this.balance
+            "balance": this.balance,
+            "whitelist": this.whitelist || this.gamertag
         })
         request.headers = [
             new HttpHeader("Content-Type", "application/json"),

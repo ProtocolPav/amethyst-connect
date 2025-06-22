@@ -10,13 +10,13 @@ function do_glitch() {
         utils.commands.effect_glitch
     ]
 
-    if (random <= 0.27) {
+    if (random <= 0.37) {
         const glitch = glitches_type[Math.floor(Math.random() * glitches_type.length)]
         for (const player of world.getAllPlayers()) {
             glitch(player)
             player.sendMessage('[You whisper to yourself] §oWhat was that?')
 
-            if (Math.random() < 0.4) {
+            if (Math.random() < 0.45) {
                 utils.commands.place_glitch_block(player)
             }
         }
