@@ -7137,7 +7137,8 @@ var ThornyUser = class _ThornyUser {
     const request = new HttpRequest(`http://nexuscore:8000/api/v0.2/users/${this.thorny_id}`);
     request.method = HttpRequestMethod.Put;
     request.body = JSON.stringify({
-      "balance": this.balance
+      "balance": this.balance,
+      "whitelist": this.whitelist || this.gamertag
     });
     request.headers = [
       new HttpHeader("Content-Type", "application/json"),
@@ -8167,12 +8168,12 @@ function do_glitch() {
     utils_default.commands.noise_glitch,
     utils_default.commands.effect_glitch
   ];
-  if (random <= 0.27) {
+  if (random <= 0.37) {
     const glitch = glitches_type[Math.floor(Math.random() * glitches_type.length)];
     for (const player of world11.getAllPlayers()) {
       glitch(player);
       player.sendMessage("[You whisper to yourself] \xA7oWhat was that?");
-      if (Math.random() < 0.4) {
+      if (Math.random() < 0.45) {
         utils_default.commands.place_glitch_block(player);
       }
     }
