@@ -117,6 +117,12 @@ class ObjectiveWithProgress extends Objective {
         else if (interaction.type === 'die' && this.required_deaths) {
             this.deaths += 1
 
+            utils.commands.send_message(
+                interaction.dimension,
+                this.thorny_user.gamertag,
+                `§l[§aQuests§f]§r You have died. ${this.required_deaths - this.deaths} Remaining...`
+            )
+
             if (this.deaths > this.required_deaths) {
                 this.status = 'failed'
                 this.end = new Date()
@@ -133,7 +139,7 @@ class ObjectiveWithProgress extends Objective {
             utils.commands.send_message(
                 interaction.dimension,
                 this.thorny_user.gamertag,
-                "§4No Rewards given. You failed the objective, but the quest will go on!"
+                `§l[§aQuests§f]§r §4You have failed the previous objective, but the quest continues... You did not receive rewards for the previous objective.`
             )
         }
 
