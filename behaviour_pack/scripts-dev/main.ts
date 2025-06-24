@@ -3,6 +3,7 @@ import load_loops from './loops'
 import load_world_event_handlers from './events';
 import {WorldCache} from "./api/sacrifice";
 import api from "./api";
+import {system} from "@minecraft/server";
 
 const guild_id = process.env.GUILD_ID || '0'
 
@@ -21,8 +22,12 @@ load_custom_components(guild_id)
 load_world_event_handlers(guild_id)
 
 // Relay Startup Event
-api.Relay.event(
-    'AmethystConnect Plugin successfully loaded',
-    "Don't see this on server startup? Ping a CM! It's important!",
-    'start'
-)
+system.beforeEvents.startup.subscribe(initEvent => {
+    system.run(() => {
+        api.Relay.event(
+            'AmethystConnect Plugin successfully loaded',
+            "Don't see this on server startup? Ping a CM! It's important!",
+            'start'
+        )
+    })
+})
