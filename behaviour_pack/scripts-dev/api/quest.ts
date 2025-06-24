@@ -158,8 +158,8 @@ export class Objective implements IObjective {
             requirements.push(`- No more than ${this.required_deaths} deaths`)
         }
 
-        if (this.continue_on_fail) {
-            requirements.push(`- Failing this objective will NOT fail the entire quest`)
+        if (!this.continue_on_fail && (this.objective_timer || this.required_deaths)) {
+            requirements.push(`- Failing this objective will fail the entire quest`)
         }
 
         return requirements.join('\n')

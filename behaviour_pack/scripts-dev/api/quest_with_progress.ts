@@ -38,10 +38,14 @@ class ObjectiveWithProgress extends Objective {
         this.deaths = 0
     }
 
-    private async complete_objective(interaction: Interaction, quest: QuestWithProgress) {
+    private async complete_objective(interaction: Interaction, quest: QuestWithProgress, failed: boolean) {
         const index = quest.objectives.indexOf(this)
 
-        utils.commands.play_objective_complete_sound(this.thorny_user.gamertag)
+        if (failed) {
+            utils.commands.play_quest_fail_sound(this.thorny_user.gamertag)
+        } else {
+            utils.commands.play_objective_complete_sound(this.thorny_user.gamertag)
+        }
 
         utils.commands.send_title(
             interaction.dimension, 
@@ -98,7 +102,7 @@ class ObjectiveWithProgress extends Objective {
                 const index = quest.objectives.indexOf(this)
 
                 if (index < quest.objectives.length-1) {
-                    await this.complete_objective(interaction, quest)
+                    await this.complete_objective(interaction, quest, false)
                 }
 
                 await this.give_rewards(interaction, this.thorny_user)
@@ -109,8 +113,6 @@ class ObjectiveWithProgress extends Objective {
         else if (requirement_check.fail_objective) {
             this.status = 'failed'
             this.end = new Date()
-
-            return false
         }
         else if (interaction.type === 'die' && this.required_deaths) {
             this.deaths += 1
@@ -119,8 +121,20 @@ class ObjectiveWithProgress extends Objective {
                 this.status = 'failed'
                 this.end = new Date()
             }
+        }
 
-            return false
+        if (this.status === 'failed' && this.continue_on_fail) {
+            const index = quest.objectives.indexOf(this)
+
+            if (index < quest.objectives.length-1) {
+                await this.complete_objective(interaction, quest, true)
+            }
+
+            utils.commands.send_message(
+                interaction.dimension,
+                this.thorny_user.gamertag,
+                "§4No Rewards given. You failed the objective, but the quest will go on!"
+            )
         }
 
         return false;
@@ -292,15 +306,6 @@ export default class QuestWithProgress extends Quest {
                     `§c+=+=+=+=+=+=+ Quest Failed :( +=+=+=+=+=+=+§r\n` +
                     `${this.thorny_user.gamertag} has failed §l§n${this.title}§r!\n` +
                     `Think you can do better? Run §5/quests view§r on Discord to start it!`
-                )
-            }
-            else if (active_objective.status === 'failed' && active_objective.continue_on_fail) {
-                utils.commands.play_quest_fail_sound(this.thorny_user.gamertag)
-
-                utils.commands.send_message(
-                    interaction.dimension,
-                    this.thorny_user.gamertag,
-                    "§4You failed the objective, but the quest will go on!"
                 )
             }
 
