@@ -34,6 +34,10 @@ export default function load_heal_dragon_component() {
             event.block.location
         )
         event.dimension.spawnEntity(
+            'amethyst:the_breath',
+            event.block.location
+        )
+        event.dimension.spawnEntity(
             'amethyst:endstone_golem',
             event.block.location
         )
