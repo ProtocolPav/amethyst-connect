@@ -2394,6 +2394,7 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["MusicDiscCreator"] = "minecraft:music_disc_creator";
   MinecraftItemTypes2["MusicDiscCreatorMusicBox"] = "minecraft:music_disc_creator_music_box";
   MinecraftItemTypes2["MusicDiscFar"] = "minecraft:music_disc_far";
+  MinecraftItemTypes2["MusicDiscLavaChicken"] = "minecraft:music_disc_lava_chicken";
   MinecraftItemTypes2["MusicDiscMall"] = "minecraft:music_disc_mall";
   MinecraftItemTypes2["MusicDiscMellohi"] = "minecraft:music_disc_mellohi";
   MinecraftItemTypes2["MusicDiscOtherside"] = "minecraft:music_disc_otherside";
@@ -4136,12 +4137,15 @@ var formatters = {
   G: function(date, token, localize2) {
     const era = date.getFullYear() > 0 ? 1 : 0;
     switch (token) {
+      // AD, BC
       case "G":
       case "GG":
       case "GGG":
         return localize2.era(era, { width: "abbreviated" });
+      // A, B
       case "GGGGG":
         return localize2.era(era, { width: "narrow" });
+      // Anno Domini, Before Christ
       case "GGGG":
       default:
         return localize2.era(era, { width: "wide" });
@@ -4191,22 +4195,28 @@ var formatters = {
   Q: function(date, token, localize2) {
     const quarter = Math.ceil((date.getMonth() + 1) / 3);
     switch (token) {
+      // 1, 2, 3, 4
       case "Q":
         return String(quarter);
+      // 01, 02, 03, 04
       case "QQ":
         return addLeadingZeros(quarter, 2);
+      // 1st, 2nd, 3rd, 4th
       case "Qo":
         return localize2.ordinalNumber(quarter, { unit: "quarter" });
+      // Q1, Q2, Q3, Q4
       case "QQQ":
         return localize2.quarter(quarter, {
           width: "abbreviated",
           context: "formatting"
         });
+      // 1, 2, 3, 4 (narrow quarter; could be not numerical)
       case "QQQQQ":
         return localize2.quarter(quarter, {
           width: "narrow",
           context: "formatting"
         });
+      // 1st quarter, 2nd quarter, ...
       case "QQQQ":
       default:
         return localize2.quarter(quarter, {
@@ -4219,22 +4229,28 @@ var formatters = {
   q: function(date, token, localize2) {
     const quarter = Math.ceil((date.getMonth() + 1) / 3);
     switch (token) {
+      // 1, 2, 3, 4
       case "q":
         return String(quarter);
+      // 01, 02, 03, 04
       case "qq":
         return addLeadingZeros(quarter, 2);
+      // 1st, 2nd, 3rd, 4th
       case "qo":
         return localize2.ordinalNumber(quarter, { unit: "quarter" });
+      // Q1, Q2, Q3, Q4
       case "qqq":
         return localize2.quarter(quarter, {
           width: "abbreviated",
           context: "standalone"
         });
+      // 1, 2, 3, 4 (narrow quarter; could be not numerical)
       case "qqqqq":
         return localize2.quarter(quarter, {
           width: "narrow",
           context: "standalone"
         });
+      // 1st quarter, 2nd quarter, ...
       case "qqqq":
       default:
         return localize2.quarter(quarter, {
@@ -4250,18 +4266,22 @@ var formatters = {
       case "M":
       case "MM":
         return lightFormatters.M(date, token);
+      // 1st, 2nd, ..., 12th
       case "Mo":
         return localize2.ordinalNumber(month + 1, { unit: "month" });
+      // Jan, Feb, ..., Dec
       case "MMM":
         return localize2.month(month, {
           width: "abbreviated",
           context: "formatting"
         });
+      // J, F, ..., D
       case "MMMMM":
         return localize2.month(month, {
           width: "narrow",
           context: "formatting"
         });
+      // January, February, ..., December
       case "MMMM":
       default:
         return localize2.month(month, { width: "wide", context: "formatting" });
@@ -4271,22 +4291,28 @@ var formatters = {
   L: function(date, token, localize2) {
     const month = date.getMonth();
     switch (token) {
+      // 1, 2, ..., 12
       case "L":
         return String(month + 1);
+      // 01, 02, ..., 12
       case "LL":
         return addLeadingZeros(month + 1, 2);
+      // 1st, 2nd, ..., 12th
       case "Lo":
         return localize2.ordinalNumber(month + 1, { unit: "month" });
+      // Jan, Feb, ..., Dec
       case "LLL":
         return localize2.month(month, {
           width: "abbreviated",
           context: "standalone"
         });
+      // J, F, ..., D
       case "LLLLL":
         return localize2.month(month, {
           width: "narrow",
           context: "standalone"
         });
+      // January, February, ..., December
       case "LLLL":
       default:
         return localize2.month(month, { width: "wide", context: "standalone" });
@@ -4327,6 +4353,7 @@ var formatters = {
   E: function(date, token, localize2) {
     const dayOfWeek = date.getDay();
     switch (token) {
+      // Tue
       case "E":
       case "EE":
       case "EEE":
@@ -4334,16 +4361,19 @@ var formatters = {
           width: "abbreviated",
           context: "formatting"
         });
+      // T
       case "EEEEE":
         return localize2.day(dayOfWeek, {
           width: "narrow",
           context: "formatting"
         });
+      // Tu
       case "EEEEEE":
         return localize2.day(dayOfWeek, {
           width: "short",
           context: "formatting"
         });
+      // Tuesday
       case "EEEE":
       default:
         return localize2.day(dayOfWeek, {
@@ -4357,10 +4387,13 @@ var formatters = {
     const dayOfWeek = date.getDay();
     const localDayOfWeek = (dayOfWeek - options.weekStartsOn + 8) % 7 || 7;
     switch (token) {
+      // Numerical value (Nth day of week with current locale or weekStartsOn)
       case "e":
         return String(localDayOfWeek);
+      // Padded numerical value
       case "ee":
         return addLeadingZeros(localDayOfWeek, 2);
+      // 1st, 2nd, ..., 7th
       case "eo":
         return localize2.ordinalNumber(localDayOfWeek, { unit: "day" });
       case "eee":
@@ -4368,16 +4401,19 @@ var formatters = {
           width: "abbreviated",
           context: "formatting"
         });
+      // T
       case "eeeee":
         return localize2.day(dayOfWeek, {
           width: "narrow",
           context: "formatting"
         });
+      // Tu
       case "eeeeee":
         return localize2.day(dayOfWeek, {
           width: "short",
           context: "formatting"
         });
+      // Tuesday
       case "eeee":
       default:
         return localize2.day(dayOfWeek, {
@@ -4391,10 +4427,13 @@ var formatters = {
     const dayOfWeek = date.getDay();
     const localDayOfWeek = (dayOfWeek - options.weekStartsOn + 8) % 7 || 7;
     switch (token) {
+      // Numerical value (same as in `e`)
       case "c":
         return String(localDayOfWeek);
+      // Padded numerical value
       case "cc":
         return addLeadingZeros(localDayOfWeek, token.length);
+      // 1st, 2nd, ..., 7th
       case "co":
         return localize2.ordinalNumber(localDayOfWeek, { unit: "day" });
       case "ccc":
@@ -4402,16 +4441,19 @@ var formatters = {
           width: "abbreviated",
           context: "standalone"
         });
+      // T
       case "ccccc":
         return localize2.day(dayOfWeek, {
           width: "narrow",
           context: "standalone"
         });
+      // Tu
       case "cccccc":
         return localize2.day(dayOfWeek, {
           width: "short",
           context: "standalone"
         });
+      // Tuesday
       case "cccc":
       default:
         return localize2.day(dayOfWeek, {
@@ -4425,27 +4467,34 @@ var formatters = {
     const dayOfWeek = date.getDay();
     const isoDayOfWeek = dayOfWeek === 0 ? 7 : dayOfWeek;
     switch (token) {
+      // 2
       case "i":
         return String(isoDayOfWeek);
+      // 02
       case "ii":
         return addLeadingZeros(isoDayOfWeek, token.length);
+      // 2nd
       case "io":
         return localize2.ordinalNumber(isoDayOfWeek, { unit: "day" });
+      // Tue
       case "iii":
         return localize2.day(dayOfWeek, {
           width: "abbreviated",
           context: "formatting"
         });
+      // T
       case "iiiii":
         return localize2.day(dayOfWeek, {
           width: "narrow",
           context: "formatting"
         });
+      // Tu
       case "iiiiii":
         return localize2.day(dayOfWeek, {
           width: "short",
           context: "formatting"
         });
+      // Tuesday
       case "iiii":
       default:
         return localize2.day(dayOfWeek, {
@@ -4611,13 +4660,21 @@ var formatters = {
       return "Z";
     }
     switch (token) {
+      // Hours and optional minutes
       case "X":
         return formatTimezoneWithOptionalMinutes(timezoneOffset);
+      // Hours, minutes and optional seconds without `:` delimiter
+      // Note: neither ISO-8601 nor JavaScript supports seconds in timezone offsets
+      // so this token always has the same output as `XX`
       case "XXXX":
       case "XX":
         return formatTimezone(timezoneOffset);
+      // Hours, minutes and optional seconds with `:` delimiter
+      // Note: neither ISO-8601 nor JavaScript supports seconds in timezone offsets
+      // so this token always has the same output as `XXX`
       case "XXXXX":
       case "XXX":
+      // Hours and minutes with `:` delimiter
       default:
         return formatTimezone(timezoneOffset, ":");
     }
@@ -4626,13 +4683,21 @@ var formatters = {
   x: function(date, token, _localize) {
     const timezoneOffset = date.getTimezoneOffset();
     switch (token) {
+      // Hours and optional minutes
       case "x":
         return formatTimezoneWithOptionalMinutes(timezoneOffset);
+      // Hours, minutes and optional seconds without `:` delimiter
+      // Note: neither ISO-8601 nor JavaScript supports seconds in timezone offsets
+      // so this token always has the same output as `xx`
       case "xxxx":
       case "xx":
         return formatTimezone(timezoneOffset);
+      // Hours, minutes and optional seconds with `:` delimiter
+      // Note: neither ISO-8601 nor JavaScript supports seconds in timezone offsets
+      // so this token always has the same output as `xxx`
       case "xxxxx":
       case "xxx":
+      // Hours and minutes with `:` delimiter
       default:
         return formatTimezone(timezoneOffset, ":");
     }
@@ -4641,10 +4706,12 @@ var formatters = {
   O: function(date, token, _localize) {
     const timezoneOffset = date.getTimezoneOffset();
     switch (token) {
+      // Short
       case "O":
       case "OO":
       case "OOO":
         return "GMT" + formatTimezoneShort(timezoneOffset, ":");
+      // Long
       case "OOOO":
       default:
         return "GMT" + formatTimezone(timezoneOffset, ":");
@@ -4654,10 +4721,12 @@ var formatters = {
   z: function(date, token, _localize) {
     const timezoneOffset = date.getTimezoneOffset();
     switch (token) {
+      // Short
       case "z":
       case "zz":
       case "zzz":
         return "GMT" + formatTimezoneShort(timezoneOffset, ":");
+      // Long
       case "zzzz":
       default:
         return "GMT" + formatTimezone(timezoneOffset, ":");
@@ -4935,12 +5004,15 @@ var EraParser = class extends Parser {
   priority = 140;
   parse(dateString, token, match2) {
     switch (token) {
+      // AD, BC
       case "G":
       case "GG":
       case "GGG":
         return match2.era(dateString, { width: "abbreviated" }) || match2.era(dateString, { width: "narrow" });
+      // A, B
       case "GGGGG":
         return match2.era(dateString, { width: "narrow" });
+      // Anno Domini, Before Christ
       case "GGGG":
       default:
         return match2.era(dateString, { width: "wide" }) || match2.era(dateString, { width: "abbreviated" }) || match2.era(dateString, { width: "narrow" });
@@ -5271,11 +5343,14 @@ var QuarterParser = class extends Parser {
   priority = 120;
   parse(dateString, token, match2) {
     switch (token) {
+      // 1, 2, 3, 4
       case "Q":
       case "QQ":
         return parseNDigits(token.length, dateString);
+      // 1st, 2nd, 3rd, 4th
       case "Qo":
         return match2.ordinalNumber(dateString, { unit: "quarter" });
+      // Q1, Q2, Q3, Q4
       case "QQQ":
         return match2.quarter(dateString, {
           width: "abbreviated",
@@ -5284,11 +5359,13 @@ var QuarterParser = class extends Parser {
           width: "narrow",
           context: "formatting"
         });
+      // 1, 2, 3, 4 (narrow quarter; could be not numerical)
       case "QQQQQ":
         return match2.quarter(dateString, {
           width: "narrow",
           context: "formatting"
         });
+      // 1st quarter, 2nd quarter, ...
       case "QQQQ":
       default:
         return match2.quarter(dateString, {
@@ -5334,11 +5411,14 @@ var StandAloneQuarterParser = class extends Parser {
   priority = 120;
   parse(dateString, token, match2) {
     switch (token) {
+      // 1, 2, 3, 4
       case "q":
       case "qq":
         return parseNDigits(token.length, dateString);
+      // 1st, 2nd, 3rd, 4th
       case "qo":
         return match2.ordinalNumber(dateString, { unit: "quarter" });
+      // Q1, Q2, Q3, Q4
       case "qqq":
         return match2.quarter(dateString, {
           width: "abbreviated",
@@ -5347,11 +5427,13 @@ var StandAloneQuarterParser = class extends Parser {
           width: "narrow",
           context: "standalone"
         });
+      // 1, 2, 3, 4 (narrow quarter; could be not numerical)
       case "qqqqq":
         return match2.quarter(dateString, {
           width: "narrow",
           context: "standalone"
         });
+      // 1st quarter, 2nd quarter, ...
       case "qqqq":
       default:
         return match2.quarter(dateString, {
@@ -5413,13 +5495,16 @@ var MonthParser = class extends Parser {
   parse(dateString, token, match2) {
     const valueCallback = (value) => value - 1;
     switch (token) {
+      // 1, 2, ..., 12
       case "M":
         return mapValue(
           parseNumericPattern(numericPatterns.month, dateString),
           valueCallback
         );
+      // 01, 02, ..., 12
       case "MM":
         return mapValue(parseNDigits(2, dateString), valueCallback);
+      // 1st, 2nd, ..., 12th
       case "Mo":
         return mapValue(
           match2.ordinalNumber(dateString, {
@@ -5427,16 +5512,19 @@ var MonthParser = class extends Parser {
           }),
           valueCallback
         );
+      // Jan, Feb, ..., Dec
       case "MMM":
         return match2.month(dateString, {
           width: "abbreviated",
           context: "formatting"
         }) || match2.month(dateString, { width: "narrow", context: "formatting" });
+      // J, F, ..., D
       case "MMMMM":
         return match2.month(dateString, {
           width: "narrow",
           context: "formatting"
         });
+      // January, February, ..., December
       case "MMMM":
       default:
         return match2.month(dateString, { width: "wide", context: "formatting" }) || match2.month(dateString, {
@@ -5461,13 +5549,16 @@ var StandAloneMonthParser = class extends Parser {
   parse(dateString, token, match2) {
     const valueCallback = (value) => value - 1;
     switch (token) {
+      // 1, 2, ..., 12
       case "L":
         return mapValue(
           parseNumericPattern(numericPatterns.month, dateString),
           valueCallback
         );
+      // 01, 02, ..., 12
       case "LL":
         return mapValue(parseNDigits(2, dateString), valueCallback);
+      // 1st, 2nd, ..., 12th
       case "Lo":
         return mapValue(
           match2.ordinalNumber(dateString, {
@@ -5475,16 +5566,19 @@ var StandAloneMonthParser = class extends Parser {
           }),
           valueCallback
         );
+      // Jan, Feb, ..., Dec
       case "LLL":
         return match2.month(dateString, {
           width: "abbreviated",
           context: "standalone"
         }) || match2.month(dateString, { width: "narrow", context: "standalone" });
+      // J, F, ..., D
       case "LLLLL":
         return match2.month(dateString, {
           width: "narrow",
           context: "standalone"
         });
+      // January, February, ..., December
       case "LLLL":
       default:
         return match2.month(dateString, { width: "wide", context: "standalone" }) || match2.month(dateString, {
@@ -5733,6 +5827,7 @@ var DayParser = class extends Parser {
   priority = 90;
   parse(dateString, token, match2) {
     switch (token) {
+      // Tue
       case "E":
       case "EE":
       case "EEE":
@@ -5740,13 +5835,16 @@ var DayParser = class extends Parser {
           width: "abbreviated",
           context: "formatting"
         }) || match2.day(dateString, { width: "short", context: "formatting" }) || match2.day(dateString, { width: "narrow", context: "formatting" });
+      // T
       case "EEEEE":
         return match2.day(dateString, {
           width: "narrow",
           context: "formatting"
         });
+      // Tu
       case "EEEEEE":
         return match2.day(dateString, { width: "short", context: "formatting" }) || match2.day(dateString, { width: "narrow", context: "formatting" });
+      // Tuesday
       case "EEEE":
       default:
         return match2.day(dateString, { width: "wide", context: "formatting" }) || match2.day(dateString, {
@@ -5775,9 +5873,11 @@ var LocalDayParser = class extends Parser {
       return (value + options.weekStartsOn + 6) % 7 + wholeWeekDays;
     };
     switch (token) {
+      // 3
       case "e":
       case "ee":
         return mapValue(parseNDigits(token.length, dateString), valueCallback);
+      // 3rd
       case "eo":
         return mapValue(
           match2.ordinalNumber(dateString, {
@@ -5785,18 +5885,22 @@ var LocalDayParser = class extends Parser {
           }),
           valueCallback
         );
+      // Tue
       case "eee":
         return match2.day(dateString, {
           width: "abbreviated",
           context: "formatting"
         }) || match2.day(dateString, { width: "short", context: "formatting" }) || match2.day(dateString, { width: "narrow", context: "formatting" });
+      // T
       case "eeeee":
         return match2.day(dateString, {
           width: "narrow",
           context: "formatting"
         });
+      // Tu
       case "eeeeee":
         return match2.day(dateString, { width: "short", context: "formatting" }) || match2.day(dateString, { width: "narrow", context: "formatting" });
+      // Tuesday
       case "eeee":
       default:
         return match2.day(dateString, { width: "wide", context: "formatting" }) || match2.day(dateString, {
@@ -5841,9 +5945,11 @@ var StandAloneLocalDayParser = class extends Parser {
       return (value + options.weekStartsOn + 6) % 7 + wholeWeekDays;
     };
     switch (token) {
+      // 3
       case "c":
       case "cc":
         return mapValue(parseNDigits(token.length, dateString), valueCallback);
+      // 3rd
       case "co":
         return mapValue(
           match2.ordinalNumber(dateString, {
@@ -5851,18 +5957,22 @@ var StandAloneLocalDayParser = class extends Parser {
           }),
           valueCallback
         );
+      // Tue
       case "ccc":
         return match2.day(dateString, {
           width: "abbreviated",
           context: "standalone"
         }) || match2.day(dateString, { width: "short", context: "standalone" }) || match2.day(dateString, { width: "narrow", context: "standalone" });
+      // T
       case "ccccc":
         return match2.day(dateString, {
           width: "narrow",
           context: "standalone"
         });
+      // Tu
       case "cccccc":
         return match2.day(dateString, { width: "short", context: "standalone" }) || match2.day(dateString, { width: "narrow", context: "standalone" });
+      // Tuesday
       case "cccc":
       default:
         return match2.day(dateString, { width: "wide", context: "standalone" }) || match2.day(dateString, {
@@ -5917,11 +6027,14 @@ var ISODayParser = class extends Parser {
       return value;
     };
     switch (token) {
+      // 2
       case "i":
       case "ii":
         return parseNDigits(token.length, dateString);
+      // 2nd
       case "io":
         return match2.ordinalNumber(dateString, { unit: "day" });
+      // Tue
       case "iii":
         return mapValue(
           match2.day(dateString, {
@@ -5936,6 +6049,7 @@ var ISODayParser = class extends Parser {
           }),
           valueCallback
         );
+      // T
       case "iiiii":
         return mapValue(
           match2.day(dateString, {
@@ -5944,6 +6058,7 @@ var ISODayParser = class extends Parser {
           }),
           valueCallback
         );
+      // Tu
       case "iiiiii":
         return mapValue(
           match2.day(dateString, {
@@ -5955,6 +6070,7 @@ var ISODayParser = class extends Parser {
           }),
           valueCallback
         );
+      // Tuesday
       case "iiii":
       default:
         return mapValue(
@@ -7042,13 +7158,9 @@ function load_glitch_component() {
       ];
       const glitch2 = glitches_type[Math.floor(Math.random() * glitches_type.length)];
       const players = event.block.dimension.getPlayers({ location, maxDistance: radius });
-      if (players.length === 0) {
-        event.block.setType("minecraft:air");
-      } else {
-        players.forEach((player) => {
-          glitch2(player);
-        });
-      }
+      players.forEach((player) => {
+        glitch2(player);
+      });
     }
   }
   function glitch_particles(event) {
@@ -7967,6 +8079,10 @@ function load_heal_dragon_component() {
       event.block.location
     );
     event.dimension.spawnEntity(
+      "amethyst:the_breath",
+      event.block.location
+    );
+    event.dimension.spawnEntity(
       "amethyst:endstone_golem",
       event.block.location
     );
@@ -8004,7 +8120,7 @@ function load_custom_components(guild_id2) {
 }
 
 // behaviour_pack/scripts-dev/loops/elytra_no_mending.ts
-import { EquipmentSlot as EquipmentSlot3, world as world8, system as system8, EntityComponentTypes as EntityComponentTypes5, ItemComponentTypes as ItemComponentTypes2, EnchantmentType } from "@minecraft/server";
+import { EquipmentSlot as EquipmentSlot3, world as world7, system as system8, EntityComponentTypes as EntityComponentTypes5, ItemComponentTypes as ItemComponentTypes2, EnchantmentType } from "@minecraft/server";
 function elytraCheck(player) {
   const player_equipment = player.getComponent(EntityComponentTypes5.Equippable);
   const item = player_equipment?.getEquipment(EquipmentSlot3.Chest);
@@ -8027,7 +8143,7 @@ function elytraCheck(player) {
       }
       item.setLore([`
 \xA7o"My wings are cursed!"`]);
-      world8.getDimension("overworld").runCommand(`title "${player.name}" actionbar \xA7o\xA7iMy Elytra feels different...`);
+      world7.getDimension("overworld").runCommand(`title "${player.name}" actionbar \xA7o\xA7iMy Elytra feels different...`);
       player_equipment?.setEquipment(EquipmentSlot3.Chest, item);
       console.log(`[ElytraCheck] Player ${player.name} has elytra with mending. Removing Mending.`);
     }
@@ -8035,7 +8151,7 @@ function elytraCheck(player) {
 }
 function load_elytra_mending_checker() {
   system8.runInterval(() => {
-    let playerlist = world8.getPlayers();
+    let playerlist = world7.getPlayers();
     playerlist.forEach((player) => {
       elytraCheck(player);
     });
@@ -8044,7 +8160,7 @@ function load_elytra_mending_checker() {
 }
 
 // behaviour_pack/scripts-dev/loops/border.ts
-import { world as world9, system as system9, EntityDamageCause } from "@minecraft/server";
+import { world as world8, system as system9, EntityDamageCause } from "@minecraft/server";
 function borderCheck(player, dimensionID, border_size, warning_range, outside) {
   const position = player.location;
   const distance_2d = Math.sqrt(position.x ** 2 + position.z ** 2);
@@ -8056,27 +8172,27 @@ function borderCheck(player, dimensionID, border_size, warning_range, outside) {
     console.log(`[Plugin] [Border] Player ${player.name} has re-entered the ${dimensionID} border.`);
   }
   if (border_size < distance_2d) {
-    world9.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iI shouldn't go any further. It's too dangerous here.`);
-    world9.getDimension(dimensionID).runCommand(`effect "${player.name}" blindness 4 2`);
+    world8.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iI shouldn't go any further. It's too dangerous here.`);
+    world8.getDimension(dimensionID).runCommand(`effect "${player.name}" blindness 4 2`);
     player.applyDamage(1.3, { cause: EntityDamageCause.void });
   } else if (border_size - 20 < distance_2d) {
-    world9.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iThe Monolith's protection is wearing off. I can feel it...`);
+    world8.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iThe Monolith's protection is wearing off. I can feel it...`);
   }
   if (border_size - 100 < distance_2d && warning_range.indexOf(player.name) == -1) {
     warning_range.push(player.name);
-    world9.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iMaybe I should start heading back now...`);
+    world8.getDimension(dimensionID).runCommand(`title "${player.name}" actionbar \xA7o\xA7iMaybe I should start heading back now...`);
   } else if (border_size - 100 > distance_2d && warning_range.indexOf(player.name) != -1) {
     warning_range.splice(warning_range.indexOf(player.name), 1);
   }
 }
-function load_world_border(guild_id2) {
+function load_world_border() {
   let players_100_blocks_away = { overworld: [], nether: [], end: [] };
   let players_outside_border = { overworld: [], nether: [], end: [] };
   system9.runInterval(() => {
     let players = {
-      overworld: world9.getDimension(MinecraftDimensionTypes.Overworld).getPlayers(),
-      nether: world9.getDimension(MinecraftDimensionTypes.Nether).getPlayers(),
-      end: world9.getDimension(MinecraftDimensionTypes.TheEnd).getPlayers()
+      overworld: world8.getDimension(MinecraftDimensionTypes.Overworld).getPlayers(),
+      nether: world8.getDimension(MinecraftDimensionTypes.Nether).getPlayers(),
+      end: world8.getDimension(MinecraftDimensionTypes.TheEnd).getPlayers()
     };
     players.overworld.forEach((player) => {
       borderCheck(player, MinecraftDimensionTypes.Overworld, WorldCache.world.overworld_border, players_100_blocks_away.overworld, players_outside_border.overworld);
@@ -8092,7 +8208,7 @@ function load_world_border(guild_id2) {
 }
 
 // behaviour_pack/scripts-dev/loops/quests.ts
-import { system as system10, world as world10 } from "@minecraft/server";
+import { system as system10, world as world9 } from "@minecraft/server";
 async function check_quests() {
   try {
     if (!api_default.Interaction.is_processing()) {
@@ -8138,7 +8254,7 @@ async function display_timer() {
       let remaining_seconds = Math.max(0, active_objective.objective_timer - elapsed_seconds);
       let minutes = Math.floor(remaining_seconds / 60);
       let seconds = remaining_seconds % 60;
-      let player = world10.getPlayers({ name: active_objective.thorny_user.gamertag })[0];
+      let player = world9.getPlayers({ name: active_objective.thorny_user.gamertag })[0];
       utils_default.commands.send_title(
         player.dimension.id,
         player.name,
@@ -8158,40 +8274,12 @@ function load_quest_loop() {
   console.log("[Loops] Loaded Quests Loop");
 }
 
-// behaviour_pack/scripts-dev/loops/glitches.ts
-import { system as system11, world as world11, TicksPerSecond as TicksPerSecond5 } from "@minecraft/server";
-function do_glitch() {
-  const random = Math.random();
-  const glitches_type = [
-    utils_default.commands.vision_block_glitch,
-    utils_default.commands.vision_entity_glitch,
-    utils_default.commands.noise_glitch,
-    utils_default.commands.effect_glitch
-  ];
-  if (random <= 0.37) {
-    const glitch = glitches_type[Math.floor(Math.random() * glitches_type.length)];
-    for (const player of world11.getAllPlayers()) {
-      glitch(player);
-      player.sendMessage("[You whisper to yourself] \xA7oWhat was that?");
-      if (Math.random() < 0.45) {
-        utils_default.commands.place_glitch_block(player);
-      }
-    }
-  }
-}
-function load_glitch_loop() {
-  system11.runInterval(() => {
-    do_glitch();
-  }, TicksPerSecond5 * 60 * 30);
-  console.log("[Loops] Loaded Glitches Loop");
-}
-
 // behaviour_pack/scripts-dev/loops/totem_of_togetherness.ts
-import { EntityComponentTypes as EntityComponentTypes7, EquipmentSlot as EquipmentSlot4, system as system12, world as world12 } from "@minecraft/server";
+import { EntityComponentTypes as EntityComponentTypes6, EquipmentSlot as EquipmentSlot4, system as system11, world as world10 } from "@minecraft/server";
 var healthboost = MinecraftEffectTypes.HealthBoost;
 function togetherness(player) {
   const position = player.location;
-  const equippable = player.getComponent(EntityComponentTypes7.Equippable);
+  const equippable = player.getComponent(EntityComponentTypes6.Equippable);
   const offhand = equippable?.getEquipment(EquipmentSlot4.Offhand);
   const mainhand = equippable?.getEquipment(EquipmentSlot4.Mainhand);
   if (offhand?.hasTag("amethyst:togetherness") || mainhand?.hasTag("amethyst:togetherness")) {
@@ -8214,8 +8302,8 @@ function togetherness(player) {
   }
 }
 function load_totem_o_togetherness() {
-  system12.runInterval(() => {
-    let playerlist = world12.getPlayers();
+  system11.runInterval(() => {
+    let playerlist = world10.getPlayers();
     playerlist.forEach((player) => {
       togetherness(player);
     });
@@ -8224,9 +8312,9 @@ function load_totem_o_togetherness() {
 }
 
 // behaviour_pack/scripts-dev/loops/location.ts
-import { EntityComponentTypes as EntityComponentTypes8, EquipmentSlot as EquipmentSlot5, system as system13, world as world13, TicksPerSecond as TicksPerSecond6 } from "@minecraft/server";
+import { EntityComponentTypes as EntityComponentTypes7, EquipmentSlot as EquipmentSlot5, system as system12, world as world11, TicksPerSecond as TicksPerSecond5 } from "@minecraft/server";
 function location_log(player) {
-  const head_gear = player.getComponent(EntityComponentTypes8.Equippable)?.getEquipment(EquipmentSlot5.Head);
+  const head_gear = player.getComponent(EntityComponentTypes7.Equippable)?.getEquipment(EquipmentSlot5.Head);
   const check_list = [
     MinecraftItemTypes.SkeletonSkull,
     MinecraftItemTypes.WitherSkeletonSkull,
@@ -8240,27 +8328,27 @@ function location_log(player) {
   let hidden = false;
   hidden = head_gear?.typeId ? check_list.includes(head_gear.typeId) : false;
   const location = [Math.round(player.location.x), Math.round(player.location.y), Math.round(player.location.z)];
-  return { "gamertag": player.name, "location": location, "hidden": hidden };
+  return { "gamertag": player.name, "location": location, "hidden": hidden, dimension: player.dimension.id };
 }
 function load_location_logger() {
-  system13.runInterval(() => {
-    let playerlist = world13.getPlayers();
+  system12.runInterval(() => {
+    let playerlist = world11.getPlayers();
     let log = [];
     playerlist.forEach((player) => {
       log.push(location_log(player));
     });
     api_default.Relay.location(log);
-  }, TicksPerSecond6 * 5);
+  }, TicksPerSecond5 * 5);
   console.log("[Loops] Loaded Location Loop");
 }
 
 // behaviour_pack/scripts-dev/loops/champion_set.ts
-import { EntityComponentTypes as EntityComponentTypes9, EquipmentSlot as EquipmentSlot6, MolangVariableMap, system as system14, world as world14 } from "@minecraft/server";
+import { EntityComponentTypes as EntityComponentTypes8, EquipmentSlot as EquipmentSlot6, MolangVariableMap, system as system13, world as world12 } from "@minecraft/server";
 function champion(player) {
   const molang = new MolangVariableMap();
   molang.setColorRGB("variable.color", { red: 1, green: 0.913, blue: 0.576 });
   const position = player.location;
-  const equippable = player.getComponent(EntityComponentTypes9.Equippable);
+  const equippable = player.getComponent(EntityComponentTypes8.Equippable);
   let equipped = 0;
   equippable?.getEquipment(EquipmentSlot6.Head)?.hasTag("amethyst:champion") ? equipped++ : null;
   equippable?.getEquipment(EquipmentSlot6.Chest)?.hasTag("amethyst:champion") ? equipped++ : null;
@@ -8277,8 +8365,8 @@ function champion(player) {
   }
 }
 function load_champion_set() {
-  system14.runInterval(() => {
-    let playerlist = world14.getPlayers();
+  system13.runInterval(() => {
+    let playerlist = world12.getPlayers();
     playerlist.forEach((player) => {
       champion(player);
     });
@@ -8291,22 +8379,21 @@ function load_loops() {
   load_elytra_mending_checker();
   load_world_border();
   load_quest_loop();
-  load_glitch_loop();
   load_totem_o_togetherness();
   load_location_logger();
   load_champion_set();
 }
 
 // behaviour_pack/scripts-dev/events/blocks.ts
-import { world as world15, system as system15 } from "@minecraft/server";
-import { EntityComponentTypes as EntityComponentTypes10, EquipmentSlot as EquipmentSlot7 } from "@minecraft/server";
+import { world as world13, system as system14 } from "@minecraft/server";
+import { EntityComponentTypes as EntityComponentTypes9, EquipmentSlot as EquipmentSlot7 } from "@minecraft/server";
 function load_block_event_handler() {
-  world15.beforeEvents.playerBreakBlock.subscribe((event) => {
+  world13.beforeEvents.playerBreakBlock.subscribe((event) => {
     const block_id = event.block.typeId;
     const block_location = [event.block.x, event.block.y, event.block.z];
     const dimension = event.player.dimension;
-    const mainhand = event.player.getComponent(EntityComponentTypes10.Equippable)?.getEquipment(EquipmentSlot7.Mainhand);
-    system15.run(() => {
+    const mainhand = event.player.getComponent(EntityComponentTypes9.Equippable)?.getEquipment(EquipmentSlot7.Mainhand);
+    system14.run(() => {
       const interaction = new api_default.Interaction(
         {
           thorny_id: api_default.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
@@ -8321,12 +8408,12 @@ function load_block_event_handler() {
       api_default.Interaction.enqueue(interaction);
     });
   });
-  world15.afterEvents.playerPlaceBlock.subscribe((event) => {
+  world13.afterEvents.playerPlaceBlock.subscribe((event) => {
     const block_id = event.block.typeId;
     const block_location = [event.block.x, event.block.y, event.block.z];
     const dimension = event.player.dimension;
-    const mainhand = event.player.getComponent(EntityComponentTypes10.Equippable)?.getEquipment(EquipmentSlot7.Mainhand);
-    system15.run(() => {
+    const mainhand = event.player.getComponent(EntityComponentTypes9.Equippable)?.getEquipment(EquipmentSlot7.Mainhand);
+    system14.run(() => {
       const interaction = new api_default.Interaction(
         {
           thorny_id: api_default.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
@@ -8340,11 +8427,11 @@ function load_block_event_handler() {
       interaction.post_interaction();
     });
   });
-  world15.afterEvents.playerInteractWithBlock.subscribe((event) => {
+  world13.afterEvents.playerInteractWithBlock.subscribe((event) => {
     const block_id = event.block.typeId;
     const block_location = [event.block.x, event.block.y, event.block.z];
     const dimension = event.player.dimension;
-    const mainhand = event.player.getComponent(EntityComponentTypes10.Equippable)?.getEquipment(EquipmentSlot7.Mainhand);
+    const mainhand = event.player.getComponent(EntityComponentTypes9.Equippable)?.getEquipment(EquipmentSlot7.Mainhand);
     const all_blocks = [
       // Containers
       MinecraftBlockTypes.Chest,
@@ -8454,7 +8541,7 @@ function load_block_event_handler() {
       MinecraftBlockTypes.WaxedWeatheredCopperTrapdoor
     ];
     if (all_blocks.includes(block_id) && !(event.beforeItemStack?.typeId === block_id && event.itemStack?.amount !== event.beforeItemStack?.amount)) {
-      system15.run(() => {
+      system14.run(() => {
         const interaction = new api_default.Interaction(
           {
             thorny_id: api_default.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
@@ -8472,15 +8559,15 @@ function load_block_event_handler() {
 }
 
 // behaviour_pack/scripts-dev/events/chat.ts
-import { EntityComponentTypes as EntityComponentTypes11, EquipmentSlot as EquipmentSlot8, system as system16, world as world16 } from "@minecraft/server";
+import { EntityComponentTypes as EntityComponentTypes10, EquipmentSlot as EquipmentSlot8, system as system15, world as world14 } from "@minecraft/server";
 function load_chat_handler() {
-  world16.beforeEvents.chatSend.subscribe((chat_event) => {
+  world14.beforeEvents.chatSend.subscribe((chat_event) => {
     const gamertag = chat_event.sender.name;
     const thorny_user = api_default.ThornyUser.fetch_user(gamertag);
     if (chat_event.message.startsWith("!lore")) {
-      const equippable = chat_event.sender.getComponent(EntityComponentTypes11.Equippable);
+      const equippable = chat_event.sender.getComponent(EntityComponentTypes10.Equippable);
       const mainhand = equippable?.getEquipment(EquipmentSlot8.Mainhand);
-      system16.run(() => {
+      system15.run(() => {
         switch (chat_event.message.split(" ")[1].toLowerCase()) {
           case "add":
             if (mainhand) {
@@ -8501,10 +8588,10 @@ function load_chat_handler() {
         }
       });
     } else {
-      world16.sendMessage({
+      world14.sendMessage({
         rawtext: [{ text: `\xA7l\xA78[\xA7r${thorny_user?.get_role_display()}\xA7l\xA78]\xA7r \xA77${gamertag}:\xA7r ${chat_event.message}` }]
       });
-      system16.run(() => {
+      system15.run(() => {
         api_default.Relay.message(gamertag, chat_event.message);
       });
     }
@@ -8513,9 +8600,9 @@ function load_chat_handler() {
 }
 
 // behaviour_pack/scripts-dev/events/connections.ts
-import { world as world17 } from "@minecraft/server";
+import { world as world15 } from "@minecraft/server";
 function load_connections_handler(guild_id2) {
-  world17.afterEvents.playerSpawn.subscribe((spawn_event) => {
+  world15.afterEvents.playerSpawn.subscribe((spawn_event) => {
     if (spawn_event.initialSpawn) {
       try {
         api_default.ThornyUser.get_user_from_api(guild_id2, spawn_event.player.name).then((thorny_user) => {
@@ -8531,10 +8618,10 @@ function load_connections_handler(guild_id2) {
       }
     }
   });
-  world17.afterEvents.playerJoin.subscribe((join_event) => {
+  world15.afterEvents.playerJoin.subscribe((join_event) => {
     console.log("Join Log! ", join_event.playerName, join_event.playerId);
   });
-  world17.afterEvents.playerLeave.subscribe((leave_event) => {
+  world15.afterEvents.playerLeave.subscribe((leave_event) => {
     const thorny_user = api_default.ThornyUser.fetch_user(leave_event.playerName);
     if (thorny_user) {
       api_default.QuestWithProgress.clear_cache(thorny_user);
@@ -8545,14 +8632,14 @@ function load_connections_handler(guild_id2) {
 }
 
 // behaviour_pack/scripts-dev/events/entities.ts
-import { system as system17, world as world18 } from "@minecraft/server";
-import { EntityComponentTypes as EntityComponentTypes12, EquipmentSlot as EquipmentSlot9, Player as Player11 } from "@minecraft/server";
+import { system as system16, world as world16 } from "@minecraft/server";
+import { EntityComponentTypes as EntityComponentTypes11, EquipmentSlot as EquipmentSlot9, Player as Player10 } from "@minecraft/server";
 function load_entity_event_handler() {
-  world18.afterEvents.entityDie.subscribe((event) => {
-    if (event.damageSource.damagingEntity instanceof Player11) {
+  world16.afterEvents.entityDie.subscribe((event) => {
+    if (event.damageSource.damagingEntity instanceof Player10) {
       const player = event.damageSource.damagingEntity;
       const dimension = player.dimension;
-      const mainhand = player.getComponent(EntityComponentTypes12.Equippable)?.getEquipment(EquipmentSlot9.Mainhand);
+      const mainhand = player.getComponent(EntityComponentTypes11.Equippable)?.getEquipment(EquipmentSlot9.Mainhand);
       const interaction = new api_default.Interaction(
         {
           thorny_id: api_default.ThornyUser.fetch_user(player.name)?.thorny_id ?? 0,
@@ -8563,9 +8650,9 @@ function load_entity_event_handler() {
           dimension: dimension.id
         }
       );
-      if (event.deadEntity instanceof Player11) {
+      if (event.deadEntity instanceof Player10) {
         const dead_player = event.deadEntity;
-        const dead_mainhand = dead_player.getComponent(EntityComponentTypes12.Equippable)?.getEquipment(EquipmentSlot9.Mainhand);
+        const dead_mainhand = dead_player.getComponent(EntityComponentTypes11.Equippable)?.getEquipment(EquipmentSlot9.Mainhand);
         interaction.reference = dead_player.name;
         const death_interaction = new api_default.Interaction(
           {
@@ -8585,11 +8672,11 @@ function load_entity_event_handler() {
         interaction.post_interaction();
       }
       api_default.Interaction.enqueue(interaction);
-    } else if (event.deadEntity instanceof Player11 && event.damageSource.damagingEntity) {
+    } else if (event.deadEntity instanceof Player10 && event.damageSource.damagingEntity) {
       const killer = event.damageSource.damagingEntity;
       const player = event.deadEntity;
       const dimension = player.dimension;
-      const mainhand = player.getComponent(EntityComponentTypes12.Equippable)?.getEquipment(EquipmentSlot9.Mainhand);
+      const mainhand = player.getComponent(EntityComponentTypes11.Equippable)?.getEquipment(EquipmentSlot9.Mainhand);
       const death_interaction = new api_default.Interaction(
         {
           thorny_id: api_default.ThornyUser.fetch_user(player.name)?.thorny_id ?? 0,
@@ -8602,10 +8689,10 @@ function load_entity_event_handler() {
       );
       death_interaction.post_interaction();
       api_default.Relay.event(utils_default.DeathMessage.random_pve(player.name, killer.typeId), "", "other");
-    } else if (event.deadEntity instanceof Player11 && !event.damageSource.damagingEntity) {
+    } else if (event.deadEntity instanceof Player10 && !event.damageSource.damagingEntity) {
       const player = event.deadEntity;
       const dimension = player.dimension;
-      const mainhand = player.getComponent(EntityComponentTypes12.Equippable)?.getEquipment(EquipmentSlot9.Mainhand);
+      const mainhand = player.getComponent(EntityComponentTypes11.Equippable)?.getEquipment(EquipmentSlot9.Mainhand);
       const death_interaction = new api_default.Interaction(
         {
           thorny_id: api_default.ThornyUser.fetch_user(player.name)?.thorny_id ?? 0,
@@ -8620,11 +8707,11 @@ function load_entity_event_handler() {
       api_default.Relay.event(utils_default.DeathMessage.random_suicide(player.name, event.damageSource.cause), "", "other");
     }
   });
-  world18.afterEvents.playerInteractWithEntity.subscribe((event) => {
+  world16.afterEvents.playerInteractWithEntity.subscribe((event) => {
     const entity_id = event.target.typeId;
     const entity_location = [event.target.location.x, event.target.location.y, event.target.location.z];
     const dimension = event.player.dimension;
-    const mainhand = event.player.getComponent(EntityComponentTypes12.Equippable)?.getEquipment(EquipmentSlot9.Mainhand);
+    const mainhand = event.player.getComponent(EntityComponentTypes11.Equippable)?.getEquipment(EquipmentSlot9.Mainhand);
     const all_entities = [
       // Villagers
       MinecraftEntityTypes.Villager,
@@ -8645,7 +8732,7 @@ function load_entity_event_handler() {
       MinecraftEntityTypes.HopperMinecart
     ];
     if (all_entities.includes(entity_id)) {
-      system17.run(() => {
+      system16.run(() => {
         const interaction = new api_default.Interaction(
           {
             thorny_id: api_default.ThornyUser.fetch_user(event.player.name)?.thorny_id ?? 0,
@@ -8662,9 +8749,9 @@ function load_entity_event_handler() {
   });
   let first_stage = false;
   let second_stage = false;
-  world18.afterEvents.entityHurt.subscribe((event) => {
+  world16.afterEvents.entityHurt.subscribe((event) => {
     if (event.hurtEntity.typeId === MinecraftEntityTypes.EnderDragon) {
-      const health_component = event.hurtEntity.getComponent(EntityComponentTypes12.Health);
+      const health_component = event.hurtEntity.getComponent(EntityComponentTypes11.Health);
       if (health_component && !first_stage && health_component?.currentValue / health_component?.effectiveMax <= 0.75) {
         first_stage = true;
         const message2 = utils_default.DragonHeartMessage.health_stage_message(1);
@@ -8689,11 +8776,11 @@ function load_entity_event_handler() {
 }
 
 // behaviour_pack/scripts-dev/events/script_events.ts
-import { system as system18, world as world19 } from "@minecraft/server";
+import { system as system17, world as world17 } from "@minecraft/server";
 function load_script_event_handler() {
-  system18.afterEvents.scriptEventReceive.subscribe((script_event) => {
+  system17.afterEvents.scriptEventReceive.subscribe((script_event) => {
     const thorny_user = api_default.ThornyUser.fetch_user(script_event.message);
-    const player = world19.getPlayers({ name: script_event.message })[0];
+    const player = world17.getPlayers({ name: script_event.message })[0];
     if (thorny_user) {
       const interaction = new api_default.Interaction(
         {
