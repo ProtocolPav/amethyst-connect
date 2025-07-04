@@ -1,4 +1,4 @@
-import {BlockComponentRandomTickEvent, Player, world, BlockComponentTickEvent, system} from "@minecraft/server";
+import {Player, BlockComponentTickEvent, system} from "@minecraft/server";
 import utils from "../utils";
 
 
@@ -19,13 +19,9 @@ export default function load_glitch_component() {
 
             const players = event.block.dimension.getPlayers({location: location, maxDistance: radius})
 
-            if (players.length === 0) {
-                event.block.setType('minecraft:air')
-            } else {
-                players.forEach((player: Player) => {
-                    glitch(player)
-                })
-            }
+            players.forEach((player: Player) => {
+                glitch(player)
+            })
         }
     }
 

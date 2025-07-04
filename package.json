@@ -1,15 +1,15 @@
 {
   "dependencies": {
-    "@minecraft/server": "^2.1.0-beta",
-    "@minecraft/server-net": "beta",
-    "@minecraft/vanilla-data": "^1.21.90",
+    "@minecraft/server": "^2.1.0-beta.1.21.93-stable",
+    "@minecraft/server-net": "^1.0.0-beta.1.21.93-stable",
+    "@minecraft/vanilla-data": "^1.21.93",
     "cross-env": "^7.0.3"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.13",
     "@types/node": "^22.9.0",
     "date-fns": "^4.1.0",
-    "esbuild": "^0.21.1"
+    "esbuild": "^0.25.5"
   },
   "scripts": {
     "bundle": "cross-env GUILD_ID=611008530077712395 node esbuild.js",
