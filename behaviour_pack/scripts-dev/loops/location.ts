@@ -20,13 +20,13 @@ function location_log(player: Player) {
 
     const location = [Math.round(player.location.x), Math.round(player.location.y), Math.round(player.location.z)];
 
-    return {'gamertag': player.name, 'location': location, 'hidden': hidden}
+    return {'gamertag': player.name, 'location': location, 'hidden': hidden, dimension: player.dimension.id}
 }
 
 export default function load_location_logger() {
     system.runInterval(() => {
         let playerlist = world.getPlayers();
-        let log: {gamertag: string, location: number[], hidden: boolean}[] = []
+        let log: {gamertag: string, location: number[], hidden: boolean, dimension: string}[] = []
 
         playerlist.forEach((player) => {
             log.push(location_log(player))
