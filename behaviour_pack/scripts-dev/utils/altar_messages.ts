@@ -2,15 +2,15 @@ export default class AltarMessage {
     public static random_sacrifice(blockValue: number, originalBlockValue: number) {
         // Special case for completely worthless items
         const noValueMessages = [
-            `The Anomaly cracks audibly... your empty gesture rejected. §l${blockValue} blocks§r`,
+            `The Anomaly cracks audibly... your empty gesture rejected. §8§l${blockValue} blocks§r`,
             `The void ignores your hollow tribute. Not even dust remains`,
-            `Your hands burn with static... the crystal knows you lied. §l${blockValue} blocks§r`,
-            `A chorus of enderman laughter... your mockery exposed. §l${blockValue} blocks§r`,
-            `The Altar bleeds black ichor... your insult quantified. §l${blockValue} blocks§r`,
+            `Your hands burn with static... the crystal knows you lied. §8§l${blockValue} blocks§r`,
+            `A chorus of enderman laughter... your mockery exposed. §8§l${blockValue} blocks§r`,
+            `The Altar bleeds black ichor... your insult quantified. §8§l${blockValue} blocks§r`,
             `Reality itself flinches from your apathy. Contribution: Null`,
-            `The Anomaly shows you visions of your own indifference. §l${blockValue} blocks§r`,
+            `The Anomaly shows you visions of your own indifference. §8§l${blockValue} blocks§r`,
             `Your 'offering' shatters into anti-matter. Debt unpaid`,
-            `The void between stars whispers: §oWorthless§r. §l${blockValue} blocks§r`,
+            `The void between stars whispers: §oWorthless§r. §8§l${blockValue} blocks§r`,
             `The crystal's core turns obsidian... a permanent record of your deceit`,
         ];
 
@@ -20,73 +20,57 @@ export default class AltarMessage {
 
         // Message categories
         const valueTierMessages = {
-            extreme: [ // 200+
-                `The sky hemorrhages violet lightning... §l+${blockValue} blocks§r tear through reality`,
-                `Stone screams as it liquefies. Sacrifice consumed: §l+${blockValue} blocks§r`,
-                `Time fractures into overlapping echoes. Debt paid: §l+${blockValue} blocks§r`,
-                `The End's bedrock cracks like eggshells. §l+${blockValue} border blocks§r claimed`,
-                `Oceans of shadow boil over. §l+${blockValue} blocks§r absorbed`
+            extreme: [ // 100+
+                `Reality tears open. §l+${blockValue} blocks§r claimed for the border`,
+                `The void screams in hunger. §l+${blockValue} blocks§r added`,
+                `Dimensions collapse inward. §l+${blockValue} blocks§r added`
             ],
-            very: [ // 60+
-                `Trees age centuries in seconds. §l+${blockValue} blocks§r logged`,
-                `Water flows upward to the crystal. §l+${blockValue} blocks§r fed`,
-                `Animals flee in geometric patterns. §l+${blockValue} blocks§r cataloged`,
-                `A chorus root network petrifies instantly. §l+${blockValue} blocks§r`,
-                `Your voice echoes from tomorrow. §l+${blockValue} blocks§r owed`
+            very: [ // 30+
+                `Shadows dance with purpose. §l+${blockValue} blocks§r added`,
+                `The crystal pulses greedily. §l+${blockValue} blocks§r expanded`,
+                `Time stutters briefly. §l+${blockValue} blocks§r expanded`
             ],
-            valuable: [ // 25+
-                `Flames burn cold and blue. §l+${blockValue} blocks§r recorded`,
-                `Ender motes orbit your head like flies. §l+${blockValue} blocks§r`,
-                `Metal objects vibrate mournfully. §l+${blockValue} blocks§r`,
-                `Your breath frosts black. §l+${blockValue} blocks§r accepted`,
-                `All coins in your pocket invert. §l+${blockValue} blocks§r`
+            valuable: [ // 10+
+                `A whisper of change. §l+${blockValue} blocks§r expanded`,
+                `Minor disturbance detected. §l+${blockValue} blocks§r added`,
+                `The air shifts slightly. §l+${blockValue} blocks§r claimed for the border`
             ],
-            not: [ // <25
-                `Dust settles in perfect circles. §l+${blockValue} blocks§r`,
-                `A faint enderman groan echoes... then silence. §l+${blockValue} blocks§r`,
-                `Leaves curl unnaturally. §l+${blockValue} blocks§r`,
-                `Puddles reflect red for 1 heartbeat. §l+${blockValue} blocks§r`,
-                `The Anomaly exhales static. §l+${blockValue} blocks§r`
+            not: [ // <10
+                `Barely a tremor. §l+${blockValue} blocks§r claimed for the border`,
+                `The Anomaly yawns. §l+${blockValue} blocks§r expanded`,
+                `Dust motes settle. §l+${blockValue} blocks§r added`
             ]
         };
 
         const depreciationMessages = {
-            high: [ // 80-65%
-                `The Anomaly pauses... did you ever truly care? §l+${blockValue} blocks§r`,
-                `Your hesitation taints the offering. §l+${blockValue} grudgingly absorbed§r`,
-                `The crystal vibrates suspiciously. "Again?" §l+${blockValue} blocks§r`,
-                `Once-prized, now routine. The void notices. §l+${blockValue} blocks§r`,
-                `The Altar accepts your mechanical tribute. §l+${blockValue} blocks§r`
+            high: [ // 80-65% - Yellow (still decent value)
+                `The Anomaly pauses, confused... "Why do you repeat this hollow act?" §e§l+${blockValue} blocks§r`,
+                `The crystal dims with disappointment. "Have you forgotten the meaning?" §e§l+${blockValue} blocks§r`,
+                `The void whispers uncertainty... "Is this all you offer now?" §e§l+${blockValue} blocks§r`,
             ],
-            mid: [ // 65-50%
-                `The Anomaly mocks your hollow repetition. §l+${blockValue} blocks§r`,
-                `"This meant something once," the void accuses. §l+${blockValue} blocks§r`,
-                `Your growing apathy poisons the ritual. §l+${blockValue} blocks§r`,
-                `The crystal's light dims in disappointment. §l+${blockValue} blocks§r`,
-                `The Altar accepts stale tribute... for now. §l+${blockValue} blocks§r`
+            mid: [ // 65-50% - Orange (declining value)
+                `"How... predictable," the Anomaly laughs coldly. §6§l+${blockValue} blocks§r`,
+                `The void yawns theatrically. "Another 'grand' gesture." §6§l+${blockValue} blocks§r`,
+                `"You bore me," echoes through reality. §6§l+${blockValue} blocks§r`
             ],
-            low: [ // 50-30%
-                `The Anomaly snarls at your rotten deception. §l+${blockValue} blocks§r`,
-                `"You think I don't see?" Static shreds air. §l+${blockValue} blocks§r`,
-                `Your contempt for the ritual becomes mutual. §l+${blockValue} blocks§r`,
-                `The void regurgitates part of your insult. §l+${blockValue} blocks§r`,
-                `The crystal burns your hands in contempt. §l+${blockValue} blocks§r`
+            low: [ // 50-30% - Red (poor value)
+                `"Your mockery ends NOW," the void seethes. §c§l+${blockValue} blocks§r`,
+                `The Anomaly's rage cracks the ground beneath you. §c§l+${blockValue} blocks§r`,
+                `"Continue this insult and face the consequences." §c§l+${blockValue} blocks§r`
             ],
-            negligible: [ // <30%
-                `The Anomaly's fury cracks nearby stone. "ENOUGH." §l+${blockValue} blocks§r`,
-                `Your betrayal hangs in the air. §l+${blockValue} pity blocks§r`,
-                `The void rejects all but cosmic spite. §l+${blockValue} blocks§r`,
-                `The Altar bleeds black ichor from your insult. §l+${blockValue} blocks§r`,
-                `Reality itself recoils at your mockery. §l+${blockValue} blocks§r`
+            negligible: [ // <30% - Dark Red (terrible value)
+                `The Anomaly's wrath tears through reality. "YOU WILL SUFFER." §4§l+${blockValue} blocks§r`,
+                `"Your insolence demands retribution," the void seethes. §4§l+${blockValue} blocks§r`,
+                `The cosmos itself turns against you in fury. §4§l+${blockValue} blocks§r`
             ]
         };
 
         // Single point of value tier selection
         const getValueTier = () => {
-            if (blockValue >= 200) return valueTierMessages.extreme;
-            if (blockValue >= 60) return valueTierMessages.very;
-            if (blockValue >= 25) return valueTierMessages.valuable;
-            return valueTierMessages.not;
+            if (blockValue >= 100) return valueTierMessages.extreme;  // Top 5% (elite items)
+            if (blockValue >= 30) return valueTierMessages.very;      // Top 20% (high-value items)
+            if (blockValue >= 10) return valueTierMessages.valuable;  // Top 50% (above-average items)
+            return valueTierMessages.not;                             // Bottom 50% (common items)
         };
 
         // Default to value tier messages
