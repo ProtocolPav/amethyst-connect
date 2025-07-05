@@ -18,6 +18,7 @@ type timeoutID = number;
 export default function load_altar_component(guild_id: string) {
     const sacrificeTimers: Map<playerName, timeoutID> = new Map();
     const sacrificeTotals: Map<playerName, {val: number, orig: number}> = new Map();
+    const evil_acts = new utils.EvilActs()
 
     const banned_gamertags = [
         'MarsOfSoa',
@@ -99,21 +100,23 @@ export default function load_altar_component(guild_id: string) {
 
                     const timeoutId = system.runTimeout(() => {
                         ambient(event);
-                        event.dimension.playSound("altar.sacrifice", event.block.center(), { volume: 8 });
+                        event.dimension.playSound("altar.sacrifice", event.block.center(), { volume: 6 });
 
                         const total_value = Math.round(sacrificeTotals.get(playerName)?.val!)
                         const total_original = Math.round(sacrificeTotals.get(playerName)?.orig!)
                         const message = utils.AltarMessage.random_sacrifice(total_value, total_original)
                         utils.commands.send_message(
                             event.dimension.id,
-                            playerName,
+                            '@a',
                             `[§l§aAltar§r] ${message}`
                         );
 
                         const valueRemaining = total_value / total_original
 
-                        if (valueRemaining < 0.3) {
-                            // Do an evil act to punish the player
+                        if (event.player && valueRemaining < 0.3 && Math.random() < 0.5) {
+                            evil_acts.executeRandomPunishment(event.player)
+                        } else if (event.player && valueRemaining < 0.5 && Math.random() < 0.12) {
+                            evil_acts.executeRandomPunishment(event.player)
                         }
 
                         sacrificeTimers.delete(playerName) // Clean up timers
