@@ -49,15 +49,6 @@ export default class EvilActs {
         }
     }
 
-    executePunishment(name: string, player: Player) {
-        const punishment = this.punishments.get(name);
-        if (punishment) {
-            punishment(player);
-            return true;
-        }
-        return false;
-    }
-
     // Basic negative effects
     applyBlindness(player: Player, duration = 20) {
         player.addEffect('blindness', duration*TicksPerSecond, { amplifier: 2 });
@@ -123,7 +114,7 @@ export default class EvilActs {
             x: (Math.random() - 0.5) * 2,
             z: (Math.random() - 0.5) * 2
         };
-        player.applyKnockback({x:4, z:0}, 0.8);
+        player.applyKnockback(direction, 0.8);
     }
 
     launchSkyward(player: Player) {
