@@ -7135,6 +7135,7 @@ var EvilActs = class {
     this.addPunishment("damage", (player) => this.dealDamage(player));
     this.addPunishment("knockback", (player) => this.applyKnockback(player));
     this.addPunishment("launch_skyward", (player) => this.launchSkyward(player));
+    this.addPunishment("inventory_shuffle", (player) => this.inventoryShuffle(player));
     this.addPunishment("fake_death", (player) => this.simulateDeath(player));
     this.addPunishment("phantom_sounds", (player) => this.playPhantomSounds(player));
   }
@@ -7208,6 +7209,27 @@ var EvilActs = class {
   }
   launchSkyward(player) {
     player.applyKnockback({ x: 0, z: 0 }, 3);
+  }
+  inventoryShuffle(player) {
+    const inventory = player.getComponent("inventory")?.container;
+    if (!inventory) return;
+    const items = [];
+    const slots = [];
+    for (let i = 0; i < 9; i++) {
+      const item = inventory.getItem(i);
+      if (item) {
+        items.push(item);
+        slots.push(i);
+        inventory.setItem(i, void 0);
+      }
+    }
+    for (let i = items.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [items[i], items[j]] = [items[j], items[i]];
+    }
+    for (let i = 0; i < items.length; i++) {
+      inventory.setItem(slots[i], items[i]);
+    }
   }
   // Psychological
   simulateDeath(player) {
@@ -7325,6 +7347,7 @@ var Glitches = class {
       "record.ward",
       "record.cat"
     ];
+    player.stopMusic();
     const disc = musicDiscs[Math.floor(Math.random() * musicDiscs.length)];
     player.playSound(disc, { volume: 30, pitch: Math.random() * 2 });
   }
@@ -9142,7 +9165,7 @@ function load_world_event_handlers(guild_id2) {
 }
 
 // behaviour_pack/scripts-dev/main.ts
-var guild_id = "1213827104945471538";
+var guild_id = "611008530077712395";
 WorldCache.load_world(guild_id).then();
 load_loops();
 load_custom_components(guild_id);
