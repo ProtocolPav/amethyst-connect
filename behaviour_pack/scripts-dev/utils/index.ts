@@ -8,6 +8,7 @@ import combine from './combine_two_lists'
 import AltarMessage from "./altar_messages";
 import DragonHeartMessage from "./dragon_messages";
 import EvilActs from "./evil_acts";
+import Glitches from "./glitches";
 
 const utils = {
     DeathMessage,
@@ -19,7 +20,8 @@ const utils = {
     convert_seconds_to_hms,
     clean_id,
     combine,
-    EvilActs
+    EvilActs,
+    Glitches
 }
 
 export default utils

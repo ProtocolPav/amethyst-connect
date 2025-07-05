@@ -3,24 +3,17 @@ import utils from "../utils";
 
 
 export default function load_glitch_component() {
+    const glitches = new utils.Glitches();
+
     function glitch(event : BlockComponentTickEvent) {
         if (Math.random() < 0.07 && event.block.isValid) {
             const location = event.block.location;
-            const radius = 18;
-
-            const glitches_type = [
-                utils.commands.noise_glitch,
-                utils.commands.vision_block_glitch,
-                utils.commands.vision_entity_glitch,
-                utils.commands.effect_glitch
-            ]
-
-            const glitch = glitches_type[Math.floor(Math.random() * glitches_type.length)]
+            const radius = 12;
 
             const players = event.block.dimension.getPlayers({location: location, maxDistance: radius})
 
             players.forEach((player: Player) => {
-                glitch(player)
+                glitches.executeRandomGlitch(player);
             })
         }
     }
