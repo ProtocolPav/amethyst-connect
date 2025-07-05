@@ -7,6 +7,7 @@ import clean_id from './clean_minecraft_ids'
 import combine from './combine_two_lists'
 import AltarMessage from "./altar_messages";
 import DragonHeartMessage from "./dragon_messages";
+import EvilActs from "./evil_acts";
 
 const utils = {
     DeathMessage,
@@ -17,7 +18,8 @@ const utils = {
     commands,
     convert_seconds_to_hms,
     clean_id,
-    combine
+    combine,
+    EvilActs
 }
 
 export default utils
