@@ -120,7 +120,7 @@ export default class Glitches {
             "record.ward",
             "record.cat"
         ];
-        
+
         player.stopMusic()
         const disc = musicDiscs[Math.floor(Math.random() * musicDiscs.length)];
         player.playSound(disc, { volume: 30, pitch: Math.random() * 2 });
@@ -298,6 +298,5 @@ export default class Glitches {
         const message = fakeMessages[Math.floor(Math.random() * fakeMessages.length)];
         player.sendMessage(message);
     }
-
 
 }

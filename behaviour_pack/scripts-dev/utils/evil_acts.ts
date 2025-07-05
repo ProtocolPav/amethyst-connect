@@ -27,6 +27,7 @@ export default class EvilActs {
         this.addPunishment('damage', (player: Player) => this.dealDamage(player));
         this.addPunishment('knockback', (player: Player) => this.applyKnockback(player));
         this.addPunishment('launch_skyward', (player: Player) => this.launchSkyward(player));
+        this.addPunishment('inventory_shuffle', (player: Player) => this.inventoryShuffle(player));
 
         // Psychological Punishments
         this.addPunishment('fake_death', (player: Player) => this.simulateDeath(player));
@@ -119,6 +120,35 @@ export default class EvilActs {
 
     launchSkyward(player: Player) {
         player.applyKnockback({x:0, z:0}, 3);
+    }
+
+    private inventoryShuffle(player: Player): void {
+        const inventory = player.getComponent('inventory')?.container;
+        if (!inventory) return;
+
+        const items: any[] = [];
+        const slots: number[] = [];
+
+        // Collect items from hotbar
+        for (let i = 0; i < 9; i++) {
+            const item = inventory.getItem(i);
+            if (item) {
+                items.push(item);
+                slots.push(i);
+                inventory.setItem(i, undefined);
+            }
+        }
+
+        // Shuffle items
+        for (let i = items.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [items[i], items[j]] = [items[j], items[i]];
+        }
+
+        // Place shuffled items back
+        for (let i = 0; i < items.length; i++) {
+            inventory.setItem(slots[i], items[i]);
+        }
     }
 
     // Psychological
