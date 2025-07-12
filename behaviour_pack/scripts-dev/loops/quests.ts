@@ -11,6 +11,7 @@ async function check_quests() {
             while (interaction) {
                 let thorny_user = api.ThornyUser.fetch_user_by_id(interaction.thorny_id)
                 let quest = await api.QuestWithProgress.get_active_quest(thorny_user)
+
                 if (quest && await quest.increment_active_objective(interaction)) {
                     await quest.update_user_quest()
                     await thorny_user.update()
