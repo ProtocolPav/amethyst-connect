@@ -6,18 +6,6 @@ import utils from "../utils"
 import ThornyUser from "./user"
 import { parse, format } from "date-fns"
 
-function normalizeDateString(datetime: string): string {
-    if (!datetime.includes('.')) {
-        // Add microseconds if missing
-        return `${datetime}.000000`;
-    }
-
-    // Pad or trim to exactly 6 digits
-    return datetime.replace(/\.(\d{1,6})\d*/, (_, digits) => {
-        return `.${digits.padEnd(6, '0')}`;
-    });
-}
-
 interface IObjectiveWithProgress extends IObjective {
     start: string | null
     end: string | null
@@ -37,21 +25,27 @@ class ObjectiveWithProgress extends Objective {
     start: Date | null
     end: Date | null
     completion: number
+    deaths: number
     status: 'in_progress' | 'completed' | 'failed'
 
     constructor(data: IObjectiveWithProgress, thorny_user: ThornyUser) {
         super(data)
         this.thorny_user = thorny_user
-        this.start = data.start ? parse(normalizeDateString(data.start), 'yyyy-MM-dd HH:mm:ss.SSSSSS', new Date()) : null
-        this.end = data.end ? parse(normalizeDateString(data.end), 'yyyy-MM-dd HH:mm:ss.SSSSSS', new Date()) : null
+        this.start = data.start ? parse(utils.normalizeDateString(data.start), 'yyyy-MM-dd HH:mm:ss.SSSSSS', new Date()) : null
+        this.end = data.end ? parse(utils.normalizeDateString(data.end), 'yyyy-MM-dd HH:mm:ss.SSSSSS', new Date()) : null
         this.completion = data.completion
         this.status = data.status
+        this.deaths = 0
     }
 
-    private async complete_objective(interaction: Interaction, quest: QuestWithProgress) {
+    private async complete_objective(interaction: Interaction, quest: QuestWithProgress, failed: boolean) {
         const index = quest.objectives.indexOf(this)
 
-        utils.commands.play_objective_complete_sound(this.thorny_user.gamertag)
+        if (failed) {
+            utils.commands.play_quest_fail_sound(this.thorny_user.gamertag)
+        } else {
+            utils.commands.play_objective_complete_sound(this.thorny_user.gamertag)
+        }
 
         utils.commands.send_title(
             interaction.dimension, 
@@ -108,7 +102,7 @@ class ObjectiveWithProgress extends Objective {
                 const index = quest.objectives.indexOf(this)
 
                 if (index < quest.objectives.length-1) {
-                    await this.complete_objective(interaction, quest)
+                    await this.complete_objective(interaction, quest, false)
                 }
 
                 await this.give_rewards(interaction, this.thorny_user)
@@ -119,11 +113,34 @@ class ObjectiveWithProgress extends Objective {
         else if (requirement_check.fail_objective) {
             this.status = 'failed'
             this.end = new Date()
+        }
+        else if (interaction.type === 'die' && this.required_deaths) {
+            this.deaths += 1
 
-            await quest.fail_quest(interaction.thorny_id)
-            utils.commands.play_quest_fail_sound(this.thorny_user.gamertag)
+            utils.commands.send_message(
+                interaction.dimension,
+                this.thorny_user.gamertag,
+                `§l[§aQuests§f]§r You have died. ${this.required_deaths - this.deaths} Remaining...`
+            )
 
-            return false
+            if (this.deaths > this.required_deaths) {
+                this.status = 'failed'
+                this.end = new Date()
+            }
+        }
+
+        if (this.status === 'failed' && this.continue_on_fail) {
+            const index = quest.objectives.indexOf(this)
+
+            if (index < quest.objectives.length-1) {
+                await this.complete_objective(interaction, quest, true)
+            }
+
+            utils.commands.send_message(
+                interaction.dimension,
+                this.thorny_user.gamertag,
+                `§l[§aQuests§f]§r §4You have failed the previous objective, but the quest continues... You did not receive rewards for the previous objective.`
+            )
         }
 
         return false;
@@ -142,8 +159,8 @@ export default class QuestWithProgress extends Quest {
     constructor(data: IQuestWithProgress, thorny_user: ThornyUser) {
         super(data)
         this.thorny_user = thorny_user
-        this.accepted_on = parse(normalizeDateString(data.accepted_on), 'yyyy-MM-dd HH:mm:ss.SSSSSSS', new Date())
-        this.started_on = data.started_on ? parse(normalizeDateString(data.started_on), 'yyyy-MM-dd HH:mm:ss.SSSSSS', new Date()) : null
+        this.accepted_on = parse(utils.normalizeDateString(data.accepted_on), 'yyyy-MM-dd HH:mm:ss.SSSSSSS', new Date())
+        this.started_on = data.started_on ? parse(utils.normalizeDateString(data.started_on), 'yyyy-MM-dd HH:mm:ss.SSSSSS', new Date()) : null
         this.status = data.status
 
         this.objectives = []
@@ -191,7 +208,7 @@ export default class QuestWithProgress extends Quest {
         }
     }
 
-    get_active_objective(): ObjectiveWithProgress | null {
+    public get_active_objective(): ObjectiveWithProgress | null {
         return this.objectives.find(objective => objective.status === 'in_progress') ?? null
     }
 
@@ -229,7 +246,13 @@ export default class QuestWithProgress extends Quest {
         await http.request(request)
     }
 
+    public get_progress(): number {
+        return this.objectives.filter(objective => objective.status === 'completed').length
+    }
+
     /**
+     * Increments the active objective if it exists.
+     * Updates the quest and objective's start times, as well as the next objective's start time if needed.
      * @returns
      * A boolean representing if the objective has been incremented or not
      */
@@ -270,15 +293,25 @@ export default class QuestWithProgress extends Quest {
             else if (next_objective && next_objective.objective_id !== active_objective.objective_id) {
                 next_objective.start = new Date()
             }
-            else if (active_objective.status === 'failed') {
+            else if (active_objective.status === 'failed' && !active_objective.continue_on_fail) {
                 this.status = 'failed'
                 this.end_time = new Date()
+
+                utils.commands.play_quest_fail_sound(this.thorny_user.gamertag)
 
                 utils.commands.send_title(
                     interaction.dimension,
                     this.thorny_user.gamertag,
                     'title',
                     `§lQuest Failed :(`
+                )
+
+                utils.commands.send_message(
+                    interaction.dimension,
+                    '@a',
+                    `§c+=+=+=+=+=+=+ Quest Failed :( +=+=+=+=+=+=+§r\n` +
+                    `${this.thorny_user.gamertag} has failed §l§n${this.title}§r!\n` +
+                    `Think you can do better? Run §5/quests view§r on Discord to start it!`
                 )
             }
 
