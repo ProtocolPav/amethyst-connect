@@ -55,7 +55,6 @@ const utils = {
     combine,
     EvilActs,
     Glitches,
-    combine,
     normalizeDateString
 }
 

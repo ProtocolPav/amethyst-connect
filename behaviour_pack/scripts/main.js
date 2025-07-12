@@ -240,9 +240,7 @@ var MinecraftBlockTypes = ((MinecraftBlockTypes22) => {
   MinecraftBlockTypes22["BubbleCoralFan"] = "minecraft:bubble_coral_fan";
   MinecraftBlockTypes22["BubbleCoralWallFan"] = "minecraft:bubble_coral_wall_fan";
   MinecraftBlockTypes22["BuddingAmethyst"] = "minecraft:budding_amethyst";
-  MinecraftBlockTypes22["Bush"] = "minecraft:bush";
   MinecraftBlockTypes22["Cactus"] = "minecraft:cactus";
-  MinecraftBlockTypes22["CactusFlower"] = "minecraft:cactus_flower";
   MinecraftBlockTypes22["Cake"] = "minecraft:cake";
   MinecraftBlockTypes22["Calcite"] = "minecraft:calcite";
   MinecraftBlockTypes22["CalibratedSculkSensor"] = "minecraft:calibrated_sculk_sensor";
@@ -452,7 +450,6 @@ var MinecraftBlockTypes = ((MinecraftBlockTypes22) => {
   MinecraftBlockTypes22["DoubleCutCopperSlab"] = "minecraft:double_cut_copper_slab";
   MinecraftBlockTypes22["DragonEgg"] = "minecraft:dragon_egg";
   MinecraftBlockTypes22["DragonHead"] = "minecraft:dragon_head";
-  MinecraftBlockTypes22["DriedGhast"] = "minecraft:dried_ghast";
   MinecraftBlockTypes22["DriedKelpBlock"] = "minecraft:dried_kelp_block";
   MinecraftBlockTypes22["DripstoneBlock"] = "minecraft:dripstone_block";
   MinecraftBlockTypes22["Dropper"] = "minecraft:dropper";
@@ -607,7 +604,6 @@ var MinecraftBlockTypes = ((MinecraftBlockTypes22) => {
   MinecraftBlockTypes22["FireCoralBlock"] = "minecraft:fire_coral_block";
   MinecraftBlockTypes22["FireCoralFan"] = "minecraft:fire_coral_fan";
   MinecraftBlockTypes22["FireCoralWallFan"] = "minecraft:fire_coral_wall_fan";
-  MinecraftBlockTypes22["FireflyBush"] = "minecraft:firefly_bush";
   MinecraftBlockTypes22["FletchingTable"] = "minecraft:fletching_table";
   MinecraftBlockTypes22["FlowerPot"] = "minecraft:flower_pot";
   MinecraftBlockTypes22["FloweringAzalea"] = "minecraft:flowering_azalea";
@@ -744,7 +740,6 @@ var MinecraftBlockTypes = ((MinecraftBlockTypes22) => {
   MinecraftBlockTypes22["LargeAmethystBud"] = "minecraft:large_amethyst_bud";
   MinecraftBlockTypes22["LargeFern"] = "minecraft:large_fern";
   MinecraftBlockTypes22["Lava"] = "minecraft:lava";
-  MinecraftBlockTypes22["LeafLitter"] = "minecraft:leaf_litter";
   MinecraftBlockTypes22["Lectern"] = "minecraft:lectern";
   MinecraftBlockTypes22["Lever"] = "minecraft:lever";
   MinecraftBlockTypes22["LightBlock0"] = "minecraft:light_block_0";
@@ -1100,7 +1095,6 @@ var MinecraftBlockTypes = ((MinecraftBlockTypes22) => {
   MinecraftBlockTypes22["SeaLantern"] = "minecraft:sea_lantern";
   MinecraftBlockTypes22["SeaPickle"] = "minecraft:sea_pickle";
   MinecraftBlockTypes22["Seagrass"] = "minecraft:seagrass";
-  MinecraftBlockTypes22["ShortDryGrass"] = "minecraft:short_dry_grass";
   MinecraftBlockTypes22["ShortGrass"] = "minecraft:short_grass";
   MinecraftBlockTypes22["Shroomlight"] = "minecraft:shroomlight";
   MinecraftBlockTypes22["SilverGlazedTerracotta"] = "minecraft:silver_glazed_terracotta";
@@ -1197,7 +1191,6 @@ var MinecraftBlockTypes = ((MinecraftBlockTypes22) => {
   MinecraftBlockTypes22["SuspiciousGravel"] = "minecraft:suspicious_gravel";
   MinecraftBlockTypes22["SuspiciousSand"] = "minecraft:suspicious_sand";
   MinecraftBlockTypes22["SweetBerryBush"] = "minecraft:sweet_berry_bush";
-  MinecraftBlockTypes22["TallDryGrass"] = "minecraft:tall_dry_grass";
   MinecraftBlockTypes22["TallGrass"] = "minecraft:tall_grass";
   MinecraftBlockTypes22["Target"] = "minecraft:target";
   MinecraftBlockTypes22["TintedGlass"] = "minecraft:tinted_glass";
@@ -1325,7 +1318,6 @@ var MinecraftBlockTypes = ((MinecraftBlockTypes22) => {
   MinecraftBlockTypes22["WhiteTerracotta"] = "minecraft:white_terracotta";
   MinecraftBlockTypes22["WhiteTulip"] = "minecraft:white_tulip";
   MinecraftBlockTypes22["WhiteWool"] = "minecraft:white_wool";
-  MinecraftBlockTypes22["Wildflowers"] = "minecraft:wildflowers";
   MinecraftBlockTypes22["WitherRose"] = "minecraft:wither_rose";
   MinecraftBlockTypes22["WitherSkeletonSkull"] = "minecraft:wither_skeleton_skull";
   MinecraftBlockTypes22["WoodenButton"] = "minecraft:wooden_button";
@@ -1346,7 +1338,6 @@ var MinecraftBlockTypes = ((MinecraftBlockTypes22) => {
   return MinecraftBlockTypes22;
 })(MinecraftBlockTypes || {});
 var MinecraftCameraPresetsTypes = ((MinecraftCameraPresetsTypes2) => {
-  MinecraftCameraPresetsTypes2["ControlSchemeCamera"] = "minecraft:control_scheme_camera";
   MinecraftCameraPresetsTypes2["FirstPerson"] = "minecraft:first_person";
   MinecraftCameraPresetsTypes2["FixedBoom"] = "minecraft:fixed_boom";
   MinecraftCameraPresetsTypes2["FollowOrbit"] = "minecraft:follow_orbit";
@@ -1500,7 +1491,6 @@ var MinecraftEntityTypes = ((MinecraftEntityTypes2) => {
   MinecraftEntityTypes2["GlowSquid"] = "minecraft:glow_squid";
   MinecraftEntityTypes2["Goat"] = "minecraft:goat";
   MinecraftEntityTypes2["Guardian"] = "minecraft:guardian";
-  MinecraftEntityTypes2["HappyGhast"] = "minecraft:happy_ghast";
   MinecraftEntityTypes2["Hoglin"] = "minecraft:hoglin";
   MinecraftEntityTypes2["HopperMinecart"] = "minecraft:hopper_minecart";
   MinecraftEntityTypes2["Horse"] = "minecraft:horse";
@@ -1702,7 +1692,6 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["BlackConcretePowder"] = "minecraft:black_concrete_powder";
   MinecraftItemTypes2["BlackDye"] = "minecraft:black_dye";
   MinecraftItemTypes2["BlackGlazedTerracotta"] = "minecraft:black_glazed_terracotta";
-  MinecraftItemTypes2["BlackHarness"] = "minecraft:black_harness";
   MinecraftItemTypes2["BlackShulkerBox"] = "minecraft:black_shulker_box";
   MinecraftItemTypes2["BlackStainedGlass"] = "minecraft:black_stained_glass";
   MinecraftItemTypes2["BlackStainedGlassPane"] = "minecraft:black_stained_glass_pane";
@@ -1723,9 +1712,7 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["BlueConcrete"] = "minecraft:blue_concrete";
   MinecraftItemTypes2["BlueConcretePowder"] = "minecraft:blue_concrete_powder";
   MinecraftItemTypes2["BlueDye"] = "minecraft:blue_dye";
-  MinecraftItemTypes2["BlueEgg"] = "minecraft:blue_egg";
   MinecraftItemTypes2["BlueGlazedTerracotta"] = "minecraft:blue_glazed_terracotta";
-  MinecraftItemTypes2["BlueHarness"] = "minecraft:blue_harness";
   MinecraftItemTypes2["BlueIce"] = "minecraft:blue_ice";
   MinecraftItemTypes2["BlueOrchid"] = "minecraft:blue_orchid";
   MinecraftItemTypes2["BlueShulkerBox"] = "minecraft:blue_shulker_box";
@@ -1763,9 +1750,7 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["BrownConcrete"] = "minecraft:brown_concrete";
   MinecraftItemTypes2["BrownConcretePowder"] = "minecraft:brown_concrete_powder";
   MinecraftItemTypes2["BrownDye"] = "minecraft:brown_dye";
-  MinecraftItemTypes2["BrownEgg"] = "minecraft:brown_egg";
   MinecraftItemTypes2["BrownGlazedTerracotta"] = "minecraft:brown_glazed_terracotta";
-  MinecraftItemTypes2["BrownHarness"] = "minecraft:brown_harness";
   MinecraftItemTypes2["BrownMushroom"] = "minecraft:brown_mushroom";
   MinecraftItemTypes2["BrownMushroomBlock"] = "minecraft:brown_mushroom_block";
   MinecraftItemTypes2["BrownShulkerBox"] = "minecraft:brown_shulker_box";
@@ -1781,9 +1766,7 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["BuddingAmethyst"] = "minecraft:budding_amethyst";
   MinecraftItemTypes2["Bundle"] = "minecraft:bundle";
   MinecraftItemTypes2["BurnPotterySherd"] = "minecraft:burn_pottery_sherd";
-  MinecraftItemTypes2["Bush"] = "minecraft:bush";
   MinecraftItemTypes2["Cactus"] = "minecraft:cactus";
-  MinecraftItemTypes2["CactusFlower"] = "minecraft:cactus_flower";
   MinecraftItemTypes2["Cake"] = "minecraft:cake";
   MinecraftItemTypes2["Calcite"] = "minecraft:calcite";
   MinecraftItemTypes2["CalibratedSculkSensor"] = "minecraft:calibrated_sculk_sensor";
@@ -1928,7 +1911,6 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["CyanConcretePowder"] = "minecraft:cyan_concrete_powder";
   MinecraftItemTypes2["CyanDye"] = "minecraft:cyan_dye";
   MinecraftItemTypes2["CyanGlazedTerracotta"] = "minecraft:cyan_glazed_terracotta";
-  MinecraftItemTypes2["CyanHarness"] = "minecraft:cyan_harness";
   MinecraftItemTypes2["CyanShulkerBox"] = "minecraft:cyan_shulker_box";
   MinecraftItemTypes2["CyanStainedGlass"] = "minecraft:cyan_stained_glass";
   MinecraftItemTypes2["CyanStainedGlassPane"] = "minecraft:cyan_stained_glass_pane";
@@ -2020,7 +2002,6 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["DragonBreath"] = "minecraft:dragon_breath";
   MinecraftItemTypes2["DragonEgg"] = "minecraft:dragon_egg";
   MinecraftItemTypes2["DragonHead"] = "minecraft:dragon_head";
-  MinecraftItemTypes2["DriedGhast"] = "minecraft:dried_ghast";
   MinecraftItemTypes2["DriedKelp"] = "minecraft:dried_kelp";
   MinecraftItemTypes2["DriedKelpBlock"] = "minecraft:dried_kelp_block";
   MinecraftItemTypes2["DripstoneBlock"] = "minecraft:dripstone_block";
@@ -2076,7 +2057,6 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["FireCoral"] = "minecraft:fire_coral";
   MinecraftItemTypes2["FireCoralBlock"] = "minecraft:fire_coral_block";
   MinecraftItemTypes2["FireCoralFan"] = "minecraft:fire_coral_fan";
-  MinecraftItemTypes2["FireflyBush"] = "minecraft:firefly_bush";
   MinecraftItemTypes2["FireworkRocket"] = "minecraft:firework_rocket";
   MinecraftItemTypes2["FireworkStar"] = "minecraft:firework_star";
   MinecraftItemTypes2["FishingRod"] = "minecraft:fishing_rod";
@@ -2144,7 +2124,6 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["GrayConcretePowder"] = "minecraft:gray_concrete_powder";
   MinecraftItemTypes2["GrayDye"] = "minecraft:gray_dye";
   MinecraftItemTypes2["GrayGlazedTerracotta"] = "minecraft:gray_glazed_terracotta";
-  MinecraftItemTypes2["GrayHarness"] = "minecraft:gray_harness";
   MinecraftItemTypes2["GrayShulkerBox"] = "minecraft:gray_shulker_box";
   MinecraftItemTypes2["GrayStainedGlass"] = "minecraft:gray_stained_glass";
   MinecraftItemTypes2["GrayStainedGlassPane"] = "minecraft:gray_stained_glass_pane";
@@ -2157,7 +2136,6 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["GreenConcretePowder"] = "minecraft:green_concrete_powder";
   MinecraftItemTypes2["GreenDye"] = "minecraft:green_dye";
   MinecraftItemTypes2["GreenGlazedTerracotta"] = "minecraft:green_glazed_terracotta";
-  MinecraftItemTypes2["GreenHarness"] = "minecraft:green_harness";
   MinecraftItemTypes2["GreenShulkerBox"] = "minecraft:green_shulker_box";
   MinecraftItemTypes2["GreenStainedGlass"] = "minecraft:green_stained_glass";
   MinecraftItemTypes2["GreenStainedGlassPane"] = "minecraft:green_stained_glass_pane";
@@ -2169,7 +2147,6 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["GusterBannerPattern"] = "minecraft:guster_banner_pattern";
   MinecraftItemTypes2["GusterPotterySherd"] = "minecraft:guster_pottery_sherd";
   MinecraftItemTypes2["HangingRoots"] = "minecraft:hanging_roots";
-  MinecraftItemTypes2["HappyGhastSpawnEgg"] = "minecraft:happy_ghast_spawn_egg";
   MinecraftItemTypes2["HardenedClay"] = "minecraft:hardened_clay";
   MinecraftItemTypes2["HayBlock"] = "minecraft:hay_block";
   MinecraftItemTypes2["HeartOfTheSea"] = "minecraft:heart_of_the_sea";
@@ -2247,7 +2224,6 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["LargeFern"] = "minecraft:large_fern";
   MinecraftItemTypes2["LavaBucket"] = "minecraft:lava_bucket";
   MinecraftItemTypes2["Lead"] = "minecraft:lead";
-  MinecraftItemTypes2["LeafLitter"] = "minecraft:leaf_litter";
   MinecraftItemTypes2["Leather"] = "minecraft:leather";
   MinecraftItemTypes2["LeatherBoots"] = "minecraft:leather_boots";
   MinecraftItemTypes2["LeatherChestplate"] = "minecraft:leather_chestplate";
@@ -2279,7 +2255,6 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["LightBlueConcretePowder"] = "minecraft:light_blue_concrete_powder";
   MinecraftItemTypes2["LightBlueDye"] = "minecraft:light_blue_dye";
   MinecraftItemTypes2["LightBlueGlazedTerracotta"] = "minecraft:light_blue_glazed_terracotta";
-  MinecraftItemTypes2["LightBlueHarness"] = "minecraft:light_blue_harness";
   MinecraftItemTypes2["LightBlueShulkerBox"] = "minecraft:light_blue_shulker_box";
   MinecraftItemTypes2["LightBlueStainedGlass"] = "minecraft:light_blue_stained_glass";
   MinecraftItemTypes2["LightBlueStainedGlassPane"] = "minecraft:light_blue_stained_glass_pane";
@@ -2291,7 +2266,6 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["LightGrayConcrete"] = "minecraft:light_gray_concrete";
   MinecraftItemTypes2["LightGrayConcretePowder"] = "minecraft:light_gray_concrete_powder";
   MinecraftItemTypes2["LightGrayDye"] = "minecraft:light_gray_dye";
-  MinecraftItemTypes2["LightGrayHarness"] = "minecraft:light_gray_harness";
   MinecraftItemTypes2["LightGrayShulkerBox"] = "minecraft:light_gray_shulker_box";
   MinecraftItemTypes2["LightGrayStainedGlass"] = "minecraft:light_gray_stained_glass";
   MinecraftItemTypes2["LightGrayStainedGlassPane"] = "minecraft:light_gray_stained_glass_pane";
@@ -2308,7 +2282,6 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["LimeConcretePowder"] = "minecraft:lime_concrete_powder";
   MinecraftItemTypes2["LimeDye"] = "minecraft:lime_dye";
   MinecraftItemTypes2["LimeGlazedTerracotta"] = "minecraft:lime_glazed_terracotta";
-  MinecraftItemTypes2["LimeHarness"] = "minecraft:lime_harness";
   MinecraftItemTypes2["LimeShulkerBox"] = "minecraft:lime_shulker_box";
   MinecraftItemTypes2["LimeStainedGlass"] = "minecraft:lime_stained_glass";
   MinecraftItemTypes2["LimeStainedGlassPane"] = "minecraft:lime_stained_glass_pane";
@@ -2328,7 +2301,6 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["MagentaConcretePowder"] = "minecraft:magenta_concrete_powder";
   MinecraftItemTypes2["MagentaDye"] = "minecraft:magenta_dye";
   MinecraftItemTypes2["MagentaGlazedTerracotta"] = "minecraft:magenta_glazed_terracotta";
-  MinecraftItemTypes2["MagentaHarness"] = "minecraft:magenta_harness";
   MinecraftItemTypes2["MagentaShulkerBox"] = "minecraft:magenta_shulker_box";
   MinecraftItemTypes2["MagentaStainedGlass"] = "minecraft:magenta_stained_glass";
   MinecraftItemTypes2["MagentaStainedGlassPane"] = "minecraft:magenta_stained_glass_pane";
@@ -2394,7 +2366,6 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["MusicDiscCreator"] = "minecraft:music_disc_creator";
   MinecraftItemTypes2["MusicDiscCreatorMusicBox"] = "minecraft:music_disc_creator_music_box";
   MinecraftItemTypes2["MusicDiscFar"] = "minecraft:music_disc_far";
-  MinecraftItemTypes2["MusicDiscLavaChicken"] = "minecraft:music_disc_lava_chicken";
   MinecraftItemTypes2["MusicDiscMall"] = "minecraft:music_disc_mall";
   MinecraftItemTypes2["MusicDiscMellohi"] = "minecraft:music_disc_mellohi";
   MinecraftItemTypes2["MusicDiscOtherside"] = "minecraft:music_disc_otherside";
@@ -2403,7 +2374,6 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["MusicDiscRelic"] = "minecraft:music_disc_relic";
   MinecraftItemTypes2["MusicDiscStal"] = "minecraft:music_disc_stal";
   MinecraftItemTypes2["MusicDiscStrad"] = "minecraft:music_disc_strad";
-  MinecraftItemTypes2["MusicDiscTears"] = "minecraft:music_disc_tears";
   MinecraftItemTypes2["MusicDiscWait"] = "minecraft:music_disc_wait";
   MinecraftItemTypes2["MusicDiscWard"] = "minecraft:music_disc_ward";
   MinecraftItemTypes2["Mutton"] = "minecraft:mutton";
@@ -2464,7 +2434,6 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["OrangeConcretePowder"] = "minecraft:orange_concrete_powder";
   MinecraftItemTypes2["OrangeDye"] = "minecraft:orange_dye";
   MinecraftItemTypes2["OrangeGlazedTerracotta"] = "minecraft:orange_glazed_terracotta";
-  MinecraftItemTypes2["OrangeHarness"] = "minecraft:orange_harness";
   MinecraftItemTypes2["OrangeShulkerBox"] = "minecraft:orange_shulker_box";
   MinecraftItemTypes2["OrangeStainedGlass"] = "minecraft:orange_stained_glass";
   MinecraftItemTypes2["OrangeStainedGlassPane"] = "minecraft:orange_stained_glass_pane";
@@ -2525,7 +2494,6 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["PinkConcretePowder"] = "minecraft:pink_concrete_powder";
   MinecraftItemTypes2["PinkDye"] = "minecraft:pink_dye";
   MinecraftItemTypes2["PinkGlazedTerracotta"] = "minecraft:pink_glazed_terracotta";
-  MinecraftItemTypes2["PinkHarness"] = "minecraft:pink_harness";
   MinecraftItemTypes2["PinkPetals"] = "minecraft:pink_petals";
   MinecraftItemTypes2["PinkShulkerBox"] = "minecraft:pink_shulker_box";
   MinecraftItemTypes2["PinkStainedGlass"] = "minecraft:pink_stained_glass";
@@ -2599,7 +2567,6 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["PurpleConcretePowder"] = "minecraft:purple_concrete_powder";
   MinecraftItemTypes2["PurpleDye"] = "minecraft:purple_dye";
   MinecraftItemTypes2["PurpleGlazedTerracotta"] = "minecraft:purple_glazed_terracotta";
-  MinecraftItemTypes2["PurpleHarness"] = "minecraft:purple_harness";
   MinecraftItemTypes2["PurpleShulkerBox"] = "minecraft:purple_shulker_box";
   MinecraftItemTypes2["PurpleStainedGlass"] = "minecraft:purple_stained_glass";
   MinecraftItemTypes2["PurpleStainedGlassPane"] = "minecraft:purple_stained_glass_pane";
@@ -2638,7 +2605,6 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["RedConcretePowder"] = "minecraft:red_concrete_powder";
   MinecraftItemTypes2["RedDye"] = "minecraft:red_dye";
   MinecraftItemTypes2["RedGlazedTerracotta"] = "minecraft:red_glazed_terracotta";
-  MinecraftItemTypes2["RedHarness"] = "minecraft:red_harness";
   MinecraftItemTypes2["RedMushroom"] = "minecraft:red_mushroom";
   MinecraftItemTypes2["RedMushroomBlock"] = "minecraft:red_mushroom_block";
   MinecraftItemTypes2["RedNetherBrick"] = "minecraft:red_nether_brick";
@@ -2701,7 +2667,6 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["SheepSpawnEgg"] = "minecraft:sheep_spawn_egg";
   MinecraftItemTypes2["ShelterPotterySherd"] = "minecraft:shelter_pottery_sherd";
   MinecraftItemTypes2["Shield"] = "minecraft:shield";
-  MinecraftItemTypes2["ShortDryGrass"] = "minecraft:short_dry_grass";
   MinecraftItemTypes2["ShortGrass"] = "minecraft:short_grass";
   MinecraftItemTypes2["Shroomlight"] = "minecraft:shroomlight";
   MinecraftItemTypes2["ShulkerShell"] = "minecraft:shulker_shell";
@@ -2824,7 +2789,6 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["SweetBerries"] = "minecraft:sweet_berries";
   MinecraftItemTypes2["TadpoleBucket"] = "minecraft:tadpole_bucket";
   MinecraftItemTypes2["TadpoleSpawnEgg"] = "minecraft:tadpole_spawn_egg";
-  MinecraftItemTypes2["TallDryGrass"] = "minecraft:tall_dry_grass";
   MinecraftItemTypes2["TallGrass"] = "minecraft:tall_grass";
   MinecraftItemTypes2["Target"] = "minecraft:target";
   MinecraftItemTypes2["TideArmorTrimSmithingTemplate"] = "minecraft:tide_armor_trim_smithing_template";
@@ -2950,7 +2914,6 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["WhiteConcretePowder"] = "minecraft:white_concrete_powder";
   MinecraftItemTypes2["WhiteDye"] = "minecraft:white_dye";
   MinecraftItemTypes2["WhiteGlazedTerracotta"] = "minecraft:white_glazed_terracotta";
-  MinecraftItemTypes2["WhiteHarness"] = "minecraft:white_harness";
   MinecraftItemTypes2["WhiteShulkerBox"] = "minecraft:white_shulker_box";
   MinecraftItemTypes2["WhiteStainedGlass"] = "minecraft:white_stained_glass";
   MinecraftItemTypes2["WhiteStainedGlassPane"] = "minecraft:white_stained_glass_pane";
@@ -2958,7 +2921,6 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["WhiteTulip"] = "minecraft:white_tulip";
   MinecraftItemTypes2["WhiteWool"] = "minecraft:white_wool";
   MinecraftItemTypes2["WildArmorTrimSmithingTemplate"] = "minecraft:wild_armor_trim_smithing_template";
-  MinecraftItemTypes2["Wildflowers"] = "minecraft:wildflowers";
   MinecraftItemTypes2["WindCharge"] = "minecraft:wind_charge";
   MinecraftItemTypes2["WitchSpawnEgg"] = "minecraft:witch_spawn_egg";
   MinecraftItemTypes2["WitherRose"] = "minecraft:wither_rose";
@@ -2983,7 +2945,6 @@ var MinecraftItemTypes = ((MinecraftItemTypes2) => {
   MinecraftItemTypes2["YellowConcretePowder"] = "minecraft:yellow_concrete_powder";
   MinecraftItemTypes2["YellowDye"] = "minecraft:yellow_dye";
   MinecraftItemTypes2["YellowGlazedTerracotta"] = "minecraft:yellow_glazed_terracotta";
-  MinecraftItemTypes2["YellowHarness"] = "minecraft:yellow_harness";
   MinecraftItemTypes2["YellowShulkerBox"] = "minecraft:yellow_shulker_box";
   MinecraftItemTypes2["YellowStainedGlass"] = "minecraft:yellow_stained_glass";
   MinecraftItemTypes2["YellowStainedGlassPane"] = "minecraft:yellow_stained_glass_pane";
@@ -4137,15 +4098,12 @@ var formatters = {
   G: function(date, token, localize2) {
     const era = date.getFullYear() > 0 ? 1 : 0;
     switch (token) {
-      // AD, BC
       case "G":
       case "GG":
       case "GGG":
         return localize2.era(era, { width: "abbreviated" });
-      // A, B
       case "GGGGG":
         return localize2.era(era, { width: "narrow" });
-      // Anno Domini, Before Christ
       case "GGGG":
       default:
         return localize2.era(era, { width: "wide" });
@@ -4195,28 +4153,22 @@ var formatters = {
   Q: function(date, token, localize2) {
     const quarter = Math.ceil((date.getMonth() + 1) / 3);
     switch (token) {
-      // 1, 2, 3, 4
       case "Q":
         return String(quarter);
-      // 01, 02, 03, 04
       case "QQ":
         return addLeadingZeros(quarter, 2);
-      // 1st, 2nd, 3rd, 4th
       case "Qo":
         return localize2.ordinalNumber(quarter, { unit: "quarter" });
-      // Q1, Q2, Q3, Q4
       case "QQQ":
         return localize2.quarter(quarter, {
           width: "abbreviated",
           context: "formatting"
         });
-      // 1, 2, 3, 4 (narrow quarter; could be not numerical)
       case "QQQQQ":
         return localize2.quarter(quarter, {
           width: "narrow",
           context: "formatting"
         });
-      // 1st quarter, 2nd quarter, ...
       case "QQQQ":
       default:
         return localize2.quarter(quarter, {
@@ -4229,28 +4181,22 @@ var formatters = {
   q: function(date, token, localize2) {
     const quarter = Math.ceil((date.getMonth() + 1) / 3);
     switch (token) {
-      // 1, 2, 3, 4
       case "q":
         return String(quarter);
-      // 01, 02, 03, 04
       case "qq":
         return addLeadingZeros(quarter, 2);
-      // 1st, 2nd, 3rd, 4th
       case "qo":
         return localize2.ordinalNumber(quarter, { unit: "quarter" });
-      // Q1, Q2, Q3, Q4
       case "qqq":
         return localize2.quarter(quarter, {
           width: "abbreviated",
           context: "standalone"
         });
-      // 1, 2, 3, 4 (narrow quarter; could be not numerical)
       case "qqqqq":
         return localize2.quarter(quarter, {
           width: "narrow",
           context: "standalone"
         });
-      // 1st quarter, 2nd quarter, ...
       case "qqqq":
       default:
         return localize2.quarter(quarter, {
@@ -4266,22 +4212,18 @@ var formatters = {
       case "M":
       case "MM":
         return lightFormatters.M(date, token);
-      // 1st, 2nd, ..., 12th
       case "Mo":
         return localize2.ordinalNumber(month + 1, { unit: "month" });
-      // Jan, Feb, ..., Dec
       case "MMM":
         return localize2.month(month, {
           width: "abbreviated",
           context: "formatting"
         });
-      // J, F, ..., D
       case "MMMMM":
         return localize2.month(month, {
           width: "narrow",
           context: "formatting"
         });
-      // January, February, ..., December
       case "MMMM":
       default:
         return localize2.month(month, { width: "wide", context: "formatting" });
@@ -4291,28 +4233,22 @@ var formatters = {
   L: function(date, token, localize2) {
     const month = date.getMonth();
     switch (token) {
-      // 1, 2, ..., 12
       case "L":
         return String(month + 1);
-      // 01, 02, ..., 12
       case "LL":
         return addLeadingZeros(month + 1, 2);
-      // 1st, 2nd, ..., 12th
       case "Lo":
         return localize2.ordinalNumber(month + 1, { unit: "month" });
-      // Jan, Feb, ..., Dec
       case "LLL":
         return localize2.month(month, {
           width: "abbreviated",
           context: "standalone"
         });
-      // J, F, ..., D
       case "LLLLL":
         return localize2.month(month, {
           width: "narrow",
           context: "standalone"
         });
-      // January, February, ..., December
       case "LLLL":
       default:
         return localize2.month(month, { width: "wide", context: "standalone" });
@@ -4353,7 +4289,6 @@ var formatters = {
   E: function(date, token, localize2) {
     const dayOfWeek = date.getDay();
     switch (token) {
-      // Tue
       case "E":
       case "EE":
       case "EEE":
@@ -4361,19 +4296,16 @@ var formatters = {
           width: "abbreviated",
           context: "formatting"
         });
-      // T
       case "EEEEE":
         return localize2.day(dayOfWeek, {
           width: "narrow",
           context: "formatting"
         });
-      // Tu
       case "EEEEEE":
         return localize2.day(dayOfWeek, {
           width: "short",
           context: "formatting"
         });
-      // Tuesday
       case "EEEE":
       default:
         return localize2.day(dayOfWeek, {
@@ -4387,13 +4319,10 @@ var formatters = {
     const dayOfWeek = date.getDay();
     const localDayOfWeek = (dayOfWeek - options.weekStartsOn + 8) % 7 || 7;
     switch (token) {
-      // Numerical value (Nth day of week with current locale or weekStartsOn)
       case "e":
         return String(localDayOfWeek);
-      // Padded numerical value
       case "ee":
         return addLeadingZeros(localDayOfWeek, 2);
-      // 1st, 2nd, ..., 7th
       case "eo":
         return localize2.ordinalNumber(localDayOfWeek, { unit: "day" });
       case "eee":
@@ -4401,19 +4330,16 @@ var formatters = {
           width: "abbreviated",
           context: "formatting"
         });
-      // T
       case "eeeee":
         return localize2.day(dayOfWeek, {
           width: "narrow",
           context: "formatting"
         });
-      // Tu
       case "eeeeee":
         return localize2.day(dayOfWeek, {
           width: "short",
           context: "formatting"
         });
-      // Tuesday
       case "eeee":
       default:
         return localize2.day(dayOfWeek, {
@@ -4427,13 +4353,10 @@ var formatters = {
     const dayOfWeek = date.getDay();
     const localDayOfWeek = (dayOfWeek - options.weekStartsOn + 8) % 7 || 7;
     switch (token) {
-      // Numerical value (same as in `e`)
       case "c":
         return String(localDayOfWeek);
-      // Padded numerical value
       case "cc":
         return addLeadingZeros(localDayOfWeek, token.length);
-      // 1st, 2nd, ..., 7th
       case "co":
         return localize2.ordinalNumber(localDayOfWeek, { unit: "day" });
       case "ccc":
@@ -4441,19 +4364,16 @@ var formatters = {
           width: "abbreviated",
           context: "standalone"
         });
-      // T
       case "ccccc":
         return localize2.day(dayOfWeek, {
           width: "narrow",
           context: "standalone"
         });
-      // Tu
       case "cccccc":
         return localize2.day(dayOfWeek, {
           width: "short",
           context: "standalone"
         });
-      // Tuesday
       case "cccc":
       default:
         return localize2.day(dayOfWeek, {
@@ -4467,34 +4387,27 @@ var formatters = {
     const dayOfWeek = date.getDay();
     const isoDayOfWeek = dayOfWeek === 0 ? 7 : dayOfWeek;
     switch (token) {
-      // 2
       case "i":
         return String(isoDayOfWeek);
-      // 02
       case "ii":
         return addLeadingZeros(isoDayOfWeek, token.length);
-      // 2nd
       case "io":
         return localize2.ordinalNumber(isoDayOfWeek, { unit: "day" });
-      // Tue
       case "iii":
         return localize2.day(dayOfWeek, {
           width: "abbreviated",
           context: "formatting"
         });
-      // T
       case "iiiii":
         return localize2.day(dayOfWeek, {
           width: "narrow",
           context: "formatting"
         });
-      // Tu
       case "iiiiii":
         return localize2.day(dayOfWeek, {
           width: "short",
           context: "formatting"
         });
-      // Tuesday
       case "iiii":
       default:
         return localize2.day(dayOfWeek, {
@@ -4660,21 +4573,13 @@ var formatters = {
       return "Z";
     }
     switch (token) {
-      // Hours and optional minutes
       case "X":
         return formatTimezoneWithOptionalMinutes(timezoneOffset);
-      // Hours, minutes and optional seconds without `:` delimiter
-      // Note: neither ISO-8601 nor JavaScript supports seconds in timezone offsets
-      // so this token always has the same output as `XX`
       case "XXXX":
       case "XX":
         return formatTimezone(timezoneOffset);
-      // Hours, minutes and optional seconds with `:` delimiter
-      // Note: neither ISO-8601 nor JavaScript supports seconds in timezone offsets
-      // so this token always has the same output as `XXX`
       case "XXXXX":
       case "XXX":
-      // Hours and minutes with `:` delimiter
       default:
         return formatTimezone(timezoneOffset, ":");
     }
@@ -4683,21 +4588,13 @@ var formatters = {
   x: function(date, token, _localize) {
     const timezoneOffset = date.getTimezoneOffset();
     switch (token) {
-      // Hours and optional minutes
       case "x":
         return formatTimezoneWithOptionalMinutes(timezoneOffset);
-      // Hours, minutes and optional seconds without `:` delimiter
-      // Note: neither ISO-8601 nor JavaScript supports seconds in timezone offsets
-      // so this token always has the same output as `xx`
       case "xxxx":
       case "xx":
         return formatTimezone(timezoneOffset);
-      // Hours, minutes and optional seconds with `:` delimiter
-      // Note: neither ISO-8601 nor JavaScript supports seconds in timezone offsets
-      // so this token always has the same output as `xxx`
       case "xxxxx":
       case "xxx":
-      // Hours and minutes with `:` delimiter
       default:
         return formatTimezone(timezoneOffset, ":");
     }
@@ -4706,12 +4603,10 @@ var formatters = {
   O: function(date, token, _localize) {
     const timezoneOffset = date.getTimezoneOffset();
     switch (token) {
-      // Short
       case "O":
       case "OO":
       case "OOO":
         return "GMT" + formatTimezoneShort(timezoneOffset, ":");
-      // Long
       case "OOOO":
       default:
         return "GMT" + formatTimezone(timezoneOffset, ":");
@@ -4721,12 +4616,10 @@ var formatters = {
   z: function(date, token, _localize) {
     const timezoneOffset = date.getTimezoneOffset();
     switch (token) {
-      // Short
       case "z":
       case "zz":
       case "zzz":
         return "GMT" + formatTimezoneShort(timezoneOffset, ":");
-      // Long
       case "zzzz":
       default:
         return "GMT" + formatTimezone(timezoneOffset, ":");
@@ -5004,15 +4897,12 @@ var EraParser = class extends Parser {
   priority = 140;
   parse(dateString, token, match2) {
     switch (token) {
-      // AD, BC
       case "G":
       case "GG":
       case "GGG":
         return match2.era(dateString, { width: "abbreviated" }) || match2.era(dateString, { width: "narrow" });
-      // A, B
       case "GGGGG":
         return match2.era(dateString, { width: "narrow" });
-      // Anno Domini, Before Christ
       case "GGGG":
       default:
         return match2.era(dateString, { width: "wide" }) || match2.era(dateString, { width: "abbreviated" }) || match2.era(dateString, { width: "narrow" });
@@ -5343,14 +5233,11 @@ var QuarterParser = class extends Parser {
   priority = 120;
   parse(dateString, token, match2) {
     switch (token) {
-      // 1, 2, 3, 4
       case "Q":
       case "QQ":
         return parseNDigits(token.length, dateString);
-      // 1st, 2nd, 3rd, 4th
       case "Qo":
         return match2.ordinalNumber(dateString, { unit: "quarter" });
-      // Q1, Q2, Q3, Q4
       case "QQQ":
         return match2.quarter(dateString, {
           width: "abbreviated",
@@ -5359,13 +5246,11 @@ var QuarterParser = class extends Parser {
           width: "narrow",
           context: "formatting"
         });
-      // 1, 2, 3, 4 (narrow quarter; could be not numerical)
       case "QQQQQ":
         return match2.quarter(dateString, {
           width: "narrow",
           context: "formatting"
         });
-      // 1st quarter, 2nd quarter, ...
       case "QQQQ":
       default:
         return match2.quarter(dateString, {
@@ -5411,14 +5296,11 @@ var StandAloneQuarterParser = class extends Parser {
   priority = 120;
   parse(dateString, token, match2) {
     switch (token) {
-      // 1, 2, 3, 4
       case "q":
       case "qq":
         return parseNDigits(token.length, dateString);
-      // 1st, 2nd, 3rd, 4th
       case "qo":
         return match2.ordinalNumber(dateString, { unit: "quarter" });
-      // Q1, Q2, Q3, Q4
       case "qqq":
         return match2.quarter(dateString, {
           width: "abbreviated",
@@ -5427,13 +5309,11 @@ var StandAloneQuarterParser = class extends Parser {
           width: "narrow",
           context: "standalone"
         });
-      // 1, 2, 3, 4 (narrow quarter; could be not numerical)
       case "qqqqq":
         return match2.quarter(dateString, {
           width: "narrow",
           context: "standalone"
         });
-      // 1st quarter, 2nd quarter, ...
       case "qqqq":
       default:
         return match2.quarter(dateString, {
@@ -5495,16 +5375,13 @@ var MonthParser = class extends Parser {
   parse(dateString, token, match2) {
     const valueCallback = (value) => value - 1;
     switch (token) {
-      // 1, 2, ..., 12
       case "M":
         return mapValue(
           parseNumericPattern(numericPatterns.month, dateString),
           valueCallback
         );
-      // 01, 02, ..., 12
       case "MM":
         return mapValue(parseNDigits(2, dateString), valueCallback);
-      // 1st, 2nd, ..., 12th
       case "Mo":
         return mapValue(
           match2.ordinalNumber(dateString, {
@@ -5512,19 +5389,16 @@ var MonthParser = class extends Parser {
           }),
           valueCallback
         );
-      // Jan, Feb, ..., Dec
       case "MMM":
         return match2.month(dateString, {
           width: "abbreviated",
           context: "formatting"
         }) || match2.month(dateString, { width: "narrow", context: "formatting" });
-      // J, F, ..., D
       case "MMMMM":
         return match2.month(dateString, {
           width: "narrow",
           context: "formatting"
         });
-      // January, February, ..., December
       case "MMMM":
       default:
         return match2.month(dateString, { width: "wide", context: "formatting" }) || match2.month(dateString, {
@@ -5549,16 +5423,13 @@ var StandAloneMonthParser = class extends Parser {
   parse(dateString, token, match2) {
     const valueCallback = (value) => value - 1;
     switch (token) {
-      // 1, 2, ..., 12
       case "L":
         return mapValue(
           parseNumericPattern(numericPatterns.month, dateString),
           valueCallback
         );
-      // 01, 02, ..., 12
       case "LL":
         return mapValue(parseNDigits(2, dateString), valueCallback);
-      // 1st, 2nd, ..., 12th
       case "Lo":
         return mapValue(
           match2.ordinalNumber(dateString, {
@@ -5566,19 +5437,16 @@ var StandAloneMonthParser = class extends Parser {
           }),
           valueCallback
         );
-      // Jan, Feb, ..., Dec
       case "LLL":
         return match2.month(dateString, {
           width: "abbreviated",
           context: "standalone"
         }) || match2.month(dateString, { width: "narrow", context: "standalone" });
-      // J, F, ..., D
       case "LLLLL":
         return match2.month(dateString, {
           width: "narrow",
           context: "standalone"
         });
-      // January, February, ..., December
       case "LLLL":
       default:
         return match2.month(dateString, { width: "wide", context: "standalone" }) || match2.month(dateString, {
@@ -5827,7 +5695,6 @@ var DayParser = class extends Parser {
   priority = 90;
   parse(dateString, token, match2) {
     switch (token) {
-      // Tue
       case "E":
       case "EE":
       case "EEE":
@@ -5835,16 +5702,13 @@ var DayParser = class extends Parser {
           width: "abbreviated",
           context: "formatting"
         }) || match2.day(dateString, { width: "short", context: "formatting" }) || match2.day(dateString, { width: "narrow", context: "formatting" });
-      // T
       case "EEEEE":
         return match2.day(dateString, {
           width: "narrow",
           context: "formatting"
         });
-      // Tu
       case "EEEEEE":
         return match2.day(dateString, { width: "short", context: "formatting" }) || match2.day(dateString, { width: "narrow", context: "formatting" });
-      // Tuesday
       case "EEEE":
       default:
         return match2.day(dateString, { width: "wide", context: "formatting" }) || match2.day(dateString, {
@@ -5873,11 +5737,9 @@ var LocalDayParser = class extends Parser {
       return (value + options.weekStartsOn + 6) % 7 + wholeWeekDays;
     };
     switch (token) {
-      // 3
       case "e":
       case "ee":
         return mapValue(parseNDigits(token.length, dateString), valueCallback);
-      // 3rd
       case "eo":
         return mapValue(
           match2.ordinalNumber(dateString, {
@@ -5885,22 +5747,18 @@ var LocalDayParser = class extends Parser {
           }),
           valueCallback
         );
-      // Tue
       case "eee":
         return match2.day(dateString, {
           width: "abbreviated",
           context: "formatting"
         }) || match2.day(dateString, { width: "short", context: "formatting" }) || match2.day(dateString, { width: "narrow", context: "formatting" });
-      // T
       case "eeeee":
         return match2.day(dateString, {
           width: "narrow",
           context: "formatting"
         });
-      // Tu
       case "eeeeee":
         return match2.day(dateString, { width: "short", context: "formatting" }) || match2.day(dateString, { width: "narrow", context: "formatting" });
-      // Tuesday
       case "eeee":
       default:
         return match2.day(dateString, { width: "wide", context: "formatting" }) || match2.day(dateString, {
@@ -5945,11 +5803,9 @@ var StandAloneLocalDayParser = class extends Parser {
       return (value + options.weekStartsOn + 6) % 7 + wholeWeekDays;
     };
     switch (token) {
-      // 3
       case "c":
       case "cc":
         return mapValue(parseNDigits(token.length, dateString), valueCallback);
-      // 3rd
       case "co":
         return mapValue(
           match2.ordinalNumber(dateString, {
@@ -5957,22 +5813,18 @@ var StandAloneLocalDayParser = class extends Parser {
           }),
           valueCallback
         );
-      // Tue
       case "ccc":
         return match2.day(dateString, {
           width: "abbreviated",
           context: "standalone"
         }) || match2.day(dateString, { width: "short", context: "standalone" }) || match2.day(dateString, { width: "narrow", context: "standalone" });
-      // T
       case "ccccc":
         return match2.day(dateString, {
           width: "narrow",
           context: "standalone"
         });
-      // Tu
       case "cccccc":
         return match2.day(dateString, { width: "short", context: "standalone" }) || match2.day(dateString, { width: "narrow", context: "standalone" });
-      // Tuesday
       case "cccc":
       default:
         return match2.day(dateString, { width: "wide", context: "standalone" }) || match2.day(dateString, {
@@ -6027,14 +5879,11 @@ var ISODayParser = class extends Parser {
       return value;
     };
     switch (token) {
-      // 2
       case "i":
       case "ii":
         return parseNDigits(token.length, dateString);
-      // 2nd
       case "io":
         return match2.ordinalNumber(dateString, { unit: "day" });
-      // Tue
       case "iii":
         return mapValue(
           match2.day(dateString, {
@@ -6049,7 +5898,6 @@ var ISODayParser = class extends Parser {
           }),
           valueCallback
         );
-      // T
       case "iiiii":
         return mapValue(
           match2.day(dateString, {
@@ -6058,7 +5906,6 @@ var ISODayParser = class extends Parser {
           }),
           valueCallback
         );
-      // Tu
       case "iiiiii":
         return mapValue(
           match2.day(dateString, {
@@ -6070,7 +5917,6 @@ var ISODayParser = class extends Parser {
           }),
           valueCallback
         );
-      // Tuesday
       case "iiii":
       default:
         return mapValue(
@@ -6654,16 +6500,10 @@ function cleanEscapedString2(input) {
 // behaviour_pack/scripts-dev/utils/checks.ts
 function distance_check(c1, c2, radius) {
   const distance = Math.sqrt((c1[0] - c2[0]) ** 2 + (c1[1] - c2[1]) ** 2);
-  if (distance <= radius) {
-    return true;
-  }
-  return false;
+  return distance <= radius;
 }
 function timer_check(now, start, seconds) {
-  if (differenceInSeconds(now, start) > seconds) {
-    return false;
-  }
-  return true;
+  return differenceInSeconds(now, start) <= seconds;
 }
 var checks = {
   timer_check,
@@ -6673,15 +6513,55 @@ var checks_default = checks;
 
 // behaviour_pack/scripts-dev/utils/motd.ts
 import { world as world2 } from "@minecraft/server";
-function send_motd(player) {
-  const motd_short = "You're a star! \uE107";
-  const motd = "\xA7oDo our quests by running /quests view on discord!";
-  world2.getDimension(MinecraftDimensionTypes.Overworld).runCommand(`title "${player.name}" actionbar \xA7a\xA7lWelcome to Everthorn!\xA7r ${motd_short}`);
-  player.sendMessage(`\xA7aWelcome to Everthorn, \xA7l${player.name}\xA7r
-| ${motd_short}\xA7r
-| ${motd}\xA7r
+function send_motd(player, quest) {
+  const motd_shorts = [
+    "You're a star! \uE107",
+    "Your adventure awaits...",
+    "Don't forget to eat! \uE100",
+    "Ready to explore?",
+    "First we mine, then we craft.",
+    "It's craftin' time! \uE10A",
+    "I lava you! \uE10C",
+    "RISE AND GRIND!!!",
+    "Got what it takes?",
+    "Dream big, build bigger. \uE108",
+    "We missed you!!!",
+    "Hey, you dropped this \uE108",
+    "Together We Stand \uE10C",
+    "Do some quests!"
+  ];
+  const motd_longs = [
+    "\xA7oDo our quests by running \xA7l\xA75/quests view\xA7r\xA7o on discord!",
+    "\xA7oPssst... Have you checked out this month's \xA7l\xA7gMonthly Market\xA7r\xA7o yet?",
+    "\xA7oExplore different projects by traversing our \xA7lroad network\xA7r\xA7ro.",
+    "\xA7oHave you seen our AMAZING \xA7l\xA7nSubway System\xA7r\xA7o? Ask about it!",
+    "\xA7oCheck out our \xA7lLive Map\xA7r\xA7o on \xA79everthorn.net/map\xA7r\xA7o!",
+    "\xA7oBuild to your heart's content, and become part of Everthorn's history.",
+    "\xA7oRemember, projects \xA7lmust\xA7r\xA7o be connected to our \xA7lroad network\xA7r\xA7o.",
+    "\xA7oFeelin' lonely? Ping the \xA7l@Get On The Server\xA7r\xA7o ping :))"
+  ];
+  const randomShort = motd_shorts[Math.floor(Math.random() * motd_shorts.length)];
+  let randomLong = motd_longs[Math.floor(Math.random() * motd_longs.length)];
+  let questReminder = "";
+  if (Math.random() < 5e-3) {
+    randomLong = "\xA7o\xA7p\xA7lLucky you! You just found 1 Nug! Send a screenshot in #general and ping a CM to claim it!";
+  }
+  if (quest) {
+    questReminder = `\xA7l\xA7aActive Quest:\xA7r ${quest.title}
+\xA7l\xA7bYour Progress:\xA7r ${quest.get_progress()}/${quest.objectives.length}
 ---------
-`);
+`;
+  }
+  world2.getDimension(MinecraftDimensionTypes.Overworld).runCommand(
+    `title "${player.name}" actionbar \xA7a\xA7lWelcome to Everthorn!\xA7r ${randomShort}`
+  );
+  player.sendMessage(
+    `\xA7aWelcome to Everthorn, \xA7l${player.name}\xA7r
+\xA77${randomShort}\xA7r
+${randomLong}\xA7r
+---------
+${questReminder}`
+  );
 }
 
 // behaviour_pack/scripts-dev/utils/commands.ts
@@ -6889,28 +6769,6 @@ var commands = {
   place_glitch_block
 };
 var commands_default = commands;
-
-// behaviour_pack/scripts-dev/utils/time_string.ts
-function convert_seconds_to_hms(seconds) {
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor(seconds % 3600 / 60);
-  const remainingSeconds = seconds % 60;
-  return `${hours}h ${minutes}m ${remainingSeconds}s`;
-}
-
-// behaviour_pack/scripts-dev/utils/clean_minecraft_ids.ts
-function clean_id(id) {
-  return id.replace(/^[^:]+:/, "").replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
-}
-
-// behaviour_pack/scripts-dev/utils/combine_two_lists.ts
-function combine(list1, list2, id) {
-  let combined_list = [];
-  for (let item of list1) {
-    combined_list.push({ ...item, ...list2.find((item2) => item2[id] === item[id]) });
-  }
-  return combined_list;
-}
 
 // behaviour_pack/scripts-dev/utils/altar_messages.ts
 var AltarMessage = class {
@@ -7488,6 +7346,30 @@ var Glitches = class {
 };
 
 // behaviour_pack/scripts-dev/utils/index.ts
+function convert_seconds_to_hms(seconds) {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor(seconds % 3600 / 60);
+  const remainingSeconds = seconds % 60;
+  return `${hours}h ${minutes}m ${remainingSeconds}s`;
+}
+function combine(list1, list2, id) {
+  let combined_list = [];
+  for (let item of list1) {
+    combined_list.push({ ...item, ...list2.find((item2) => item2[id] === item[id]) });
+  }
+  return combined_list;
+}
+function clean_id(id) {
+  return id.replace(/^[^:]+:/, "").replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
+}
+function normalizeDateString(datetime) {
+  if (!datetime.includes(".")) {
+    return `${datetime}.000000`;
+  }
+  return datetime.replace(/\.(\d{1,6})\d*/, (_, digits) => {
+    return `.${digits.padEnd(6, "0")}`;
+  });
+}
 var utils = {
   DeathMessage,
   AltarMessage,
@@ -7499,7 +7381,8 @@ var utils = {
   clean_id,
   combine,
   EvilActs,
-  Glitches
+  Glitches,
+  normalizeDateString
 };
 var utils_default = utils;
 
@@ -7784,6 +7667,8 @@ var Objective = class {
     this.required_mainhand = data.required_mainhand;
     this.required_location = data.required_location;
     this.location_radius = data.location_radius;
+    this.required_deaths = data.required_deaths;
+    this.continue_on_fail = data.continue_on_fail;
     this.rewards = [];
     for (let reward of data.rewards) {
       this.rewards.push(new Reward(reward));
@@ -7815,6 +7700,12 @@ var Objective = class {
     }
     if (this.objective_timer) {
       requirements.push(`- Within ${utils_default.convert_seconds_to_hms(this.objective_timer)}`);
+    }
+    if (this.required_deaths) {
+      requirements.push(`- No more than ${this.required_deaths} deaths`);
+    }
+    if (!this.continue_on_fail && (this.objective_timer || this.required_deaths)) {
+      requirements.push(`- Failing this objective will fail the entire quest`);
     }
     return requirements.join("\n");
   }
@@ -7885,6 +7776,9 @@ var Quest = class _Quest {
     this.end_time = parse(data.end_time, "yyyy-MM-dd HH:mm:ss.SSSSSS", /* @__PURE__ */ new Date());
     this.title = data.title;
     this.description = data.description;
+    this.created_by = data.created_by;
+    this.quest_type = data.quest_type;
+    this.tags = data.tags;
     this.objectives = [];
     for (let objective of data.objectives) {
       this.objectives.push(new Objective(objective));
@@ -7904,26 +7798,23 @@ var Quest = class _Quest {
 
 // behaviour_pack/scripts-dev/api/quest_with_progress.ts
 import { http as http5, HttpHeader as HttpHeader4, HttpRequest as HttpRequest4, HttpRequestMethod as HttpRequestMethod4 } from "@minecraft/server-net";
-function normalizeDateString(datetime) {
-  if (!datetime.includes(".")) {
-    return `${datetime}.000000`;
-  }
-  return datetime.replace(/\.(\d{1,6})\d*/, (_, digits) => {
-    return `.${digits.padEnd(6, "0")}`;
-  });
-}
 var ObjectiveWithProgress = class extends Objective {
   constructor(data, thorny_user) {
     super(data);
     this.thorny_user = thorny_user;
-    this.start = data.start ? parse(normalizeDateString(data.start), "yyyy-MM-dd HH:mm:ss.SSSSSS", /* @__PURE__ */ new Date()) : null;
-    this.end = data.end ? parse(normalizeDateString(data.end), "yyyy-MM-dd HH:mm:ss.SSSSSS", /* @__PURE__ */ new Date()) : null;
+    this.start = data.start ? parse(utils_default.normalizeDateString(data.start), "yyyy-MM-dd HH:mm:ss.SSSSSS", /* @__PURE__ */ new Date()) : null;
+    this.end = data.end ? parse(utils_default.normalizeDateString(data.end), "yyyy-MM-dd HH:mm:ss.SSSSSS", /* @__PURE__ */ new Date()) : null;
     this.completion = data.completion;
     this.status = data.status;
+    this.deaths = 0;
   }
-  async complete_objective(interaction, quest) {
+  async complete_objective(interaction, quest, failed) {
     const index = quest.objectives.indexOf(this);
-    utils_default.commands.play_objective_complete_sound(this.thorny_user.gamertag);
+    if (failed) {
+      utils_default.commands.play_quest_fail_sound(this.thorny_user.gamertag);
+    } else {
+      utils_default.commands.play_objective_complete_sound(this.thorny_user.gamertag);
+    }
     utils_default.commands.send_title(
       interaction.dimension,
       this.thorny_user.gamertag,
@@ -7970,7 +7861,7 @@ var ObjectiveWithProgress = class extends Objective {
         this.end = /* @__PURE__ */ new Date();
         const index = quest.objectives.indexOf(this);
         if (index < quest.objectives.length - 1) {
-          await this.complete_objective(interaction, quest);
+          await this.complete_objective(interaction, quest, false);
         }
         await this.give_rewards(interaction, this.thorny_user);
       }
@@ -7978,9 +7869,28 @@ var ObjectiveWithProgress = class extends Objective {
     } else if (requirement_check.fail_objective) {
       this.status = "failed";
       this.end = /* @__PURE__ */ new Date();
-      await quest.fail_quest(interaction.thorny_id);
-      utils_default.commands.play_quest_fail_sound(this.thorny_user.gamertag);
-      return false;
+    } else if (interaction.type === "die" && this.required_deaths) {
+      this.deaths += 1;
+      utils_default.commands.send_message(
+        interaction.dimension,
+        this.thorny_user.gamertag,
+        `\xA7l[\xA7aQuests\xA7f]\xA7r You have died. ${this.required_deaths - this.deaths} Remaining...`
+      );
+      if (this.deaths > this.required_deaths) {
+        this.status = "failed";
+        this.end = /* @__PURE__ */ new Date();
+      }
+    }
+    if (this.status === "failed" && this.continue_on_fail) {
+      const index = quest.objectives.indexOf(this);
+      if (index < quest.objectives.length - 1) {
+        await this.complete_objective(interaction, quest, true);
+      }
+      utils_default.commands.send_message(
+        interaction.dimension,
+        this.thorny_user.gamertag,
+        `\xA7l[\xA7aQuests\xA7f]\xA7r \xA74You have failed the previous objective, but the quest continues... You did not receive rewards for the previous objective.`
+      );
     }
     return false;
   }
@@ -7992,8 +7902,8 @@ var QuestWithProgress = class _QuestWithProgress extends Quest {
   constructor(data, thorny_user) {
     super(data);
     this.thorny_user = thorny_user;
-    this.accepted_on = parse(normalizeDateString(data.accepted_on), "yyyy-MM-dd HH:mm:ss.SSSSSSS", /* @__PURE__ */ new Date());
-    this.started_on = data.started_on ? parse(normalizeDateString(data.started_on), "yyyy-MM-dd HH:mm:ss.SSSSSS", /* @__PURE__ */ new Date()) : null;
+    this.accepted_on = parse(utils_default.normalizeDateString(data.accepted_on), "yyyy-MM-dd HH:mm:ss.SSSSSSS", /* @__PURE__ */ new Date());
+    this.started_on = data.started_on ? parse(utils_default.normalizeDateString(data.started_on), "yyyy-MM-dd HH:mm:ss.SSSSSS", /* @__PURE__ */ new Date()) : null;
     this.status = data.status;
     this.objectives = [];
     for (let objective of data.objectives) {
@@ -8061,7 +7971,12 @@ var QuestWithProgress = class _QuestWithProgress extends Quest {
     ];
     await http5.request(request);
   }
+  get_progress() {
+    return this.objectives.filter((objective) => objective.status === "completed").length;
+  }
   /**
+   * Increments the active objective if it exists.
+   * Updates the quest and objective's start times, as well as the next objective's start time if needed.
    * @returns
    * A boolean representing if the objective has been incremented or not
    */
@@ -8093,14 +8008,22 @@ Run \xA75/quests view\xA7r on Discord to start it!`
         );
       } else if (next_objective && next_objective.objective_id !== active_objective.objective_id) {
         next_objective.start = /* @__PURE__ */ new Date();
-      } else if (active_objective.status === "failed") {
+      } else if (active_objective.status === "failed" && !active_objective.continue_on_fail) {
         this.status = "failed";
         this.end_time = /* @__PURE__ */ new Date();
+        utils_default.commands.play_quest_fail_sound(this.thorny_user.gamertag);
         utils_default.commands.send_title(
           interaction.dimension,
           this.thorny_user.gamertag,
           "title",
           `\xA7lQuest Failed :(`
+        );
+        utils_default.commands.send_message(
+          interaction.dimension,
+          "@a",
+          `\xA7c+=+=+=+=+=+=+ Quest Failed :( +=+=+=+=+=+=+\xA7r
+${this.thorny_user.gamertag} has failed \xA7l\xA7n${this.title}\xA7r!
+Think you can do better? Run \xA75/quests view\xA7r on Discord to start it!`
         );
       }
       return incremented;
@@ -8959,24 +8882,22 @@ function load_chat_handler() {
 // behaviour_pack/scripts-dev/events/connections.ts
 import { world as world16 } from "@minecraft/server";
 function load_connections_handler(guild_id2) {
-  world16.afterEvents.playerSpawn.subscribe((spawn_event) => {
+  world16.afterEvents.playerSpawn.subscribe(async (spawn_event) => {
     if (spawn_event.initialSpawn) {
       try {
-        api_default.ThornyUser.get_user_from_api(guild_id2, spawn_event.player.name).then((thorny_user) => {
-          thorny_user.send_connect_event("connect");
-          api_default.Relay.event(`${spawn_event.player.name} has joined the server`, "", "join");
-          utils_default.send_motd(spawn_event.player);
-          if (thorny_user.patron) {
-            spawn_event.player.nameTag = `\xA7l\xA7c${spawn_event.player.nameTag}`;
-          }
-        });
+        const thorny_user = await api_default.ThornyUser.get_user_from_api(guild_id2, spawn_event.player.name);
+        thorny_user.send_connect_event("connect");
+        api_default.Relay.event(`${spawn_event.player.name} has joined the server`, "", "join");
+        const quest = await api_default.QuestWithProgress.get_active_quest(thorny_user);
+        utils_default.send_motd(spawn_event.player, quest);
+        if (thorny_user.patron) {
+          spawn_event.player.nameTag = `\xA7l\xA7c${spawn_event.player.nameTag}`;
+        }
       } catch (e) {
+        api_default.Relay.event(`${spawn_event.player.name} has joined the server`, "API Issue Detected", "join");
         console.error(e);
       }
     }
-  });
-  world16.afterEvents.playerJoin.subscribe((join_event) => {
-    console.log("Join Log! ", join_event.playerName, join_event.playerId);
   });
   world16.afterEvents.playerLeave.subscribe((leave_event) => {
     const thorny_user = api_default.ThornyUser.fetch_user(leave_event.playerName);
@@ -9024,6 +8945,7 @@ function load_entity_event_handler() {
         interaction.reference = MinecraftEntityTypes.Player;
         interaction.post_interaction();
         death_interaction.post_interaction();
+        api_default.Interaction.enqueue(death_interaction);
         api_default.Relay.event(utils_default.DeathMessage.random_pvp(player.name, dead_player.name), "", "other");
       } else {
         interaction.post_interaction();
@@ -9045,6 +8967,7 @@ function load_entity_event_handler() {
         }
       );
       death_interaction.post_interaction();
+      api_default.Interaction.enqueue(death_interaction);
       api_default.Relay.event(utils_default.DeathMessage.random_pve(player.name, killer.typeId), "", "other");
     } else if (event.deadEntity instanceof Player12 && !event.damageSource.damagingEntity) {
       const player = event.deadEntity;
@@ -9061,6 +8984,7 @@ function load_entity_event_handler() {
         }
       );
       death_interaction.post_interaction();
+      api_default.Interaction.enqueue(death_interaction);
       api_default.Relay.event(utils_default.DeathMessage.random_suicide(player.name, event.damageSource.cause), "", "other");
     }
   });
@@ -9165,8 +9089,18 @@ function load_world_event_handlers(guild_id2) {
 }
 
 // behaviour_pack/scripts-dev/main.ts
+import { system as system19 } from "@minecraft/server";
 var guild_id = "611008530077712395";
 WorldCache.load_world(guild_id).then();
 load_loops();
 load_custom_components(guild_id);
 load_world_event_handlers(guild_id);
+system19.beforeEvents.startup.subscribe((initEvent) => {
+  system19.run(() => {
+    api_default.Relay.event(
+      "AmethystConnect Plugin successfully loaded",
+      "Don't see this on server startup? Ping a CM! It's important!",
+      "start"
+    );
+  });
+});
