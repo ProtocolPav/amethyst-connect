@@ -8,22 +8,24 @@
 			"is_experimental": false
 		},
 		"components": {
+			"minecraft:fire_immune": {},
+			"minecraft:nameable": {},
+			"minecraft:can_fly": {},
+			"minecraft:jump.static": {},
+			"minecraft:physics": {},
+			"minecraft:conditional_bandwidth_optimization": {},
+			"minecraft:movement.basic": {},
+			"minecraft:can_climb": {},
 			"minecraft:despawn": {
-				"despawn_from_distance": {},
-				"despawn_from_inactivity": true,
-				"despawn_from_simulation_edge": true,
-				"min_range_inactivity_timer": 30,
-				"min_range_random_chance": 800
+				"despawn_from_distance": {}
 			},
 			"minecraft:experience_reward": {
-				"on_death": "query.last_hit_by_player ? 5 + Math.floor(Math.random() * 3 + 1) * query.equipment_count : 0"
+				"on_death": "query.last_hit_by_player ? 10 : 0"
 			},
 			"minecraft:breathable": {
 				"total_supply": 15,
 				"suffocate_time": 0
 			},
-			"minecraft:fire_immune": {},
-			"minecraft:nameable": {},
 			"minecraft:health": {
 				"value": 30,
 				"max": 30
@@ -38,7 +40,6 @@
 			"minecraft:navigation.float": {
 				"can_path_over_water": true
 			},
-			"minecraft:can_fly": {},
 			"minecraft:behavior.float": {
 				"priority": 0
 			},
@@ -49,12 +50,6 @@
 				"y_dist": 4.5,
 				"xz_dist": 9,
 				"must_reach": true
-			},
-			"minecraft:behavior.move_to_block": {
-				"priority": 1,
-				"block_types": ["end_stone"],
-				"search_range": 20,
-				"goal_radius": 1
 			},
 			"minecraft:behavior.look_at_player": {
 				"priority": 3,
@@ -100,27 +95,24 @@
 				"triggers": [
 					{
 						"cause": "fall",
-						"deals_damage": false
+						"deals_damage": "no"
 					},
 					{
 						"cause": "magic",
-						"deals_damage": false
+						"deals_damage": "no"
 					}
 				]
 			},
-			"minecraft:jump.static": {},
 			"minecraft:loot": {
 				"table": "loot_tables/entities/the_breath.json"
 			},
 			"minecraft:type_family": {
 				"family": ["blaze", "monster", "mob"]
 			},
-			"minecraft:physics": {},
 			"minecraft:pushable": {
 				"is_pushable": true,
 				"is_pushable_by_piston": true
-			},
-			"minecraft:conditional_bandwidth_optimization": {}
+			}
 		}
 	}
 }
