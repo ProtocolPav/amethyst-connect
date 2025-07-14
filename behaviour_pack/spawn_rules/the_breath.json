@@ -9,7 +9,7 @@
       {
         "minecraft:spawns_on_surface": {},
         "minecraft:weight": {
-          "default": 5
+          "default": 1
         },
         "minecraft:herd": {
           "min_size": 1,
@@ -19,6 +19,16 @@
           "test": "has_biome_tag",
           "operator": "==",
           "value": "the_end"
+        },
+        "minecraft:density_limit": {
+          "surface": 5
+        },
+        "minecraft:spawns_on_block_filter": [
+          {"name": "minecraft:end_stone"}
+        ],
+        "minecraft:brightness_filter": {
+          "min": 0,
+          "max": 7
         }
       }
     ]

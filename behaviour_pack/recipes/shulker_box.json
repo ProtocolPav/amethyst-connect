@@ -2,7 +2,7 @@
 	"format_version": "1.20.30",
 	"minecraft:recipe_shaped": {
 		"description": {
-			"identifier": "minecraft:shulker_box"
+			"identifier": "minecraft:undyed_shulker_box"
 		},
 		"tags": [
 			"crafting_table"
@@ -20,11 +20,11 @@
 		},
 		"pattern": [
 			"DDD",
-			"C",
+			" C ",
 			"SSS"
 		],
 		"result": {
-			"item": "minecraft:shulker_box"
+			"item": "minecraft:undyed_shulker_box"
 		},
 		"unlock": [
 			{
