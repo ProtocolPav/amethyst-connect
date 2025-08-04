@@ -7684,7 +7684,7 @@ var Reward = class {
       utils_default.commands.send_message(
         interaction.dimension,
         thorny_user.gamertag,
-        `\xA7l[\xA7aQuests\xA7f]\xA7r You have received ${this.balance} Nugs!`
+        `\xA7l[\xA7aQuests\xA7f]\xA7r You have received ${this.balance}${utils_default.emojis.NUGS}!`
       );
     } else if (this.item) {
       utils_default.commands.give_item(thorny_user.gamertag, this.item, this.count);
@@ -7725,7 +7725,7 @@ var Objective = class {
       } else if (reward.item) {
         rewards.push(`${reward.count} \xA77${utils_default.clean_id(reward.item)}\xA7r`);
       } else if (reward.balance) {
-        rewards.push(`\xA7p${reward.balance} Nugs\xA7r`);
+        rewards.push(`\xA7p${reward.balance}${utils_default.emojis.NUGS}\xA7r`);
       }
     }
     return rewards.join(", ");
@@ -9108,7 +9108,7 @@ function load_world_event_handlers(guild_id2) {
 
 // behaviour_pack/scripts-dev/main.ts
 import { system as system19 } from "@minecraft/server";
-var guild_id = "1213827104945471538";
+var guild_id = "611008530077712395";
 WorldCache.load_world(guild_id).then();
 load_loops();
 load_custom_components(guild_id);
