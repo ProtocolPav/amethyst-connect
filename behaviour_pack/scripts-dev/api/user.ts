@@ -1,4 +1,5 @@
 import { HttpRequest, HttpHeader, HttpRequestMethod, http } from '@minecraft/server-net';
+import utils from "../utils";
 
 interface IThornyUser {
     thorny_id: number
@@ -121,23 +122,55 @@ export default class ThornyUser implements IThornyUser {
      * Returns a decorated role string for chat decoration
      */
     public get_role_display(): string {
-        let role = this.role
-        let colour = '§b'
-
-        if (this.patron) {
-            role = 'Patron'
-            colour = '§c'
+        if (this.role == 'New Recruit') {
+            return utils.emojis.NEWBIE
         }
-        
-        if (this.role == 'Community Manager') {
-            role = 'Manager'
-            colour = '§e'
+
+        let role_emojis: string[] = []
+
+        switch (this.role) {
+            case 'Builder':
+                role_emojis.push(utils.emojis.BUILDER)
+                break;
+
+            case 'Merchant':
+                role_emojis.push(utils.emojis.MERCHANT)
+                break;
+
+            case 'Knight':
+                role_emojis.push(utils.emojis.KNIGHT)
+                break;
+
+            case 'Gatherer':
+                role_emojis.push(utils.emojis.GATHERER)
+                break;
+
+            case 'Miner':
+                role_emojis.push(utils.emojis.MINER)
+                break;
+
+            case 'Bard':
+                role_emojis.push(utils.emojis.BARD)
+                break;
+
+            case 'Stoner':
+                role_emojis.push(utils.emojis.STONER)
+                break;
         }
 
         if (this.role == 'Owner') {
-            colour = '§l§a'
+            role_emojis.push(utils.emojis.OWNER)
+        }
+        else if (this.role == 'Community Manager') {
+            role_emojis.push(utils.emojis.MANAGER)
+        }
+        else if (this.patron) {
+            role_emojis.push(utils.emojis.PATRON)
+        }
+        else {
+            role_emojis.push(utils.emojis.DWELLER)
         }
 
-        return colour + role
+        return role_emojis.join('')
     }
 }

@@ -7370,6 +7370,25 @@ function normalizeDateString(datetime) {
     return `.${digits.padEnd(6, "0")}`;
   });
 }
+var emojis = {
+  EVERTHORN: "\uE600",
+  NUGS: "\uE601",
+  BUILDER: "\uE602",
+  KNIGHT: "\uE603",
+  GATHERER: "\uE604",
+  MERCHANT: "\uE605",
+  BARD: "\uE606",
+  STONER: "\uE607",
+  MINER: "\uE608",
+  DISCORD_ICON: "\uE609",
+  DISCORD: "\uE613",
+  OWNER: "\uE610",
+  MANAGER: "\uE611",
+  PATRON: "\uE612",
+  NEWBIE: "\uE614",
+  DWELLER: "\uE615",
+  SERVER: "\uE620"
+};
 var utils = {
   DeathMessage,
   AltarMessage,
@@ -7382,7 +7401,8 @@ var utils = {
   combine,
   EvilActs,
   Glitches,
-  normalizeDateString
+  normalizeDateString,
+  emojis
 };
 var utils_default = utils;
 
@@ -7513,20 +7533,43 @@ var ThornyUser = class _ThornyUser {
    * Returns a decorated role string for chat decoration
    */
   get_role_display() {
-    let role = this.role;
-    let colour = "\xA7b";
-    if (this.patron) {
-      role = "Patron";
-      colour = "\xA7c";
+    if (this.role == "New Recruit") {
+      return utils_default.emojis.NEWBIE;
     }
-    if (this.role == "Community Manager") {
-      role = "Manager";
-      colour = "\xA7e";
+    let role_emojis = [];
+    switch (this.role) {
+      case "Builder":
+        role_emojis.push(utils_default.emojis.BUILDER);
+        break;
+      case "Merchant":
+        role_emojis.push(utils_default.emojis.MERCHANT);
+        break;
+      case "Knight":
+        role_emojis.push(utils_default.emojis.KNIGHT);
+        break;
+      case "Gatherer":
+        role_emojis.push(utils_default.emojis.GATHERER);
+        break;
+      case "Miner":
+        role_emojis.push(utils_default.emojis.MINER);
+        break;
+      case "Bard":
+        role_emojis.push(utils_default.emojis.BARD);
+        break;
+      case "Stoner":
+        role_emojis.push(utils_default.emojis.STONER);
+        break;
     }
     if (this.role == "Owner") {
-      colour = "\xA7l\xA7a";
+      role_emojis.push(utils_default.emojis.OWNER);
+    } else if (this.role == "Community Manager") {
+      role_emojis.push(utils_default.emojis.MANAGER);
+    } else if (this.patron) {
+      role_emojis.push(utils_default.emojis.PATRON);
+    } else {
+      role_emojis.push(utils_default.emojis.DWELLER);
     }
-    return colour + role;
+    return role_emojis.join("");
   }
 };
 
@@ -8839,42 +8882,17 @@ function load_block_event_handler() {
 }
 
 // behaviour_pack/scripts-dev/events/chat.ts
-import { EntityComponentTypes as EntityComponentTypes11, EquipmentSlot as EquipmentSlot8, system as system16, world as world15 } from "@minecraft/server";
+import { system as system16, world as world15 } from "@minecraft/server";
 function load_chat_handler() {
   world15.beforeEvents.chatSend.subscribe((chat_event) => {
     const gamertag = chat_event.sender.name;
     const thorny_user = api_default.ThornyUser.fetch_user(gamertag);
-    if (chat_event.message.startsWith("!lore")) {
-      const equippable = chat_event.sender.getComponent(EntityComponentTypes11.Equippable);
-      const mainhand = equippable?.getEquipment(EquipmentSlot8.Mainhand);
-      system16.run(() => {
-        switch (chat_event.message.split(" ")[1].toLowerCase()) {
-          case "add":
-            if (mainhand) {
-              const lore = mainhand.getLore();
-              lore.push(chat_event.message.split("!lore add ")[1]);
-              mainhand.setLore(lore);
-              equippable?.setEquipment(EquipmentSlot8.Mainhand, mainhand);
-            }
-            break;
-          case "remove":
-            if (mainhand) {
-              mainhand.setLore([]);
-              equippable?.setEquipment(EquipmentSlot8.Mainhand, mainhand);
-            }
-            break;
-          default:
-            chat_event.sender.sendMessage("The command is !lore [add|remove] [your_lore]");
-        }
-      });
-    } else {
-      world15.sendMessage({
-        rawtext: [{ text: `\xA7l\xA78[\xA7r${thorny_user?.get_role_display()}\xA7l\xA78]\xA7r \xA77${gamertag}:\xA7r ${chat_event.message}` }]
-      });
-      system16.run(() => {
-        api_default.Relay.message(gamertag, chat_event.message);
-      });
-    }
+    world15.sendMessage({
+      rawtext: [{ text: `${thorny_user?.get_role_display()} \xA77${gamertag}:\xA7r ${chat_event.message}` }]
+    });
+    system16.run(() => {
+      api_default.Relay.message(gamertag, chat_event.message);
+    });
     chat_event.cancel = true;
   });
 }
@@ -8891,7 +8909,7 @@ function load_connections_handler(guild_id2) {
         const quest = await api_default.QuestWithProgress.get_active_quest(thorny_user);
         utils_default.send_motd(spawn_event.player, quest);
         if (thorny_user.patron) {
-          spawn_event.player.nameTag = `\xA7l\xA7c${spawn_event.player.nameTag}`;
+          spawn_event.player.nameTag = `\xA7l\xA7c${spawn_event.player.nameTag}\xA7r`;
         }
       } catch (e) {
         api_default.Relay.event(`${spawn_event.player.name} has joined the server`, "API Issue Detected", "join");
@@ -9090,7 +9108,7 @@ function load_world_event_handlers(guild_id2) {
 
 // behaviour_pack/scripts-dev/main.ts
 import { system as system19 } from "@minecraft/server";
-var guild_id = "611008530077712395";
+var guild_id = "1213827104945471538";
 WorldCache.load_world(guild_id).then();
 load_loops();
 load_custom_components(guild_id);
