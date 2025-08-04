@@ -66,7 +66,7 @@ export class Reward {
             utils.commands.send_message(
                 interaction.dimension,
                 thorny_user.gamertag,
-                `§l[§aQuests§f]§r You have received ${this.balance} Nugs!`
+                `§l[§aQuests§f]§r You have received ${this.balance}${utils.emojis.NUGS}!`
             )
         } else if (this.item) {
             utils.commands.give_item(thorny_user.gamertag, this.item, this.count)
@@ -128,7 +128,7 @@ export class Objective implements IObjective {
             } else if (reward.item) {
                 rewards.push(`${reward.count} §7${utils.clean_id(reward.item)}§r`)
             } else if (reward.balance) {
-                rewards.push(`§p${reward.balance} Nugs§r`)
+                rewards.push(`§p${reward.balance}${utils.emojis.NUGS}§r`)
             }
         }
 

@@ -43,6 +43,26 @@ function normalizeDateString(datetime: string): string {
     });
 }
 
+const emojis = {
+    EVERTHORN: '',
+    NUGS: '',
+    BUILDER: '',
+    KNIGHT: '',
+    GATHERER: '',
+    MERCHANT: '',
+    BARD: '',
+    STONER: '',
+    MINER: '',
+    DISCORD_ICON: '',
+    DISCORD: '',
+    OWNER: '',
+    MANAGER: '',
+    PATRON: '',
+    NEWBIE: '',
+    DWELLER: '',
+    SERVER: '',
+}
+
 const utils = {
     DeathMessage,
     AltarMessage,
@@ -55,7 +75,8 @@ const utils = {
     combine,
     EvilActs,
     Glitches,
-    normalizeDateString
+    normalizeDateString,
+    emojis,
 }
 
 export default utils

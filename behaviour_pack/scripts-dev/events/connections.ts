@@ -16,7 +16,7 @@ export default function load_connections_handler(guild_id: string) {
                 utils.send_motd(spawn_event.player, quest)
 
                 if (thorny_user.patron) {
-                    spawn_event.player.nameTag = `§l§c${spawn_event.player.nameTag}`
+                    spawn_event.player.nameTag = `§l§c${spawn_event.player.nameTag}§r`
                 }
             }
             catch (e) {
